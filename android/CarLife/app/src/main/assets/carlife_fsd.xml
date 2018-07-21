@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>   
+	<head>     
+		<messageId>CARLIFE_RESCUE_MESSAGE_ID</messageId>     
+		<partnerCode></partnerCode>     
+		<user></user>     
+		<password></password>     
+		<time></time>     
+		<version></version>   
+	</head>   
+	<body>      
+	<ivs>          
+		<serial></serial>          
+		<imei></imei>          
+		<sim></sim>          
+		<vin></vin>          
+		<ve_name>CARLIFE_RESCUE_CAR_NUMBER</ve_name>          
+		<ve_model></ve_model>          
+		<ve_color>CARLIFE_RESCUE_CAR_COLOR</ve_color>          
+		<ve_type></ve_type>          
+		<tsp_code></tsp_code>          
+		<tsp_name></tsp_name>      
+	</ivs>      
+	<setting>          
+		<time>CARLIFE_RESCUE_TIME</time>          
+		<velocity />          
+		<latitude>CARLIFE_RESCUE_LATITUDE</latitude>          
+		<longitude>CARLIFE_RESCUE_LONGITUDE</longitude>          
+		<province>CARLIFE_RESCUE_PROVINCE</province>          
+		<city>CARLIFE_RESCUE_CITY</city>          
+		<district></district>          
+		<road></road>          
+		<direction value="0"></direction>          
+		<previous_location></previous_location>      
+	</setting>      
+	<incident>         
+		<source>            
+			<item>manual</item>         
+		</source>         
+		<intensity>            <x></x>            <y></y>            <z></z>         </intensity>          
+		<damage />          
+		<air />          
+		<info />      
+	</incident>      
+	<contact>         
+		<reg_linkman>CARLIFE_LINK_PHONE</reg_linkman>         
+		<reg_linkname>CARLIFE_LINK_NAME</reg_linkname>         
+		<linkman>CARLIFE_CONTACT_PHONE</linkman>         
+		<linkname>CARLIFE_CONTACT_NAME</linkname>         
+		<callernumber></callernumber>      
+	</contact>      
+	<patientinfo>         
+		<name></name>         
+		<sex></sex>         
+		<weight></weight>         
+		<blood></blood>         
+		<patienthis></patienthis>         
+		<sensitivity></sensitivity>         
+		<remark></remark>      
+	</patientinfo>   
+	</body>
+</request>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?><manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.baidu.carlife" platformBuildVersionCode="23" platformBuildVersionName="6.0-2438415">
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCES_MOCK_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT"/>
+    <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="com.baidu.permission.SHARE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
+    <uses-feature android:name="android.hardware.wifi.direct" android:required="true"/>
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
+    <uses-permission android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.baidu.carlife"/>
+    <permission android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.baidu.carlife" android:protectionLevel="normal"/>
+    <uses-feature android:glEsVersion="0x00020000" android:required="true"/>
+    <application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:name="com.baidu.carlife.BaiduNaviApplication" android:screenOrientation="landscape" android:supportsRtl="true" android:theme="@style/AppTheme">
+        <meta-data android:name="BaiduMobAd_STAT_ID" android:value="74f9e6c5af"/>
+        <meta-data android:name="BaiduMobAd_EXCEPTION_LOG" android:value="true"/>
+        <meta-data android:name="BaiduMobAd_SEND_STRATEGY" android:value="APP_START"/>
+        <meta-data android:name="BaiduMobAd_ONLY_WIFI" android:value="false"/>
+        <meta-data android:name="BaiduMobAd_CELL_LOCATION" android:value="true"/>
+        <meta-data android:name="BaiduMobAd_GPS_LOCATION" android:value="true"/>
+        <meta-data android:name="BaiduMobAd_WIFI_LOCATION" android:value="true"/>
+        <meta-data android:name="plugin_debug" android:value="0"/>
+        <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="sQ7RFHINisS0HdnZfITNlT1p"/>
+        <activity android:clearTaskOnLaunch="true" android:configChanges="fontScale|keyboard|keyboardHidden|navigation|orientation|screenSize" android:label="@string/app_name" android:launchMode="singleTask" android:name="com.baidu.carlife.CarlifeActivity" android:screenOrientation="portrait" android:stateNotNeeded="true" android:theme="@style/CustomTheme" android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.baidu.carlife.Action.START"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.baidu.carlife.Action.CarlifePlatform"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" android:resource="@xml/accessory_filter"/>
+        </activity>
+        <activity android:label="@string/title_activity_base" android:name="com.baidu.carlife.BaseActivity" android:parentActivityName="android.support.v4.app.FragmentActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value="android.support.v4.app.FragmentActivity"/>
+        </activity>
+        <receiver android:enabled="true" android:name="com.baidu.carlife.broadcast.StartActivityBroadReceiver">
+            <intent-filter>
+                <action android:name="com.baidu.carlife.Action.StartActivityBroadReceiver"/>
+                <action android:name="com.baidu.carlife.Action.WECHAT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.baidu.carlife.core.connect.ConnectService"/>
+        <service android:exported="false" android:name="com.baidu.carlife.service.MusicPlayService"/>
+        <activity android:clearTaskOnLaunch="true" android:launchMode="singleTask" android:name="com.baidu.navi.NaviOfflineActivityStarter" android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="com.baidu.navi.action.START"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="bdnavi"/>
+                <data android:scheme="NAVI"/>
+            </intent-filter>
+            <intent-filter android:priority="0">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="geo"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.baidu.navi.action.START"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <service android:exported="true" android:name="com.baidu.che.codriver.vr.VoiceService">
+            <intent-filter>
+                <action android:name="com.baidu.codriver.action.START_SERVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </service>
+        <service android:exported="true" android:name="com.baidu.sapi2.share.ShareService">
+            <intent-filter>
+                <action android:name="baidu.intent.action.account.SHARE_SERVICE"/>
+            </intent-filter>
+        </service>
+        <receiver android:name="com.baidu.carlife.broadcast.PackageChangeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        <service android:enabled="true" android:exported="true" android:name="com.baidu.carlife.platform.service.CLPlatformService">
+            <intent-filter>
+                <action android:name="com.baidu.carlife.PlatformService"/>
+            </intent-filter>
+        </service>
+        <service android:name="com.baidu.navi.ForegroundService"/>
+        <meta-data android:name="com.indooratlas.service.endpoint.backend" android:value="https://ps.bce.indooratlas.com"/>
+        <service android:enabled="true" android:name="com.baidu.location.f" android:process=":remote"/>
+        <service android:enabled="true" android:name="com.baidu.navi.service.TimerPickerService"/>
+        <service android:name="com.baidu.carlife.service.NotificationDownloadService"/>
+        <service android:enabled="true" android:exported="false" android:name="com.baidu.carlife.core.screen.presentation.CarlifeActivityService"/>
+        <service android:name="com.baidu.navi.track.database.DataService"/>
+        <service android:exported="false" android:name="com.baidu.navi.driveanalysis.DataService"/>
+        <receiver android:name="com.baidu.carlife.broadcast.GFtestBroadcast">
+            <intent-filter>
+                <action android:name="com.baidu.carlife.driving.start"/>
+                <action android:name="com.baidu.carlife.driving.stop"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.baidu.carlife.service.PhoneStateService"/>
+        <provider android:authorities="com.baidu.carlife.fileprovider" android:exported="false" android:grantUriPermissions="true" android:name="android.support.v4.content.FileProvider">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_provider"/>
+        </provider>
+        <receiver android:name="com.baidu.carlife.push.CarLifePushMessageReceiver">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.MESSAGE"/>
+                <action android:name="com.baidu.android.pushservice.action.RECEIVE"/>
+                <action android:name="com.baidu.android.pushservice.action.notification.CLICK"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.baidu.android.pushservice.PushServiceReceiver" android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="com.baidu.android.pushservice.action.notification.SHOW"/>
+                <action android:name="com.baidu.android.pushservice.action.media.CLICK"/>
+                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.baidu.android.pushservice.RegistrationReceiver" android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.METHOD"/>
+                <action android:name="com.baidu.android.pushservice.action.BIND_SYNC"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        <service android:exported="true" android:name="com.baidu.android.pushservice.PushService" android:process=":bdservice_v1">
+            <intent-filter>
+                <action android:name="com.baidu.android.pushservice.action.PUSH_SERVICE"/>
+            </intent-filter>
+        </service>
+        <service android:exported="true" android:name="com.baidu.android.pushservice.CommandService"/>
+        <provider android:authorities="com.baidu.carlife.bdpush" android:exported="true" android:name="com.baidu.android.pushservice.PushInfoProvider" android:protectionLevel="signature" android:writePermission="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.baidu.carlife"/>
+        <activity android:name="com.baidu.carlife.logic.music.QPlayCallbackActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="login" android:scheme="carlife"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

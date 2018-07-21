@@ -1,0 +1,180 @@
+
+name = 张三,李四,王五
+appname = 行车记录,电子狗,巡航,巡航模式,记录仪,后视,回放,地图,导航
+
+centre = *
+keywords = 加油站,银行,厕所,景点,餐饮,酒店,服务区,停车场
+option = 1,2,3,4,5,6,7,8,9,10
+
+words = *
+wakeupWords = *
+
+#微信定制 start
+wechat_send = 我要发微信,我想发微信,我要发条微信,我想发条微信,我要发个微信,我想发个微信,帮我发条微信,帮我发个微信,发送微信,我要发送微信
+wechat_name = *
+#微信定制 end
+
+==========================================
+
+codriver.customCmd = <words>
+codriver.wakeup = 你好<wakeupWords>,<wakeupWords>你好
+
+telephone.telephone_setting__operation__answercall = 接电话,接听电话
+telephone.telephone_setting__operation__hangup = 挂电话,挂断电话
+telephone.call = 我要打电话,打电话给<name>,打给<name>,呼叫<name>,给<name>打电话
+contacts.view  = 前往电话,打开电话
+
+app.search = 搜索<appname>
+app.download = 下载<appname>
+app.open = 打开<appname>,启动<appname>,开启<appname>,进入<appname>,前往<appname>
+app.close = 关闭<appname>,停止<appname>,退出<appname>,关掉<appname>
+
+navigate_instruction.navigate = 开始导航
+navigate_instruction.quit = 结束导航,关闭导航,退出导航,取消导航
+navigate_instruction.view_map = 查看地图 
+navigate_instruction.route_home = 我要回家,导航回家
+navigate_instruction.route_work = 我要去公司,我要回公司,导航去公司
+navigate_instruction.set_home = 设置家的地址,修改家的地址
+navigate_instruction.set_work = 设置公司的地址,修改公司的地址
+navigate_instruction.zoom_in = 放大地图
+navigate_instruction.zoom_out = 缩小地图
+navigate_instruction.refresh_route = 更新路线,重新规划路线
+navigate_instruction.open__item__route_condition = 打开路况,开启路况
+navigate_instruction.close__item__route_condition = 关闭路况,关掉路况
+navigate_instruction.switch_mode__item__day = 白天模式,日间模式
+navigate_instruction.switch_mode__item__night = 黑夜模式,夜间模式
+navigate_instruction.switch_mode__item__full_route = 查看全程,全览模式
+navigate_instruction.switch_mode__item__continue_navi = 继续导航
+navigate_instruction.switch_mode__item__head_forward = 跟随模式,车头朝上
+navigate_instruction.switch_mode__item__north_forward = 正北模式,正北朝上
+navigate_instruction.switch_mode__item__new_hand = 新手模式
+navigate_instruction.switch_mode__item__expert = 专家模式,老手模式
+navigate_instruction.map_down = 地图向下,地图往下,地图下移
+navigate_instruction.map_up = 地图向上,地图往上,地图上移
+navigate_instruction.map_left = 地图向左,地图往左,地图左移
+navigate_instruction.map_right = 地图向右,地图往右,地图右移
+navigate_instruction.location = 我的位置,我在哪
+navigate_instruction.query_route_condition = <centre>堵不堵,<centre>的路况
+navigate_instruction.speed_limit = 当前限速,限速多少
+navigate_instruction.rest_distance = 还有多远
+navigate_instruction.rest_time = 还有多久,多久到
+navigate_instruction.route_strategy__item__recommend_route = 推荐路线
+navigate_instruction.route_strategy__item__high_speed = 高速优先
+navigate_instruction.route_strategy__item__no_high_speed = 不走高速
+navigate_instruction.route_strategy__item__less_charge = 少收费
+navigate_instruction.route_strategy__item__elude_jam = 躲避拥堵
+
+map.nearby = 附近的<keywords>,沿途的<keywords>
+
+codriver.yes = 确定,好的
+codriver.no = 取消,不用
+codriver.quit = 退出,关闭
+codriver.lock_screen = 关闭屏幕,关掉屏幕,屏幕关闭,屏幕关掉
+codriver.open_screen = 打开屏幕,点亮屏幕,屏幕打开
+codriver.light_down_min = 屏幕最暗
+codriver.light_up_max = 屏幕最亮
+codriver.open__item__help = 打开帮助,查看帮助
+codriver.back_home = 返回主界面,回到主界面,返回主页,回到主页,返回主菜单,回到主菜单,回到首页,前往首页,返回桌面,退回桌面,退回主页,回到桌面,打开主页,前往首页
+codriver.back_home = 返回主界面,回到主界面,返回主页,回到主页,返回主菜单,回到主菜单,回到首页,前往首页,返回桌面,退回桌面,退回主页,回到桌面,打开主页,前往首页
+codriver.open__item__system_setting = 打开设置,开启设置,打开系统设置,进入系统设置,开启系统设置,前往设置
+codriver.open__item__video = 打开视频,播放视频,浏览视频,查看视频
+codriver.open__item__picture = 打开图片,播放图片,浏览图片,打开照片,打开相册,查看图片,查看相册,查看照片
+codriver.operate__function__take_picture = 我要拍照,我要照相,拍一张图片,拍一张照片,拍张照片,我要抓拍,拍照片,拍个照
+codriver.open__item__mute = 关闭声音,关闭音量,静音模式
+codriver.light_up = 增加亮度,增大亮度,调高亮度,亮度调高,调亮一点,亮度增加,亮度增大
+codriver.light_down = 降低亮度,减小亮度,调低亮度,调暗一点,亮度减小,亮度降低
+codriver.light_up_max = 亮度调为最大,最大亮度,亮度最亮,最高亮度,调到最亮 
+codriver.light_down_min = 亮度调为最小,最小亮度,亮度最暗,最低亮度,调到最暗 
+codriver.open__item__wifi = 打开wifi,开启wifi,启动wifi
+codriver.close__item__wifi = 关闭wifi,关掉wifi,关闭wifi
+codriver.open__item__network_sharing = 打开wifi热点
+codriver.close__item__network_sharing = 关闭wifi热点
+codriver.open__item__traffic_manage = 打开流量管理
+codriver.close__item__traffic_manage = 关闭流量管理
+codriver.open__item__collision_detect = 打开碰撞设置,开启碰撞设置,开启碰撞检测,打开碰撞检测
+codriver.close__item__collision_detect = 关闭碰撞设置,关掉碰撞设置,关闭碰撞检测,关掉碰撞检测
+codriver.open__item__radio = 打开广播
+codriver.close__item__radio = 关闭广播
+codriver.open__item__photo_shoot = 违章拍照,违章抓拍,抓拍违章
+codriver.not_upload = 取消上传,不上传,不要上传
+codriver.open__item__network = 打开移动网络,打开网络
+codriver.close__item__network = 关闭移动网络,关闭网络
+codriver.back = 后退,返回
+codriver.open__item__voice_setting = 打开语音设置,进入语音设置,开启语音设置
+codriver.open__item__bluetooth = 打开蓝牙,开启蓝牙
+codriver.close__item__bluetooth = 关闭蓝牙,关掉蓝牙
+codriver.close__item__picture = 关闭相册,关闭照片
+codriver.close__item__mute = 开启声音,打开声音,打开音量,开启音量,关闭静音,取消静音
+codriver.volume_up = 增加音量,加大音量,增大音量,调高音量,声音大点,大点声,音量加大
+codriver.volume_down = 降低音量,减小音量,声音小点,小点声,音量减小
+codriver.volume_up_max = 音量调到最大,音量调到最高,最大音量,音量最大,最高音量
+codriver.select = 第<option>个,第<option>,第<option>项
+codriver.select__option__1 = 第一个,第一项,第一首
+codriver.select__option__2 = 第二个,第二项,第二首
+codriver.select__option__3 = 第三个,第三项,第三首
+codriver.select__option__4 = 第四个,第四项,第四首
+codriver.select__option__5 = 第五个,第五项,第五首
+codriver.select__option__6 = 第六个,第六项,第六首
+codriver.select__option__7 = 第七个,第七项,第七首
+codriver.select__option__8 = 第八个,第八项,第八首
+codriver.select__option__9 = 第九个,第九项,第九首
+codriver.select__option__10 = 第十个,第十项,第十首
+codriver.select__option__11 = 第十一个,第十一项,第十一首
+codriver.select__option__12 = 第十二个,第十二项,第十二首
+codriver.select__option__13 = 第十三个,第十三项,第十三首
+codriver.select__option__14 = 第十四个,第十四项,第十四首
+codriver.select__option__15 = 第十五个,第十五项,第十五首
+codriver.select__option__16 = 第十六个,第十六项,第十六首
+codriver.select__option__17 = 第十七个,第十七项,第十七首
+codriver.select__option__18 = 第十八个,第十八项,第十八首
+codriver.select__option__19 = 第十九个,第十九项,第十九首
+codriver.select__option__20 = 第二十个,第二十项,第二十首
+codriver.select__option__101 = 最后一个,倒数第一个,倒数第一项
+codriver.select__option__102 = 倒数第二个,倒数第二项
+codriver.open__item__media_player = 打开音乐,开启音乐,前往音乐
+codriver.open__item__entertainment = 打开娱乐
+
+
+codriver.goto_contacts = 查看联系人
+codriver.goto_call_record = 查看通话记录
+codriver.goto_item_discover = 打开发现,前往发现
+codriver.goto_item_park = 打开找车位,前往找车位
+codriver.goto_item_fuel = 打开去加油,前往去加油
+codriver.goto_item_discover_food = 打开找美食,前往找美食
+codriver.goto_item_rescue = 打开呼救援,前往呼救援
+codriver.goto_music_local = 打开本地音乐,前往本地音乐
+codriver.goto_netease = 打开网易云音乐,前往网易云音乐
+codriver.goto_music_qq = 打开QQ音乐,前往QQ音乐
+codriver.goto_music_xmly = 打开喜马拉雅FM,前往喜马拉雅FM
+codriver.goto_music_kaola = 打开考拉FM,前往考拉FM
+codriver.goto_music_chyb = 打开车悦宝,前往车悦宝
+codriver.goto_music_chinese_fm = 打开/前往中国广播
+codriver.download_music = 立即下载
+codriver.synchronize_music = 立即同步
+codriver.goto_item_ind_center = 打开个人中心,前往个人中心
+codriver.goto_navi_set = 打开地图设置,前往地图设置
+codriver.goto_vr_Set = 打开语音设置,前往语音设置
+codriver.goto_journey_Set = 打开行程设置,前往行程设置
+codriver.goto_help = 打开帮助反馈,前往帮助反馈
+codriver.goto_about = 打开关于,前往关于
+
+
+
+codriver.back = 上一页
+codriver.next = 下一页
+
+player.set__action_type__play = 播放音乐,继续播放
+player.set__action_type__exitplayer = 停止播放,停止音乐,退出音乐,关闭音乐,终止播放
+player.set__action_type__pause = 暂停播放,暂停音乐
+player.set__action_type__previous = 上一首,上一个,前一首,前一个,上一曲,前一曲
+player.set__action_type__next = 下一首,下一个,后一个,后一首,下一曲,后一曲
+player.set__mode__random = 随机播放
+player.set__mode__full_loop = 循环播放
+player.set__mode__order = 顺序播放
+player.set__mode__single = 单曲播放
+player.set__mode__single_loop = 单曲循环播放,单曲循环
+
+#微信定制 start
+wechat.send = 我要发微信给<wechat_name>, 我要发送微信给<wechat_name>,我想发微信给<wechat_name>, 我要发送微信给<wechat_name>,发微信给<wechat_name>,发送微信给<wechat_name>,<wechat_send>,给<wechat_name>发微信,给<wechat_name>发送微信,给<wechat_name>发条微信,给<wechat_name>发个微信,
+微信给<wechat_name>
+#微信定制 end
