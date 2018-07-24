@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:id="@id/ll_track_detail_panel" android:background="@color/carmode_offline_title_bg_pressed" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
+            <TextView android:textSize="20.0sp" android:textColor="@color/cl_bg_d" android:gravity="center_vertical" android:layout_gravity="center_vertical" android:id="@id/tv_track_name" android:layout_width="wrap_content" android:layout_height="60.0dip" android:layout_marginLeft="10.0dip" android:text="@string/app_name" />
+            <View android:id="@id/track_hor_divider" android:background="@drawable/divide_list_night" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+            <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <LinearLayout android:orientation="horizontal" android:id="@id/rl_track_detail_info" android:layout_width="fill_parent" android:layout_height="60.0dip" android:layout_marginRight="120.0dip">
+                    <RelativeLayout android:gravity="center" android:layout_gravity="center_vertical" android:id="@id/track_distance_section" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                        <TextView android:textSize="18.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_distance" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/track_distance" />
+                        <TextView android:textSize="14.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_distance_dis" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:text="@string/track_distance" android:layout_below="@id/tv_track_distance" />
+                    </RelativeLayout>
+                    <View android:id="@id/track_detail_line_left" android:background="@drawable/bnav_common_line_vertical_night" android:layout_width="1.0dip" android:layout_height="fill_parent" />
+                    <RelativeLayout android:gravity="center" android:layout_gravity="center_vertical" android:id="@id/track_time_section" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                        <TextView android:textSize="18.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_time" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/track_time" />
+                        <TextView android:textSize="14.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_time_dis" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:text="@string/track_time" android:layout_below="@id/tv_track_time" />
+                    </RelativeLayout>
+                    <View android:id="@id/track_detail_line_right" android:background="@drawable/bnav_common_line_vertical_night" android:layout_width="1.0dip" android:layout_height="fill_parent" />
+                    <RelativeLayout android:gravity="center" android:layout_gravity="center_vertical" android:id="@id/track_speed_section" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                        <TextView android:textSize="18.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_speed" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/track_speed" />
+                        <TextView android:textSize="14.0sp" android:textColor="@color/carmode_home_text" android:gravity="center" android:id="@id/tv_track_speed_dis" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:text="@string/track_speed" android:layout_below="@id/tv_track_speed" />
+                    </RelativeLayout>
+                </LinearLayout>
+                <TextView android:textSize="20.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/tv_share_track" android:background="@color/common_bottom_text_blue_color" android:layout_width="120.0dip" android:layout_height="60.0dip" android:text="分享" android:layout_alignParentRight="true" />
+            </RelativeLayout>
+        </LinearLayout>
+        <FrameLayout android:id="@id/layout_map_control_panel" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_above="@id/ll_track_detail_panel" android:layout_alignParentRight="true">
+            <include layout="@layout/map_control_panel" />
+        </FrameLayout>
+    </RelativeLayout>
+</LinearLayout>

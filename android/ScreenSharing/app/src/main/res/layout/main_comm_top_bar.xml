@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/main_comm_top_bar_height"
+    android:layout_centerVertical="true">
+
+    <com.baidu.carlife.view.BatteryView
+        android:id="@id/view_battery"
+        android:layout_width="11.0dip"
+        android:layout_height="15.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="30.0dip" />
+
+    <com.baidu.carlife.view.TimeTextView
+        android:id="@id/view_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16.0dip"
+        android:layout_toLeftOf="@id/view_battery"
+        android:textColor="@color/text_def_white_title"
+        android:textSize="16.0sp" />
+
+    <ImageView
+        android:id="@id/iv_connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16.0dip"
+        android:layout_toLeftOf="@id/view_time"
+        android:src="@drawable/statusbaric_ic_disconnect" />
+
+    <TextView
+        android:id="@id/tv_left_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16.0dip"
+        android:layout_toLeftOf="@id/iv_connect"
+        android:textColor="@color/text_def_white_title"
+        android:textSize="16.0sp" />
+</RelativeLayout>

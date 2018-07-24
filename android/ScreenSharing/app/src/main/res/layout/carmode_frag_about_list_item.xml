@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/item_layout" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="70.0dip" android:minHeight="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true">
+        <TextView android:textSize="20.0sp" android:textColor="@color/carmode_common_main_text" android:id="@id/about_item_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/offline_data" />
+        <TextView android:textSize="14.0sp" android:textColor="@color/carmode_offline_status_text" android:id="@id/about_item_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/offline_data" />
+    </LinearLayout>
+    <View android:id="@id/line_top" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_alignParentTop="true" />
+    <View android:id="@id/line_bottom" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_alignParentBottom="true" />
+    <View android:id="@id/line_left" android:background="@color/carmode_common_bg" android:layout_width="0.5dip" android:layout_height="70.0dip" android:layout_alignParentLeft="true" />
+    <View android:id="@id/line_right" android:background="@color/carmode_common_bg" android:layout_width="0.5dip" android:layout_height="70.0dip" android:layout_alignParentRight="true" />
+</RelativeLayout>

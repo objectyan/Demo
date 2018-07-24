@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:paddingLeft="@dimen/common_listview_item_padding_left" android:layout_width="fill_parent" android:layout_height="96.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true">
+        <RelativeLayout android:gravity="center_vertical" android:id="@id/line1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:textSize="@dimen/cl_text_a5_contant" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_start_addr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="百度国际大厦" />
+            <ImageView android:id="@id/img_arrow" android:layout_width="24.0dip" android:layout_height="16.0dip" android:layout_marginLeft="16.0dip" android:src="@drawable/map_ic_route_arrow" android:layout_toRightOf="@id/tv_start_addr" android:layout_centerVertical="true" />
+            <TextView android:textSize="@dimen/cl_text_a5_contant" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_des_addr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:text="宝安机场T3" android:layout_toRightOf="@id/img_arrow" />
+        </RelativeLayout>
+        <RelativeLayout android:gravity="center_vertical" android:id="@id/line2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:layout_below="@id/line1">
+            <ImageView android:id="@id/img_location" android:layout_width="16.0dip" android:layout_height="16.0dip" android:src="@drawable/map_ic_route_position" />
+            <TextView android:textSize="@dimen/cl_text_a2_contant" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3.14km" android:layout_toRightOf="@id/img_location" android:layout_centerVertical="true" />
+            <ImageView android:id="@id/img_time" android:layout_width="16.0dip" android:layout_height="16.0dip" android:layout_marginLeft="24.0dip" android:src="@drawable/map_ic_route_time" android:layout_toRightOf="@id/tv_distance" />
+            <TextView android:textSize="@dimen/cl_text_a2_contant" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="14分钟" android:layout_toRightOf="@id/img_time" />
+            <ImageView android:id="@id/img_speed" android:layout_width="16.0dip" android:layout_height="16.0dip" android:layout_marginLeft="24.0dip" android:src="@drawable/map_ic_route_speed" android:layout_toRightOf="@id/tv_duration" />
+            <TextView android:textSize="@dimen/cl_text_a2_contant" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="40km/h" android:layout_toRightOf="@id/img_speed" />
+        </RelativeLayout>
+        <RelativeLayout android:gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:layout_below="@id/line2">
+            <TextView android:textSize="@dimen/cl_text_a2_contant" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_date" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2016.8.05" />
+            <TextView android:textSize="@dimen/cl_text_a2_contant" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" android:text="10:38" android:layout_toRightOf="@id/tv_date" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/rl_delete_btn" android:layout_width="80.0dip" android:layout_height="fill_parent" android:layout_alignParentRight="true" android:layout_centerVertical="true">
+        <ImageView android:id="@id/iv_edit_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/com_ic_delete_on" android:layout_centerInParent="true" />
+    </RelativeLayout>
+    <View android:id="@id/cl_line" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_marginRight="@dimen/common_listview_item_padding_right" android:layout_alignParentBottom="true" />
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="horizontal" android:id="@id/name_search_focus_area_up" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <ImageButton android:id="@id/name_search_back" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:src="@drawable/com_titlebar_back_selector" />
+        <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a4_title" android:layout_gravity="center_vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="@string/carlife_map_ctrl_around" android:layout_weight="1.0" />
+        <ImageButton android:id="@id/name_search_voice" android:background="@drawable/com_bg_btn_selector" android:visibility="gone" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:layout_marginLeft="24.0dip" android:layout_marginRight="24.0dip" android:src="@drawable/com_ic_voice" android:scaleType="center" />
+    </LinearLayout>
+    <GridView android:id="@id/name_search_gridView" android:background="@null" android:focusable="true" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="72.0dip" android:layout_marginRight="72.0dip" android:listSelector="@drawable/com_bg_item_selector" android:numColumns="4" android:overScrollMode="never" />
+</LinearLayout>

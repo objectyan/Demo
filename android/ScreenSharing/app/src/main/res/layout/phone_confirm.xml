@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:paddingBottom="@dimen/default_12" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/default_text_14" android:textColor="#ffffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/phone_command_confirm" android:alpha="0.6" />
+    <TextView android:textSize="@dimen/default_20" android:textColor="#ffffffff" android:id="@id/phone_num" android:background="@color/ninety_five_percent_white" android:paddingLeft="@dimen/default_24" android:paddingTop="@dimen/default_16" android:paddingBottom="@dimen/default_16" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_8" android:text="10086" />
+</LinearLayout>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@id/common_title_bar"
+        layout="@layout/carlife_common_title_bar_new"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@id/rl_top_view"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/common_item_height_64">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.5dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8.0dip"
+            android:layout_marginLeft="80.0dip"
+            android:layout_marginRight="80.0dip"
+            android:background="#ff1a98ff" />
+
+        <ImageView
+            android:id="@id/img_back"
+            android:layout_width="@dimen/default_48"
+            android:layout_height="@dimen/default_48"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_16"
+            android:src="@drawable/com_ic_back" />
+
+        <TextView
+            android:id="@id/car_plate_head"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16.0dip"
+            android:layout_toRightOf="@id/img_back"
+            android:drawablePadding="5.0dip"
+            android:drawableRight="@drawable/com_ic_input_prompt"
+            android:gravity="center_vertical"
+            android:text="京"
+            android:textColor="#ff3385ff"
+            android:textSize="16.0dip" />
+
+        <View
+            android:id="@id/view_boarder_mid"
+            android:layout_width="1.5dip"
+            android:layout_height="22.0dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8.0dip"
+            android:layout_toRightOf="@id/car_plate_head"
+            android:background="#ff1a98ff" />
+
+        <TextView
+            android:id="@id/tv_commit_btn"
+            android:layout_width="80.0dip"
+            android:layout_height="44.0dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="66.0dip"
+            android:gravity="center"
+            android:text="@string/title_finish"
+            android:textColor="#ff1997ff"
+            android:textSize="18.0sp" />
+
+        <com.baidu.carlife.view.KeyboardEditText
+            android:id="@id/edt_car_plate_input"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6.0dip"
+            android:layout_toLeftOf="@id/tv_commit_btn"
+            android:layout_toRightOf="@id/view_boarder_mid"
+            android:background="@null"
+            android:digits="@string/carlife_map_car_plate_digits"
+            android:focusable="true"
+            android:hint="@string/plate_hine"
+            android:imeOptions="flagNoExtractUi"
+            android:maxLength="7"
+            android:singleLine="true"
+            android:textColor="#ffffffff"
+            android:textColorHint="@color/cl_text_a1"
+            android:textSize="16.0sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_top_view"
+        android:layout_marginTop="16.0dip"
+        android:gravity="center"
+        android:text="@string/plate_car"
+        android:textColor="#ffffffff"
+        android:textSize="14.0sp" />
+
+    <LinearLayout
+        android:id="@id/ll_keyboard_container"
+        android:layout_width="fill_parent"
+        android:layout_height="192.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_keyboard_gradient"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="20.0dip"
+        android:paddingRight="20.0dip"
+        android:paddingTop="@dimen/default_4"
+        android:visibility="gone" />
+</RelativeLayout>

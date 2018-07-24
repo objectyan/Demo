@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.MediaPlaybackCardView android:orientation="vertical" android:paddingTop="@dimen/default_21" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:circle="http://schemas.android.com/apk/res-auto">
+    <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/fifty_percent_white" android:id="@id/hint_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:maxLines="1" />
+    <LinearLayout android:gravity="center_vertical" android:background="@color/six_percent_white" android:paddingLeft="@dimen/default_24" android:paddingTop="@dimen/default_16" android:paddingRight="@dimen/default_28" android:paddingBottom="@dimen/default_16" android:layout_width="fill_parent" android:layout_height="@dimen/default_112">
+        <com.baidu.che.codriver.widget.CustomNetworkImageView android:id="@id/album" android:layout_width="@dimen/default_80" android:layout_height="@dimen/default_80" android:src="@drawable/album_art_default" />
+        <LinearLayout android:layout_gravity="center_vertical" android:orientation="vertical" android:id="@id/info_layout" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/default_16" android:layout_weight="1.0">
+            <TextView android:textSize="@dimen/default_text_20" android:textColor="@color/white" android:id="@id/title_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+            <TextView android:textSize="@dimen/default_text_16" android:textColor="@color/fifty_percent_white" android:id="@id/singer_text" android:layout_width="140.0dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_3" android:maxLines="1" />
+        </LinearLayout>
+        <FrameLayout android:layout_width="@dimen/default_60" android:layout_height="@dimen/default_60" android:layout_marginLeft="@dimen/default_28" android:layout_marginRight="@dimen/default_28">
+            <ImageView android:id="@id/play_btn" android:layout_width="fill_parent" android:layout_height="fill_parent" android:src="@drawable/play_btn" />
+            <com.baidu.che.codriver.widget.CircleProgressBar android:id="@android:id/progress" android:layout_width="fill_parent" android:layout_height="fill_parent" circle:progress_color="@color/white" circle:background_color="@color/fifteen_percent_white" />
+        </FrameLayout>
+        <ImageView android:id="@id/next_btn" android:layout_width="@dimen/default_60" android:layout_height="@dimen/default_60" android:src="@drawable/next_btn" />
+    </LinearLayout>
+</com.baidu.che.codriver.widget.MediaPlaybackCardView>

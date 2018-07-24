@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:id="@id/layout_home_top" android:background="@drawable/bnav_bg_home_top" android:layout_width="fill_parent" android:layout_height="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/plugin_top_divider" android:background="@drawable/bnav_map_home_plugin_line_divider" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_alignParentBottom="true" />
+    <FrameLayout android:gravity="center" android:id="@id/layout_home_voice" android:layout_width="60.0dip" android:layout_height="60.0dip">
+        <ImageView android:layout_gravity="center" android:id="@id/img_home_voice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_home_ic_voice_assistant_off" />
+        <ProgressBar android:layout_gravity="center" android:id="@id/img_home_voice_spinner" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:indeterminateDrawable="@drawable/maphome_loading" />
+    </FrameLayout>
+    <FrameLayout android:gravity="center_vertical" android:id="@id/fl_native_plugin_manager" android:layout_width="60.0dip" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+        <ImageView android:layout_gravity="center" android:id="@id/img_native_plugin_manager" android:background="@drawable/plugin_entry" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <ImageView android:layout_gravity="bottom|center" android:id="@id/img_native_plugin_arrow" android:background="@drawable/map_home_arrow" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <ImageView android:layout_gravity="center|right|top" android:id="@id/img_native_plugin_redPoint" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:layout_marginRight="6.0dip" android:src="@drawable/red_notify" />
+    </FrameLayout>
+    <LinearLayout android:layout_gravity="center_vertical" android:orientation="horizontal" android:id="@id/layout_home_search" android:layout_width="fill_parent" android:layout_height="60.0dip" android:layout_toLeftOf="@id/fl_native_plugin_manager" android:layout_toRightOf="@id/layout_home_voice">
+        <TextView android:textSize="14.0sp" android:textColor="#ff7a7c80" android:layout_gravity="center_vertical" android:id="@id/edit_home_search" android:background="@null" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:text="@string/search_place" android:textCursorDrawable="@null" />
+    </LinearLayout>
+</RelativeLayout>

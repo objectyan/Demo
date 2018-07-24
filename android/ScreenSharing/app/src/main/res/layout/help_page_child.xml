@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@color/ninety_five_percent_white" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/sixty_percent_white" android:gravity="center_vertical" android:id="@id/child_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/default_24" android:layout_marginBottom="@dimen/default_8" android:text="北京怎么走/我要去北京\n我要回家/我要去公司" android:lineSpacingExtra="@dimen/default_4" />
+</LinearLayout>

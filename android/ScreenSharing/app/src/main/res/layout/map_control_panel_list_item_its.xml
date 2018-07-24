@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:gravity="center_vertical" android:id="@id/map_control_panel_list_item_its_tv" android:paddingLeft="@dimen/dialog_left_list_padding" android:layout_width="wrap_content" android:layout_height="64.0dip" android:text="item" />
+    <com.baidu.carlife.view.SwitchButton android:id="@id/map_control_panel_list_item_its_checkbox" android:focusable="false" android:layout_width="30.0dip" android:layout_height="24.0dip" android:layout_marginRight="16.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="2.0px" android:layout_below="@id/map_control_panel_list_item_its_tv" />
+</RelativeLayout>

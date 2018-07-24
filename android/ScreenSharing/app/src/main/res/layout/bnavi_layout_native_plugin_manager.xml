@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:descendantFocusability="blocksDescendants" android:layout_width="fill_parent" android:layout_height="80.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@id/cr_grid_item" android:layout_width="wrap_content" android:layout_height="80.0dip" android:layout_marginLeft="15.0dip">
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a" android:ellipsize="end" android:id="@id/tv_plugin_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="testtest" android:singleLine="true" />
+        <TextView android:textSize="15.0sp" android:textColor="@color/cl_text_c" android:id="@id/tv_plugin_des" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:maxWidth="250.0dip" android:text="测试测试测试测试测试测试测试测试测试测试测试测试" android:singleLine="true" />
+    </LinearLayout>
+    <TextView android:textColor="@color/cl_other_d" android:gravity="center" android:id="@id/iv_op_btn" android:background="@drawable/bd_plugin_manager_update_selector" android:visibility="gone" android:layout_width="60.0dip" android:layout_height="30.0dip" android:layout_marginRight="15.0dip" android:text="已安装" android:layout_alignParentRight="true" android:layout_centerVertical="true" android:color="#ff26bf85" />
+    <ProgressBar android:id="@id/pb_plugin_downloading" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="2.0dip" android:max="100" android:progressDrawable="@drawable/nsdk_drawable_od_bg_progress_downloading_selector" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" style="?android:attr/progressBarStyleHorizontal" />
+    <View android:id="@id/v_plugin_divider" android:background="#ffd7d8d9" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_alignParentBottom="true" />
+</RelativeLayout>

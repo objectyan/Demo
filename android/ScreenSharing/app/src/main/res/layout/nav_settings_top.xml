@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="54.0dip"
+    android:background="@color/common_title_bar_background"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:minHeight="54.0dip">
+
+    <ImageView
+        android:id="@id/nav_settings_back"
+        android:layout_width="@dimen/common_left_backbtn_width"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/common_icon_back_btn_selector" />
+
+    <TextView
+        android:id="@id/nav_settings_top_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip"
+        android:singleLine="true"
+        android:text="@string/menu_app_navi_set"
+        android:textAppearance="@style/NavTopBarMiddleText" />
+</RelativeLayout>

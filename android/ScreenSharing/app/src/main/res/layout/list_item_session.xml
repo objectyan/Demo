@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:paddingLeft="16.0dip" android:paddingRight="16.0dip" android:layout_width="fill_parent" android:layout_height="@dimen/list_item_height"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_centerVertical="true">
+        <com.facebook.drawee.view.SimpleDraweeView android:id="@id/list_item_session_icon" android:layout_width="@dimen/list_item_icon_width" android:layout_height="@dimen/list_item_icon_width" android:scaleType="fitXY" fresco:placeholderImage="@mipmap/list_icon_user" />
+        <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="16.0dip" android:layout_marginRight="16.0dip" android:layout_weight="1.0">
+            <TextView android:textSize="@dimen/text_size_main" android:textColor="@color/cl_text_a5" android:layout_gravity="center_vertical" android:id="@id/list_item_session_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Name" android:singleLine="true" android:drawableRight="@mipmap/wx_ic_contacts_disturb_on" android:drawablePadding="8.0dip" />
+        </FrameLayout>
+        <View android:background="@mipmap/com_ic_more01" android:layout_width="18.0dip" android:layout_height="24.0dip" />
+    </LinearLayout>
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_main" android:gravity="center" android:id="@id/list_item_session_count" android:background="@drawable/red_dot_bg" android:layout_width="18.0dip" android:layout_height="18.0dip" android:layout_marginLeft="34.0dip" android:layout_marginTop="2.0dip" android:text="99" />
+</RelativeLayout>

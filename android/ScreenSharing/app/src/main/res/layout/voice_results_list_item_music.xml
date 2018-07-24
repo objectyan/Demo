@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="center_vertical" android:layout_width="fill_parent" android:layout_height="72.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4_content" android:ellipsize="end" android:id="@id/tv_song" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="爱你一万年" android:singleLine="true" />
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a2_content" android:ellipsize="end" android:id="@id/tv_singer" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="刘德华" android:singleLine="true" android:layout_below="@id/tv_song" />
+</RelativeLayout>

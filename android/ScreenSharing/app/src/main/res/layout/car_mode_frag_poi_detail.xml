@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_back" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:layout_width="56.0dip" android:layout_height="56.0dip" android:layout_marginLeft="12.0dip" android:layout_marginTop="28.0dip" android:layout_alignParentLeft="true">
+        <ImageView android:id="@id/left_imageview" android:src="@drawable/map_ic_back" style="@style/MapButton" />
+    </LinearLayout>
+    <FrameLayout android:id="@id/poilayout" android:layout_width="250.0dip" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+        <com.baidu.navi.view.CarmodePoiListView android:id="@id/poilistview" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <com.baidu.navi.view.CarmodePoiDetailView android:id="@id/poidetailview" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    </FrameLayout>
+    <FrameLayout android:id="@id/layout_map_control_panel" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="12.0dip" android:layout_toLeftOf="@id/poilayout" android:layout_alignParentBottom="true">
+        <include layout="@layout/map_control_panel" />
+    </FrameLayout>
+</RelativeLayout>

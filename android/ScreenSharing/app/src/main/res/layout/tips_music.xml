@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/tips_music" android:background="@drawable/tips_music_bg" android:paddingTop="22.0dip" android:paddingBottom="22.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_song_image" android:layout_width="@dimen/music_tips_image_size_56" android:layout_height="@dimen/music_tips_image_size_56" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_a" android:src="@drawable/music_ic_albumcover" />
+    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="@dimen/music_tips_image_size_56" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_a" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_a" android:layout_weight="1.0">
+        <com.baidu.carlife.view.MarqueeTextView android:textSize="22.0sp" android:textStyle="bold" android:textColor="@color/cl_text_a5_title" android:gravity="center_vertical" android:id="@id/music_name" android:focusable="true" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" style="@style/Text.Marquee" />
+        <com.baidu.carlife.view.MarqueeTextView android:textSize="14.0sp" android:textColor="@color/cl_text_a5_title" android:gravity="center_vertical" android:id="@id/music_singer" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" style="@style/Text.Marquee" />
+    </LinearLayout>
+    <ImageButton android:id="@id/ib_cancle_tips" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:layout_width="@dimen/navi_tips_direct_size_32" android:layout_height="@dimen/navi_tips_direct_size_32" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_b" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_b" android:src="@drawable/ib_cancle_tips" android:scaleType="fitXY" />
+</LinearLayout>

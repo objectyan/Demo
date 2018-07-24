@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="#ffe3e7f0" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/info_relativelayout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="15.0dip" android:layout_marginTop="16.0dip" android:layout_marginRight="15.0dip" android:layout_marginBottom="13.0dip">
+        <TextView android:id="@id/text_download" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0K/7M" android:layout_alignParentLeft="true" android:layout_centerVertical="true" style="@style/Text.provinceListName" />
+        <TextView android:id="@id/text_persent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0%" android:layout_alignParentRight="true" android:layout_centerVertical="true" style="@style/Text.provinceListName" />
+    </RelativeLayout>
+    <ProgressBar android:id="@id/progress_bar" android:layout_width="fill_parent" android:layout_height="10.0dip" android:layout_marginLeft="15.0dip" android:layout_marginRight="15.0dip" android:layout_marginBottom="15.0dip" android:max="100" android:progress="0" android:progressDrawable="@drawable/progress_bg_download_item" style="?android:attr/progressBarStyleHorizontal" />
+</LinearLayout>

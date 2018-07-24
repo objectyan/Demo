@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/relative_offline_map_data_manager" android:paddingLeft="@dimen/offline_data_rl_status_margin_left" android:paddingRight="@dimen/offline_data_rl_status_margin_left" android:layout_width="fill_parent" android:layout_height="@dimen/offline_data_listview_height">
+        <TextView android:textSize="@dimen/default_text_20" android:textColor="@color/cl_text_a5" android:gravity="center_vertical" android:id="@id/tv_offline_map_data_download" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="@string/carlife_map_data_chose_city" android:layout_centerVertical="true" />
+        <ImageView android:focusable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/iv_list_arrow" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <View android:id="@id/list_item_divider" android:background="@color/cl_line_a1_item" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="@dimen/offline_data_round_progressbar_roundWidth" android:layout_marginLeft="@dimen/offline_data_rl_status_margin_left" android:layout_marginRight="@dimen/offline_data_rl_status_margin_left" />
+</LinearLayout>

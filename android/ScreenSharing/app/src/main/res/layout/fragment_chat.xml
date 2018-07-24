@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height">
+        <ImageButton android:id="@id/fragment_chat_back" android:background="@android:color/transparent" android:layout_width="@dimen/common_item_width" android:layout_height="fill_parent" android:src="@mipmap/com_ic_back" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:id="@id/fragment_chat_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="72.0dip" android:text="title" android:lines="1" android:drawableRight="@mipmap/wx_ic_contacts_disturb_on" android:drawablePadding="8.0dip" />
+    </LinearLayout>
+    <ListView android:id="@id/chat_listview" android:layout_marginLeft="72.0dip" android:layout_marginRight="72.0dip" android:listSelector="@android:color/transparent" android:divider="@null" android:dividerHeight="0.0dip" android:layout_weight="1.0" style="@style/ListViewStyle" />
+    <ImageView android:layout_gravity="center_horizontal" android:id="@id/chat_btn_reply" android:layout_width="64.0dip" android:layout_height="64.0dip" android:layout_margin="20.0dip" android:src="@drawable/com_voice_button_selector" />
+</LinearLayout>

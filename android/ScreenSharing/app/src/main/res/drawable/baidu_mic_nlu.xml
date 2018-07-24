@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_0" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_1" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_2" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_3" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_4" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_5" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_6" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_1_7" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_0" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_1" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_2" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_3" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_4" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_5" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_2_6" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_0" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_1" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_2" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_3" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_4" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_5" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_3_6" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_0" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_1" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_2" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_3" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_4" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_5" />
+    <item android:duration="100" android:drawable="@drawable/baidu_mic_nlu_4_6" />
+</animation-list>

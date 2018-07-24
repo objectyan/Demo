@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:ptr="http://schemas.android.com/apk/res-auto">
+    <ImageView android:id="@id/divider_horizontal_top" android:layout_width="fill_parent" android:layout_height="15.0dip" />
+    <RelativeLayout android:gravity="center_vertical" android:id="@id/score_shop_layout" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <TextView android:textSize="17.0sp" android:textColor="#fff35050" android:gravity="center" android:id="@id/score_shop_tv" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="@string/score_shop" android:drawableLeft="@drawable/banv_usercenter_ic_scor_shop" android:drawablePadding="10.0dip" android:layout_alignParentLeft="true" />
+        <ImageView android:id="@id/ic_enter_score_shop" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/bnav_quickroute_btn_enter_fav" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <TextView android:textSize="17.0sp" android:gravity="center_vertical" android:id="@id/login_total_mile" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginLeft="40.0dip" android:layout_toLeftOf="@id/ic_enter_score_shop" android:layout_toRightOf="@id/score_shop_tv" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <View android:id="@id/hearder_divide" android:background="@drawable/divide_list" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+    <RelativeLayout android:gravity="center_vertical" android:id="@id/rl_my_wallet" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <TextView android:textSize="17.0sp" android:textColor="#fff35050" android:gravity="center" android:id="@id/tx_my_wallet" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="@string/my_wallet" android:drawableLeft="@drawable/my_wallet" android:drawablePadding="10.0dip" android:layout_alignParentLeft="true" />
+        <ImageView android:id="@id/iv_my_wallet" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/bnav_quickroute_btn_enter_fav" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <TextView android:textSize="17.0sp" android:id="@id/wallet_id" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="40.0dip" android:layout_toLeftOf="@id/iv_my_wallet" android:layout_toRightOf="@id/tx_my_wallet" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <ImageView android:id="@id/divider_horizontal_below" android:layout_width="fill_parent" android:layout_height="15.0dip" />
+</LinearLayout>

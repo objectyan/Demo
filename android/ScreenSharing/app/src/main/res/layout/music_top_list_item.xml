@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center" android:orientation="vertical" android:background="@drawable/com_music_title_bg_selector" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.baidu.carlife.view.MultiImageView android:id="@id/iv_music_theme" android:layout_width="100.0dip" android:layout_height="100.0dip" android:src="@drawable/music_ic_albumcover" />
+    <TextView android:textSize="16.0sp" android:textColor="@color/frag_music_title_text_selected_color" android:ellipsize="end" android:gravity="center" android:id="@id/tv_music_theme" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:text="@string/module_music_content_title_default" android:singleLine="true" />
+    <TextView android:textSize="16.0sp" android:textColor="@color/frag_music_title_text_default_a_color" android:ellipsize="end" android:gravity="center" android:id="@id/tv_music_update" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:text="@string/module_music_content_update_default" android:singleLine="true" />
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/carlife_common_title_bar_new" />
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="76.0dip" android:layout_marginRight="76.0dip">
+        <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <LinearLayout android:orientation="vertical" android:id="@id/linlayout_add_info_container" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="62.0dip">
+                <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/linlayout_add_info" android:background="@drawable/com_bg_btn_rounded_rectangle_hollow_a_selector" android:layout_width="192.0dip" android:layout_height="44.0dip" android:layout_margin="4.0dip">
+                    <ImageView android:layout_width="24.0dip" android:layout_height="24.0dip" android:src="@drawable/home_ic_rescue_add" />
+                    <TextView android:textSize="16.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="@string/add_rescue_info" />
+                </LinearLayout>
+                <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a1_content" android:layout_gravity="center_horizontal" android:layout_width="186.0dip" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" android:text="@string/complete_rescue_info" />
+            </LinearLayout>
+            <include android:id="@id/stub_rescue_info" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="28.0dip" layout="@layout/view_rescue_info" />
+        </RelativeLayout>
+        <View android:background="@color/cl_line_a1_item" android:layout_width="@dimen/common_item_line" android:layout_height="172.0dip" android:layout_marginTop="28.0dip" />
+        <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="62.0dip" android:layout_alignParentRight="true">
+                <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/linlayout_dialing" android:background="@drawable/carmode_list_bg_focus_selector" android:padding="4.0dip" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <LinearLayout android:gravity="center" android:orientation="horizontal" android:background="@drawable/com_bg_btn_rounded_rectangle_hollow_b_selector" android:layout_width="192.0dip" android:layout_height="44.0dip">
+                        <ImageView android:layout_width="24.0dip" android:layout_height="24.0dip" android:src="@drawable/home_ic_rescue_dialing" />
+                        <TextView android:textSize="16.0dip" android:textColor="@color/cl_other_f_free" android:gravity="left" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="@string/rescue_efficient" />
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a1_content" android:layout_gravity="center_horizontal" android:id="@id/tv_rescue_provide" android:layout_width="186.0dip" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

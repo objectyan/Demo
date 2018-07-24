@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/rl_battery" android:background="@android:color/transparent" android:layout_width="@dimen/new_battery_width" android:layout_height="@dimen/new_battery_heigh" android:layout_centerInParent="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_battery_state" android:visibility="gone" android:layout_width="11.0dip" android:layout_height="15.0dip" android:src="@drawable/statusbaric_ic_battery_bg" />
+    <ImageView android:id="@id/iv_charge" android:visibility="gone" android:layout_width="11.0dip" android:layout_height="15.0dip" android:src="@drawable/statusbaric_ic_battery_charge" />
+</RelativeLayout>

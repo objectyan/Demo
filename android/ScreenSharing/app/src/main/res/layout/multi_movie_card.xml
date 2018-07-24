@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:paddingBottom="@dimen/default_text_14" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.volley.toolbox.NetworkImageView android:id="@id/multi_movie_image" android:layout_width="@dimen/default_96" android:layout_height="@dimen/default_136" android:src="@drawable/default_movie" android:scaleType="centerCrop" />
+    <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/white" android:ellipsize="end" android:gravity="center" android:id="@id/multi_movie_name" android:layout_width="@dimen/default_110" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_13" android:maxLines="1" />
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_6">
+        <RatingBar android:id="@id/multi_movie_ratingbar" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="3.0dip" android:numStars="5" android:stepSize="0.1" style="@style/ratingBarStyle" />
+        <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/white" android:id="@id/multi_movie_score" android:layout_width="wrap_content" android:layout_height="wrap_content" android:alpha="0.5" />
+    </LinearLayout>
+</LinearLayout>

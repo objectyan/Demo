@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="constraintSet" format="reference" />
+    <attr name="layout_constraintBaseline_creator" format="integer" />
+    <attr name="layout_constraintBaseline_toBaselineOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintBottom_creator" format="integer" />
+    <attr name="layout_constraintBottom_toBottomOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintBottom_toTopOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintDimensionRatio" format="string" />
+    <attr name="layout_constraintEnd_toEndOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintEnd_toStartOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintGuide_begin" format="dimension" />
+    <attr name="layout_constraintGuide_end" format="dimension" />
+    <attr name="layout_constraintGuide_percent" format="float" />
+    <attr name="layout_constraintHeight_default">
+        <enum name="spread" value="0" />
+        <enum name="wrap" value="1" />
+    </attr>
+    <attr name="layout_constraintHeight_max" format="dimension" />
+    <attr name="layout_constraintHeight_min" format="dimension" />
+    <attr name="layout_constraintHorizontal_bias" format="float" />
+    <attr name="layout_constraintHorizontal_chainStyle">
+        <enum name="spread" value="0" />
+        <enum name="packed" value="2" />
+        <enum name="spread_inside" value="1" />
+    </attr>
+    <attr name="layout_constraintHorizontal_weight" format="float" />
+    <attr name="layout_constraintLeft_creator" format="integer" />
+    <attr name="layout_constraintLeft_toLeftOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintLeft_toRightOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintRight_creator" format="integer" />
+    <attr name="layout_constraintRight_toLeftOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintRight_toRightOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintStart_toEndOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintStart_toStartOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintTop_creator" format="integer" />
+    <attr name="layout_constraintTop_toBottomOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintTop_toTopOf" format="reference">
+        <enum name="parent" value="0" />
+    </attr>
+    <attr name="layout_constraintVertical_bias" format="float" />
+    <attr name="layout_constraintVertical_chainStyle">
+        <enum name="spread" value="0" />
+        <enum name="packed" value="2" />
+        <enum name="spread_inside" value="1" />
+    </attr>
+    <attr name="layout_constraintVertical_weight" format="float" />
+    <attr name="layout_constraintWidth_default">
+        <enum name="spread" value="0" />
+        <enum name="wrap" value="1" />
+    </attr>
+    <attr name="layout_constraintWidth_max" format="dimension" />
+    <attr name="layout_constraintWidth_min" format="dimension" />
+    <attr name="layout_editor_absoluteX" format="dimension" />
+    <attr name="layout_editor_absoluteY" format="dimension" />
+    <attr name="layout_goneMarginBottom" format="dimension" />
+    <attr name="layout_goneMarginEnd" format="dimension" />
+    <attr name="layout_goneMarginLeft" format="dimension" />
+    <attr name="layout_goneMarginRight" format="dimension" />
+    <attr name="layout_goneMarginStart" format="dimension" />
+    <attr name="layout_goneMarginTop" format="dimension" />
+    <attr name="layout_optimizationLevel">
+        <flag name="all" value="0x00000002" />
+        <flag name="basic" value="0x00000004" />
+        <flag name="chains" value="0x00000008" />
+        <flag name="none" value="0x00000001" />
+    </attr>
+    <attr name="icon" format="reference" localization="suggested" />
+    <attr name="icon_width" format="dimension" localization="suggested">
+        <flag name="match_parent" value="0xffffffff" />
+        <flag name="wrap_content" value="0xfffffffe" />
+    </attr>
+    <attr name="icon_height" format="dimension" localization="suggested">
+        <flag name="match_parent" value="0xffffffff" />
+        <flag name="wrap_content" value="0xfffffffe" />
+    </attr>
+    <attr name="content" format="reference" localization="suggested" />
+    <attr name="content_width" format="dimension" localization="suggested">
+        <flag name="match_parent" value="0xffffffff" />
+        <flag name="wrap_content" value="0xfffffffe" />
+    </attr>
+    <attr name="content_height" format="dimension" localization="suggested">
+        <flag name="match_parent" value="0xffffffff" />
+        <flag name="wrap_content" value="0xfffffffe" />
+    </attr>
+    <attr name="content_background" format="reference|color" localization="suggested" />
+    <!--<attr name="background" format="integer" localization="suggested" />-->
+    <attr name="image" format="integer" localization="suggested" />
+    <attr name="text" format="string" localization="suggested" />
+    <attr name="textSize" format="integer" localization="suggested" />
+    <attr name="textColor" format="color" localization="suggested" />
+    <attr name="width" format="dimension" localization="suggested" />
+    <attr name="height" format="dimension" localization="suggested" />
+    <attr name="centered" format="boolean" />
+    <attr name="fillColor" format="color" />
+    <attr name="pageColor" format="color" />
+    <attr name="radius" format="dimension" />
+    <attr name="snap" format="boolean" />
+    <attr name="strokeColor" format="color" />
+    <attr name="strokeWidth" format="dimension" />
+    <attr name="progress_value" format="integer" />
+    <attr name="progress_color" format="color" />
+    <attr name="background_color" format="color" />
+    <attr name="progress_width" format="dimension" />
+    <attr name="background_width" format="dimension" />
+    <attr name="backGroundImage" format="integer" localization="suggested" />
+    <attr name="rightContentImage" format="integer" localization="suggested" />
+    <attr name="rightContentText" format="integer" localization="suggested" />
+    <attr name="leftContentText" format="string" localization="suggested" />
+    <attr name="leftContentImage" format="integer" localization="suggested" />
+    <attr name="middleContentText" format="string" localization="suggested" />
+    <attr name="rightContentVisible" format="boolean" localization="suggested" />
+    <attr name="divider_width" format="dimension" />
+    <attr name="collapsed_height" format="dimension" />
+    <attr name="drag_scroll_start" format="float" />
+    <attr name="max_drag_scroll_speed" format="float" />
+    <attr name="float_background_color" format="color" />
+    <attr name="remove_mode">
+        <enum name="none" value="-1" />
+        <enum name="fling" value="0" />
+        <enum name="slide" value="1" />
+        <enum name="slideLeft" value="2" />
+        <enum name="slideRight" value="1" />
+    </attr>
+    <attr name="track_drag_scroll" format="boolean" />
+    <attr name="float_alpha" format="float" />
+    <attr name="fadeDuration" format="integer" />
+    <attr name="viewAspectRatio" format="float" />
+    <attr name="placeholderImage" format="reference" />
+    <attr name="placeholderImageScaleType">
+        <enum name="none" value="-1" />
+        <enum name="center" value="4" />
+        <enum name="centerCrop" value="6" />
+        <enum name="centerInside" value="5" />
+        <enum name="fitCenter" value="2" />
+        <enum name="fitEnd" value="3" />
+        <enum name="fitStart" value="1" />
+        <enum name="fitXY" value="0" />
+        <enum name="focusCrop" value="7" />
+    </attr>
+    <attr name="retryImage" format="reference" />
+    <attr name="retryImageScaleType">
+        <enum name="none" value="-1" />
+        <enum name="center" value="4" />
+        <enum name="centerCrop" value="6" />
+        <enum name="centerInside" value="5" />
+        <enum name="fitCenter" value="2" />
+        <enum name="fitEnd" value="3" />
+        <enum name="fitStart" value="1" />
+        <enum name="fitXY" value="0" />
+        <enum name="focusCrop" value="7" />
+    </attr>
+    <attr name="failureImage" format="reference" />
+    <attr name="failureImageScaleType">
+        <enum name="none" value="-1" />
+        <enum name="center" value="4" />
+        <enum name="centerCrop" value="6" />
+        <enum name="centerInside" value="5" />
+        <enum name="fitCenter" value="2" />
+        <enum name="fitEnd" value="3" />
+        <enum name="fitStart" value="1" />
+        <enum name="fitXY" value="0" />
+        <enum name="focusCrop" value="7" />
+    </attr>
+    <attr name="progressBarImage" format="reference" />
+    <attr name="progressBarImageScaleType">
+        <enum name="none" value="-1" />
+        <enum name="center" value="4" />
+        <enum name="centerCrop" value="6" />
+        <enum name="centerInside" value="5" />
+        <enum name="fitCenter" value="2" />
+        <enum name="fitEnd" value="3" />
+        <enum name="fitStart" value="1" />
+        <enum name="fitXY" value="0" />
+        <enum name="focusCrop" value="7" />
+    </attr>
+    <attr name="progressBarAutoRotateInterval" format="integer" />
+    <attr name="actualImageScaleType">
+        <enum name="none" value="-1" />
+        <enum name="center" value="4" />
+        <enum name="centerCrop" value="6" />
+        <enum name="centerInside" value="5" />
+        <enum name="fitCenter" value="2" />
+        <enum name="fitEnd" value="3" />
+        <enum name="fitStart" value="1" />
+        <enum name="fitXY" value="0" />
+        <enum name="focusCrop" value="7" />
+    </attr>
+    <attr name="backgroundImage" format="reference" />
+    <attr name="overlayImage" format="reference" />
+    <attr name="pressedStateOverlayImage" format="reference" />
+    <attr name="roundAsCircle" format="boolean" />
+    <attr name="roundedCornerRadius" format="dimension" />
+    <attr name="roundTopLeft" format="boolean" />
+    <attr name="roundTopRight" format="boolean" />
+    <attr name="roundBottomRight" format="boolean" />
+    <attr name="roundBottomLeft" format="boolean" />
+    <attr name="roundWithOverlayColor" format="color" />
+    <attr name="roundingBorderWidth" format="dimension" />
+    <attr name="roundingBorderColor" format="color" />
+    <attr name="roundingBorderPadding" format="dimension" />
+    <attr name="cardBackground" format="reference|color" />
+    <attr name="vehicleName" format="reference|color" />
+    <attr name="vehicleLogo" format="reference|color" />
+    <attr name="cardTitle" format="string" />
+    <attr name="info" format="string" />
+    <attr name="firstIv" format="reference" />
+    <attr name="secendIv" format="reference" />
+    <attr name="cardType" format="string" />
+    <attr name="cardIcon" format="reference" />
+    <attr name="cardName" format="string" />
+    <attr name="hdividerWidth" format="dimension" />
+    <attr name="dividerWidth" format="dimension" />
+    <attr name="ptrHeaderPadding" format="dimension" />
+    <attr name="ptrFooterPadding" format="dimension" />
+    <attr name="ptrRefreshableViewBackground" format="reference|color" />
+    <attr name="ptrHeaderBackground" format="reference|color" />
+    <attr name="ptrHeaderTextColor" format="reference|color" />
+    <attr name="ptrHeaderSubTextColor" format="reference|color" />
+    <attr name="ptrMode">
+        <flag name="both" value="0x00000003" />
+        <flag name="disabled" value="0x00000000" />
+        <flag name="manualOnly" value="0x00000004" />
+        <flag name="pullDownFromTop" value="0x00000001" />
+        <flag name="pullFromEnd" value="0x00000002" />
+        <flag name="pullFromStart" value="0x00000001" />
+        <flag name="pullUpFromBottom" value="0x00000002" />
+    </attr>
+    <attr name="ptrShowIndicator" format="reference|boolean" />
+    <attr name="ptrDrawable" format="reference" />
+    <attr name="ptrDrawableStart" format="reference" />
+    <attr name="ptrDrawableEnd" format="reference" />
+    <attr name="ptrOverScroll" format="reference|boolean" />
+    <attr name="ptrHeaderTextAppearance" format="reference" />
+    <attr name="ptrSubHeaderTextAppearance" format="reference" />
+    <attr name="ptrAnimationStyle">
+        <flag name="flip" value="0x00000001" />
+        <flag name="rotate" value="0x00000000" />
+    </attr>
+    <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+    <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+    <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+    <attr name="ptrAdapterViewBackground" format="reference|color" />
+    <attr name="ptrDrawableTop" format="reference" />
+    <attr name="ptrDrawableBottom" format="reference" />
+    <attr name="RP_roundColor" format="color" />
+    <attr name="RP_roundProgressColor" format="color" />
+    <attr name="RP_roundWidth" format="dimension" />
+    <attr name="RP_roundProgressWidth" format="dimension" />
+    <attr name="RP_textColor" format="color" />
+    <attr name="RP_textSize" format="dimension" />
+    <attr name="RP_max" format="integer" />
+    <attr name="RP_textIsDisplayable" format="boolean" />
+    <attr name="RP_style">
+        <enum name="FILL" value="1" />
+        <enum name="STROKE" value="0" />
+    </attr>
+    <attr name="actualImageUri" format="string" />
+    <attr name="key_name" format="string" />
+    <attr name="key_desc" format="string" />
+    <attr name="checked" format="boolean" />
+    <attr name="button" format="reference" />
+    <attr name="tabButtonStyle" format="reference" />
+    <attr name="checkedButton" format="integer" />
+    <attr name="orientation">
+        <enum name="horizontal" value="0" />
+        <enum name="vertical" value="1" />
+    </attr>
+    <attr name="textColorNight" format="reference" />
+    <attr name="backgroundNight" format="reference" />
+    <attr name="backgroundRid" format="reference" />
+    <attr name="twoButtonMode" format="boolean" localization="suggested" />
+    <attr name="title" format="string" localization="suggested" />
+    <attr name="titleSize" format="integer" localization="suggested" />
+    <attr name="titleColor" format="color" localization="suggested" />
+    <attr name="rightImage" format="integer" localization="suggested" />
+    <attr name="fakeInput" format="boolean" localization="suggested" />
+    <attr name="searchBarMode" format="boolean" localization="suggested" />
+    <attr name="TopBarType">
+        <enum name="black" value="1" />
+        <enum name="white" value="0" />
+    </attr>
+    <attr name="vpiCirclePageIndicatorStyle" format="reference" />
+    <attr name="vpiLinePageIndicatorStyle" format="reference" />
+    <attr name="vpiTitlePageIndicatorStyle" format="reference" />
+    <attr name="vpiTabPageIndicatorStyle" format="reference" />
+    <attr name="vpiUnderlinePageIndicatorStyle" format="reference" />
+    <attr name="border_thickness" format="dimension" />
+    <attr name="border_color" format="color" />
+</resources>

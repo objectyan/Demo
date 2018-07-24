@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/frag_streetscape" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/mapview_frame" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <com.baidu.navi.view.MapTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" />
+    <RelativeLayout android:id="@id/info_layout" android:layout_width="fill_parent" android:layout_height="70.0dip" android:layout_alignParentBottom="true">
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_poi_gonavi" android:background="@drawable/bnav_carmode_blue_bg_pressed_selector" android:paddingLeft="20.0dip" android:paddingRight="20.0dip" android:clickable="true" android:layout_width="120.0dip" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <TextView android:textSize="20.0sp" android:textColor="#ffffffff" android:id="@id/tv_poi_gonavi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_navi" android:singleLine="true" />
+            <TextView android:textSize="14.0sp" android:textColor="#ffffffff" android:id="@id/tv_poi_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:lines="1" />
+        </LinearLayout>
+        <View android:id="@id/line_poi_vertical_a" android:visibility="gone" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_toLeftOf="@id/btn_poi_gonavi" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:background="#e51d2026" android:paddingLeft="10.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/line_poi_vertical_a">
+            <TextView android:textSize="20.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:ellipsize="end" android:id="@id/tv_poi_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+            <TextView android:textSize="14.0sp" android:textColor="@color/carmode_common_second_text" android:ellipsize="end" android:gravity="center" android:id="@id/tv_poi_addr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:singleLine="true" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

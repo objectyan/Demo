@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:paddingTop="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/card_desc_size" android:textColor="@color/fifty_percent_white" android:id="@id/conversation_share_single_item0" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="" android:singleLine="true" android:layout_weight="1.0" />
+    <TextView android:textSize="@dimen/card_desc_size" android:textColor="@color/fifty_percent_white" android:id="@id/conversation_share_single_item1" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="" android:singleLine="true" android:layout_weight="1.0" />
+    <TextView android:textSize="@dimen/card_desc_size" android:textColor="@color/fifty_percent_white" android:id="@id/conversation_share_single_item2" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="" android:singleLine="true" android:layout_weight="1.0" />
+</LinearLayout>

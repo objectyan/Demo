@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="64.0dip">
+        <ImageButton android:id="@id/fragment_radio_channel_back" android:background="@android:color/transparent" android:focusable="true" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:src="@drawable/com_ic_back" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="随心听" android:layout_weight="1.0" />
+    </LinearLayout>
+    <RelativeLayout android:layout_gravity="center_horizontal" android:id="@id/fragment_radio_channel_viewpager_container" android:clipChildren="false" android:layout_width="@dimen/radio_channel_container_width_big_screen" android:layout_height="@dimen/radio_channel_item_container_height" android:layout_marginTop="20.0dip">
+        <com.baidu.carlife.view.recyclingviewpager.RecyclingViewPager android:id="@id/fragment_radio_channel_viewpager" android:clipChildren="false" android:layout_width="@dimen/radio_channel_item_width" android:layout_height="@dimen/radio_channel_item_height" android:layout_centerInParent="true" android:overScrollMode="never" />
+        <View android:id="@id/fragment_radio_channel_focus_view" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:layout_width="@dimen/radio_channel_item_container_height" android:layout_height="@dimen/radio_channel_item_container_height" android:layout_centerInParent="true" />
+    </RelativeLayout>
+</LinearLayout>

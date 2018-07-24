@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/iv_launch" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:id="@id/login_head" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true">
+        <com.baidu.navi.view.CircularImage android:layout_gravity="center" android:id="@id/login_circular_head" android:layout_width="70.0dip" android:layout_height="70.0dip" android:src="@drawable/bnav_user_center_user_head" />
+        <ImageView android:layout_gravity="center" android:id="@id/login_circular_head_outline" android:visibility="gone" android:layout_width="70.0dip" android:layout_height="70.0dip" android:src="@drawable/carmode_user_center_user_head_outline" android:contentDescription="@null" />
+        <TextView android:textSize="14.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/login_head_tip" android:visibility="gone" android:layout_width="70.0dip" android:layout_height="70.0dip" android:text="点击登录" />
+    </FrameLayout>
+    <TextView android:textSize="12.0sp" android:textColor="#ffa5aec3" android:id="@id/login_user_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/default_user_name" android:layout_below="@id/login_head" android:layout_centerHorizontal="true" />
+    <RelativeLayout android:id="@id/login_mile_panel" android:background="#a61d2026" android:layout_width="fill_parent" android:layout_height="45.0dip" android:layout_below="@id/login_user_name" android:layout_alignParentBottom="true">
+        <TextView android:textSize="14.0sp" android:textColor="#ffa5aec3" android:gravity="center_vertical" android:id="@id/login_total_mile" android:paddingLeft="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="您已经行驶35600KM 绕地球2圈" android:layout_centerInParent="true" />
+    </RelativeLayout>
+</RelativeLayout>

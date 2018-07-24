@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/bnav_cruise_ui_map_container" android:background="@android:color/transparent" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:paddingLeft="48.0dip" android:paddingRight="48.0dip" android:layout_width="fill_parent" android:layout_height="57.0dip">
+        <com.baidu.carlife.view.TopBarView android:id="@id/time_battary_top_bar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+    <LinearLayout android:gravity="center_horizontal" android:orientation="horizontal" android:id="@id/layout_cruise_top" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="16.0dip" android:layout_alignParentLeft="true" android:layout_alignParentTop="true">
+        <RelativeLayout android:id="@id/bnav_rg_top_status_panel" android:background="@color/cl_bg_e" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="@dimen/nsdk_rg_top_status_port_height">
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/layout_cruise_satellite_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/nsdk_rg_cp_icon_edge_margin" android:layout_alignParentLeft="true" android:layout_centerVertical="true">
+                <ImageView android:id="@id/img_cruise_satellite" android:layout_width="16.0dip" android:layout_height="16.0dip" android:src="@drawable/nsdk_drawable_rg_ic_satellite_red" />
+                <TextView android:textSize="12.0sp" android:textColor="#b2ffffff" android:id="@id/text_cruise_satellite_num" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="3.0dip" android:text="0" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/bnav_rg_sg_battery_panel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/nsdk_rg_cp_icon_edge_margin" android:layout_alignParentRight="true" android:layout_centerVertical="true">
+                <TextView android:textSize="12.0sp" android:textColor="#b2ffffff" android:id="@id/bnav_rg_sg_battery_percent" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="3.0dip" android:text="35%" />
+                <ImageView android:id="@id/bnav_rg_sg_battery_icon" android:layout_width="16.0dip" android:layout_height="16.0dip" android:src="@drawable/nsdk_drawable_rg_ic_battery_red" />
+            </LinearLayout>
+        </RelativeLayout>
+        <View android:id="@id/bnav_rg_divider" android:background="@color/cl_bg_b_night" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="0.5dip" />
+        <RelativeLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_cruise_camera_icon" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageView android:id="@id/img_cruise_camera_icon" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_centerInParent="true" />
+            <ImageView android:id="@id/img_cruise_speed_indicator" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_centerInParent="true" />
+            <TextView android:textSize="20.0sp" android:textStyle="bold" android:textColor="@android:color/black" android:id="@id/text_cruise_camera_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" />
+        </RelativeLayout>
+        <RelativeLayout android:gravity="center" android:id="@id/layout_cruise_second_camera_icon" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="12.0dip">
+            <ImageView android:id="@id/img_cruise_second_camera_icon" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_centerInParent="true" />
+        </RelativeLayout>
+        <FrameLayout android:gravity="center" android:id="@id/layout_cruise_top_middle_info" android:paddingTop="0.0dip" android:paddingBottom="0.0dip" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <TextView android:textSize="32.0sp" android:textStyle="bold" android:textColor="@android:color/white" android:gravity="center" android:id="@id/text_cruise_misc_status" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="@string/nsdk_string_cruise_no_network_short" />
+            <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@id/layout_cruise_speed_info" android:paddingTop="10.0dip" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_cruise_speed" android:layout_width="wrap_content" android:layout_height="wrap_content">"
+<TextView android:textSize="@dimen/nsdk_text_size_rg_normal_info" android:textColor="@color/nsdk_text_rg_normal_info" android:id="@id/text_cruise_speed_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nsdk_string_cruise_current_speed" />
+                    <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                        <TextView android:textSize="@dimen/nsdk_text_size_rg_num_info" android:textStyle="bold" android:textColor="@color/nsdk_rg_main_info" android:id="@id/text_cruise_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="120" />
+                        <TextView android:textSize="@dimen/nsdk_text_size_rg_normal_info" android:textColor="@color/nsdk_text_rg_normal_info" android:id="@id/text_cruise_speed_unit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:text="@string/nsdk_string_cruise_speed_unit" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@id/layout_cruise_camera_info" android:background="#ffcc0000" android:paddingTop="2.0dip" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <LinearLayout android:orientation="horizontal" android:id="@id/layout_cruise_distance" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <TextView android:textSize="@dimen/nsdk_text_size_rg_num_info" android:textStyle="bold" android:textColor="@color/nsdk_rg_main_info" android:id="@id/text_cruise_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="700米" />
+                    <TextView android:textSize="@dimen/nsdk_text_size_rg_normal_info" android:textColor="@color/nsdk_text_rg_normal_info" android:id="@id/text_cruise_distance_suffix" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nsdk_string_cruise_distance_suffix" />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal" android:id="@id/layout_cruise_camera_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip">
+                    <TextView android:textSize="@dimen/nsdk_text_size_rg_normal_info" android:textColor="@color/nsdk_rg_main_info" android:id="@id/text_cruise_camera_desc_prefix" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nsdk_string_cruise_camera_desc_prefix" />
+                    <TextView android:textSize="@dimen/nsdk_text_size_rg_normal_info" android:textColor="@color/nsdk_rg_main_info" android:id="@id/text_cruise_camera_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="限速拍照" android:maxLines="1" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+        <View android:id="@id/line_left_panel" android:background="@drawable/nsdk_drawable_common_line_horizontal" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_marginLeft="20.0dip" android:layout_marginRight="20.0dip" />
+    </LinearLayout>
+    <TextView android:textSize="20.0sp" android:textStyle="bold" android:textColor="@android:color/white" android:gravity="center" android:id="@id/text_cruise_net_status" android:background="#80000000" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="47.0dip" android:text="@string/nsdk_string_cruise_no_network_short" android:layout_toRightOf="@id/layout_cruise_top" android:layout_alignParentTop="true" />
+    <RelativeLayout android:id="@id/voice_location_quit_button_layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="12.0dip" android:layout_marginBottom="12.0dip" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true">
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/bnav_cruise_btn_its_voice_witch" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageView android:id="@id/image_its_voice_switch" android:background="@drawable/map_bg_btn_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:src="@drawable/map_ic_com_broadcast_on" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center" android:id="@id/bnav_cruise_location_layout" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:layout_below="@id/bnav_cruise_btn_its_voice_witch">
+            <ImageButton android:gravity="center" android:id="@id/bnav_cruise_btn_location" android:background="@drawable/map_bg_btn_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:src="@drawable/nsdk_drawable_cr_ic_locate_car_point" android:scaleType="centerInside" />
+            <ProgressBar android:id="@id/bnav_cruise_location_progress" android:background="@drawable/nsdk_drawable_rg_ic_locate_loading" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" style="@style/LocationProgressStyle" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center" android:id="@id/bnav_cruise_rg_btn_quit" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:layout_below="@id/bnav_cruise_location_layout">
+            <ImageView android:id="@id/img_cruise_quit" android:background="@drawable/map_bg_btn_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:src="@drawable/map_ic_com_close" android:scaleType="centerInside" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/bnav_cruise_map_scale_layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginBottom="15.0dip" android:layout_toRightOf="@id/voice_location_quit_button_layout" android:layout_alignParentBottom="true">
+        <TextView android:textSize="12.0sp" android:textColor="#ff333333" android:id="@id/bnav_cruise_scale_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="100米" android:layout_centerHorizontal="true" />
+        <TextView android:id="@id/bnav_cruise_scale_indicator" android:background="@drawable/nsdk_drawable_rg_ic_scale_indicator" android:layout_width="wrap_content" android:layout_height="7.0dip" android:layout_below="@id/bnav_cruise_scale_title" android:layout_centerHorizontal="true" />
+        <ImageView android:id="@id/app_name" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/map_home_watermark" android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/map_control_panel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="12.0dip" android:layout_marginBottom="12.0dip" android:layout_alignParentRight="true" android:layout_alignParentBottom="true">
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/bnav_cruise_btn_its_switch" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageView android:id="@id/image_its_switch" android:background="@drawable/map_bg_btn_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:src="@drawable/map_ic_com_traffic_off" />
+            <TextView android:textColor="@android:color/darker_gray" android:layout_gravity="center_horizontal" android:id="@id/its_text" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="路况" />
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:id="@id/bnav_cruise_zoom_panel" android:background="@drawable/map_bg_btn" android:padding="4.0dip" android:layout_width="56.0dip" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:layout_below="@id/bnav_cruise_btn_its_switch">
+            <ImageView android:id="@id/bnav_cruise_btn_zoom_in" android:background="@drawable/common_btn_bg_zoom_in_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:src="@drawable/map_ic_home_enlarge" android:scaleType="center" />
+            <View android:id="@id/zoom_dirver" android:background="#ffd9d9d9" android:layout_width="fill_parent" android:layout_height="1.0px" />
+            <ImageView android:id="@id/bnav_cruise_btn_zoom_out" android:background="@drawable/common_btn_bg_zoom_out_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:src="@drawable/map_ic_home_narrow" android:scaleType="center" />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:id="@id/layout_cruise_bottom" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="55.0dip" android:layout_marginLeft="4.0dip" android:layout_marginRight="8.0dip" android:layout_marginBottom="8.0dip" android:layout_toRightOf="@id/layout_cruise_top" android:layout_alignParentBottom="true">
+        <TextView android:layout_width="0.0dip" android:layout_height="1.0dip" android:layout_weight="1.0" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/layout_cruise_road_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" android:layout_marginRight="96.0dip" android:layout_marginBottom="12.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
+        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:textSize="14.0sp" android:textColor="@color/nsdk_cruise_text_assis" android:layout_gravity="center" android:id="@id/text_cruise_road_title" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nsdk_string_cruise_current_road" />
+            <TextView android:textSize="18.0sp" android:textStyle="bold" android:textColor="@color/cl_text_a" android:gravity="center" android:id="@id/text_cruise_road_name" android:background="@color/cl_bg_d" android:paddingLeft="20.0dip" android:paddingRight="20.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="168.0dip" android:minHeight="56.0dip" android:text="@string/nsdk_string_cruise_unknow_road" android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

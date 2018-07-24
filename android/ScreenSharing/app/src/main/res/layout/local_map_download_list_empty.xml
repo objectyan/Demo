@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:id="@id/local_map_download_list_empty" android:background="#ffffffff" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TableLayout android:orientation="vertical" android:paddingLeft="20.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:stretchColumns="1">
+        <TableRow>
+            <TextView android:textSize="16.0sp" android:textColor="#ff363636" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:layout_span="2" android:text="暂无下载，点击“城市列表”进行下载吧！" />
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16.0sp" android:textColor="#ff363636" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="25.0dip" android:layout_span="2" android:text="使用离线地图的好处：" />
+        </TableRow>
+        <TableRow>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_span="2">
+                <TextView android:textSize="14.0sp" android:textColor="#ff3385ff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="2.0dip" android:layout_marginTop="13.0dip" android:text="●" />
+                <TextView android:textSize="14.0sp" android:textColor="#ff363636" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="13.0dip" android:text="  下载离线地图，没网也能搜地点" />
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_span="2">
+                <TextView android:textSize="14.0sp" android:textColor="#ff3385ff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="2.0dip" android:layout_marginTop="13.0dip" android:text="●" />
+                <TextView android:textSize="14.0sp" android:textColor="#ff363636" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="13.0dip" android:text="  节省您90%的流量，不再为费流量发愁" />
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_span="2">
+                <TextView android:textSize="14.0sp" android:textColor="#ff3385ff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="2.0dip" android:layout_marginTop="13.0dip" android:text="●" />
+                <TextView android:textSize="14.0sp" android:textColor="#ff363636" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="13.0dip" android:text="  网络不佳也能顺畅用地图" />
+            </LinearLayout>
+        </TableRow>
+    </TableLayout>
+</ScrollView>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/ll_frag_setting" android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navi.view.CommonTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" app:middleContentText="@string/setting" />
+    <ScrollView android:id="@id/vertical_layout" android:scrollbars="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <LinearLayout android:orientation="vertical" android:id="@id/system_setting" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <TextView android:id="@id/system_setting_category" android:layout_width="fill_parent" android:layout_height="30.0dip" android:text="@string/system_setting" style="@style/Text.SettingsCategeoryText" />
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_launch_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_launch_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/default_launch_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_launch_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_day_night_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_day_night_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day_night_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_day_night_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_power_save_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_power_save_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/power_save_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_power_save_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:orientation="horizontal" android:id="@id/rl_voice_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_voice_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/voice_mode_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_voice_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:orientation="horizontal" android:id="@id/rl_push_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_push_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/push_mode_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_push_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:id="@id/speak_setting" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <TextView android:id="@id/speak_category" android:layout_width="fill_parent" android:layout_height="30.0dip" android:text="@string/speak_setting" style="@style/Text.SettingsCategeoryText" />
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_speak_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_speak_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speak_mode_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_speak_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <LinearLayout android:orientation="vertical" android:id="@id/ll_speak_content" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                    <LinearLayout android:layout_width="fill_parent" android:layout_height="60.0dip">
+                        <TextView android:layout_gravity="center_vertical" android:id="@id/tv_speak_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speak_content_title" style="@style/Text.CarModeSettingsText" />
+                    </LinearLayout>
+                    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="10.0dip" android:baselineAligned="false">
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_road_condition" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_elec_eye" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_elec_eye" />
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_road_condition" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_road_condition" />
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_bobao_setting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_over_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_limit_speed" />
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_straight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_straight" />
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_safe_setting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_safe_drive" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_safe_drive" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:id="@id/other_setting" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <TextView android:id="@id/other_setting_category" android:layout_width="fill_parent" android:layout_height="30.0dip" android:text="@string/other_setting" style="@style/Text.SettingsCategeoryText" />
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_screen_on" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_screen_always_on" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/navi_screen_awalys_on" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_screen_always_on" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_wifi_update" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_wifi_auto_update" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wifi_auto_update_data" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_wifi_auto_update" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_routplan_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_routplan_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pref_route_plan_mode" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_routplan_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_search_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_search_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pref_search_mode" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_search_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_dest_park_search" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_dest_park_search" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/dest_park_search" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_dest_park_search" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_route_guide_end" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_route_guide_end" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/route_guide_end_setting" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/st_route_guide_end" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_gps_hotstart" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_gps_hotstart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/gps_hot_start" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_gps_hotstart" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_ugc_show" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_ugc_show" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/setting_ugc_show" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.navisdk.ui.widget.StatusButton android:id="@id/bt_ugc_show" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+                <RelativeLayout android:id="@id/rl_about" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_about_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about" style="@style/Text.CarModeSettingsText" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/carmode_common_divide_line" android:layout_width="fill_parent" android:layout_height="1.0px" />
+            </LinearLayout>
+            <Button android:textSize="18.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/tv_lougout" android:background="@drawable/logout_bt_bg_selector" android:layout_width="fill_parent" android:layout_height="50.0dip" android:text="@string/user_logout" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

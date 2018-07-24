@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/tips_navi" android:background="@drawable/tips_navi_bg" android:paddingTop="20.0dip" android:paddingBottom="20.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_turn_icon" android:layout_width="@dimen/navi_tips_direct_size" android:layout_height="@dimen/navi_tips_direct_size" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_c" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_c" />
+    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="@dimen/navi_tips_direct_size" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_a" android:layout_weight="1.0">
+        <com.baidu.carlife.view.MarqueeTextView android:textSize="28.0dip" android:textStyle="bold" android:textColor="@color/cl_text_a5_bgtext" android:id="@id/tv_front_info" android:layout_width="wrap_content" android:layout_height="0.0dip" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_a" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_b" android:text="999米后" android:layout_weight="1.0" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <com.baidu.carlife.view.MarqueeTextView android:textSize="16.0dip" android:textColor="@color/cl_text_a2_bgtext" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_a" android:text="进入" />
+            <com.baidu.carlife.view.MarqueeTextView android:textSize="26.0dip" android:textStyle="bold" android:textColor="@color/cl_text_a5_bgtext" android:id="@id/tv_next_road_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="深南立交南路" />
+        </LinearLayout>
+    </LinearLayout>
+    <View android:background="@color/cl_line_a4_tip" android:layout_width="1.0dip" android:layout_height="@dimen/navi_tips_direct_size_32" />
+    <ImageButton android:id="@id/ib_cancle_tips" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:layout_width="@dimen/navi_tips_direct_size_32" android:layout_height="@dimen/navi_tips_direct_size_32" android:layout_marginLeft="@dimen/navi_tips_horizontal_margin_b" android:layout_marginRight="@dimen/navi_tips_horizontal_margin_b" android:src="@drawable/ib_cancle_tips" android:scaleType="fitXY" />
+</LinearLayout>

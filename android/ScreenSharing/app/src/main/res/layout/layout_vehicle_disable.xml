@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:textSize="20.0dip" android:textColor="@color/cl_text_b_dialog" android:gravity="center" android:id="@id/tv_msg" android:background="@drawable/com_dialog_bg" android:layout_width="350.0dip" android:layout_height="100.0dip" android:text="@string/error_vehicle_disable" android:layout_centerInParent="true"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

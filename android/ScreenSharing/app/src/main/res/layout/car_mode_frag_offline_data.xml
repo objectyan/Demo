@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:widget="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:background="#ff23262d" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/bottom_status">
+        <LinearLayout android:gravity="center" android:layout_gravity="center" android:orientation="horizontal" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <ImageView android:layout_gravity="center" android:id="@id/img_carmode_bar_back" android:background="@drawable/carmode_titlebar_special_selector" android:focusable="true" android:layout_width="wrap_content" android:layout_height="60.0dip" android:src="@drawable/carmode_titlebar_back_icon" android:scaleType="centerInside" android:minWidth="100.0dip" />
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_offline_title_text_pressed" android:gravity="center" android:layout_gravity="center" android:id="@id/offline_data_undownload" android:background="@drawable/carmode_offline_title_press_bg_selector" android:focusable="true" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="@string/nsdk_string_od_offline_data_undownload" android:layout_weight="1.0" />
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_offline_title_text_normal" android:gravity="center" android:layout_gravity="center" android:id="@id/offline_data_download" android:background="@drawable/carmode_offline_title_normal_bg_selector" android:focusable="true" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="@string/nsdk_string_od_offline_data_downloaded" android:layout_weight="1.0" />
+        </LinearLayout>
+        <ListView android:id="@id/vertical_list_view" android:drawingCacheQuality="low" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="0.0dip" android:layout_marginRight="0.0dip" android:listSelector="@drawable/carmode_list_bg_selector" style="@style/NaviExpandableListStyle" />
+        <LinearLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <com.baidu.navi.view.HorizontalListView android:id="@id/horiontal_list_view" android:background="@android:color/transparent" android:visibility="gone" android:drawingCacheQuality="low" android:layout_width="fill_parent" android:layout_height="131.0dip" />
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/bottom_status" android:background="@color/carmode_offline_diskpace_text" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="60.0dip" android:layout_alignParentBottom="true">
+        <TextView android:textSize="14.0sp" android:textColor="#ffffffff" android:id="@id/textview_disk_space" android:focusable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:text="@string/offline_data_disk_space" android:layout_centerVertical="true" />
+        <ImageView android:id="@id/imageview_btn_taskStatus" android:focusable="false" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bg_texture" />
+        <LinearLayout android:gravity="center" android:id="@id/update_log_layout" android:paddingLeft="15.0dip" android:paddingRight="15.0dip" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <TextView android:id="@id/textview_update_log" android:focusable="false" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/offline_data_update_log" android:layout_centerVertical="true" style="@style/NSDK_Text.provinceCarStatus" />
+        </LinearLayout>
+    </RelativeLayout>
+    <FrameLayout android:id="@id/carmode_frag_offline_data_layout_temp" android:background="@color/cl_bg_c_main" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageButton android:id="@id/carmode_frag_offline_data_back" android:background="@drawable/com_bg_btn_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_marginLeft="16.0dip" android:layout_marginTop="32.0dip" android:src="@drawable/com_titlebar_back_selector" />
+        <TextView android:textSize="@dimen/voice_domain_text_size_18" android:textColor="@color/cl_text_a5_title" android:layout_gravity="center" android:focusable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="离线地图更新中，敬请关注" />
+    </FrameLayout>
+</RelativeLayout>

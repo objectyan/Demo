@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="110.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="10.0dip" android:layout_marginRight="8.0dip" android:maxWidth="250.0dip" android:singleLine="true" />
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a4_content" android:gravity="center" android:id="@id/tv_state" android:paddingBottom="1.0dip" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@id/tv_name" android:layout_alignBottom="@id/tv_name" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/temp" android:layout_width="300.0dip" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="10.0dip" android:layout_marginBottom="6.0dip" android:layout_below="@id/tv_name">
+        <TextView android:text="@string/home_food_ququeid" style="@style/FoodQueuesTitle" />
+        <TextView android:text="@string/home_food_queuewaitnum1" style="@style/FoodQueuesTitle" />
+        <TextView android:text="@string/home_food_queuewaittime" style="@style/FoodQueuesTitle" />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="300.0dip" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_below="@id/temp">
+        <TextView android:id="@id/tv_queue_name" style="@style/FoodQueuesContent" />
+        <TextView android:id="@id/tv_queue_waitnum" style="@style/FoodQueuesContent" />
+        <TextView android:id="@id/tv_queue_waittime" style="@style/FoodQueuesContent" />
+    </LinearLayout>
+    <FrameLayout android:id="@id/btn_distant" android:background="@drawable/com_bg_item_selector" android:visibility="gone" android:layout_width="80.0dip" android:layout_height="fill_parent" android:layout_marginRight="16.0dip" android:layout_alignParentRight="true">
+        <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a2_content" android:layout_gravity="center" android:id="@id/tv_distant" android:layout_width="wrap_content" android:layout_height="wrap_content" android:drawableTop="@drawable/com_ic_navigate" />
+    </FrameLayout>
+</RelativeLayout>

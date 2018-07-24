@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/title_bar" layout="@layout/carlife_common_title_bar_new" />
+    <RelativeLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="16.0dip" android:layout_below="@id/title_bar">
+        <ImageView android:id="@id/iv_carlife_logo" android:layout_width="64.0dip" android:layout_height="64.0dip" android:src="@drawable/ic_launcher" android:scaleType="fitCenter" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:id="@id/tv_version_code" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="8.0dip" android:layout_toRightOf="@id/iv_carlife_logo" />
+        <ImageView android:layout_width="200.0dip" android:layout_height="20.0dip" android:layout_marginTop="8.0dip" android:src="@drawable/icon_head" android:scaleType="fitCenter" android:layout_below="@id/tv_version_code" android:layout_alignLeft="@id/tv_version_code" />
+    </RelativeLayout>
+    <TextView android:textSize="10.0sp" android:textColor="@color/cl_text_a5_title" android:id="@id/tv_version_right" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="8.0dip" android:text="@string/version_right" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+    <TextView android:textSize="10.0sp" android:textColor="@color/cl_text_a5_title" android:id="@id/tv_map_gps_number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dip" android:layout_marginBottom="2.0dip" android:text="@string/map_gps_number" android:layout_above="@id/tv_version_right" android:layout_centerHorizontal="true" />
+    <LinearLayout android:gravity="center_horizontal" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="40.0dip" android:layout_above="@id/tv_map_gps_number" android:layout_alignParentBottom="true">
+        <Button android:id="@id/btn_check_version" android:text="@string/check_update" style="@style/AboutButton" />
+        <Button android:id="@id/btn_service_terms" android:text="@string/service_terms" style="@style/AboutButton" />
+    </LinearLayout>
+</RelativeLayout>

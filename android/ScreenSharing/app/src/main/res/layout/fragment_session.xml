@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height">
+        <ImageButton android:id="@id/fragment_session_back" android:background="@android:color/transparent" android:layout_width="@dimen/common_item_width" android:layout_height="fill_parent" android:src="@mipmap/com_ic_back" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="最近会话" />
+    </LinearLayout>
+    <ListView android:id="@id/session_listview" style="@style/ListViewStyle" />
+    <TextView android:id="@id/session_empty_view" android:text="暂无消息记录" style="@style/Text.EmptyView" />
+</LinearLayout>

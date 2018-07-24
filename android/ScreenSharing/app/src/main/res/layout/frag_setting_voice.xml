@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include android:id="@id/title_bar" layout="@layout/carlife_common_title_bar_new" />
+    <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/voice_padding_default" android:layout_marginRight="@dimen/voice_padding_default" android:layout_below="@id/title_bar">
+        <ScrollView android:id="@id/sv_layout_common" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <include android:layout_gravity="center_horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" layout="@layout/voice_detail_command_all" />
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/common_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@id/nav_settings_top"
+        layout="@layout/nav_settings_top"
+        android:layout_width="fill_parent"
+        android:layout_height="54.0dip" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="7.0dip"
+            android:paddingRight="7.0dip"
+            android:scrollbarAlwaysDrawVerticalTrack="false"
+            android:scrollbarSize="0.0dip"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_daynight_mode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:layout_marginTop="8.0dip"
+                    android:background="@drawable/nav_settings_top_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/iv_daynight_right_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_common_icon_next_arrow"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@id/tv_daynight_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_modeswitch"
+                        android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                    <TextView
+                        android:id="@id/nav_settings_mode_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_daynight_right_image"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_modeswitch"
+                        android:textAppearance="@style/NavCommonListItemInfoText" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_powersave_mode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/iv_powersave_right_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_common_icon_next_arrow"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@id/tv_powersave_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_powersave_mode_switch"
+                        android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                    <TextView
+                        android:id="@id/nav_settings_powersave_mode_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_powersave_right_image"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_powersave_mode_switch"
+                        android:textAppearance="@style/NavCommonListItemInfoText" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_rp_net_mode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_bottom_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/iv_rp_net_mode_right_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_common_icon_next_arrow"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@id/tv_current_rp_net_mode_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:singleLine="true"
+                        android:text="@string/nav_settings_rp_net_mode_title"
+                        android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                    <TextView
+                        android:id="@id/tv_current_rp_net_mode_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_rp_net_mode_right_image"
+                        android:singleLine="true"
+                        android:text="@string/nav_settings_rp_net_mode_offline_subtitle"
+                        android:textAppearance="@style/NavCommonListItemInfoText" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_voice_mode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:layout_marginTop="8.0dip"
+                    android:background="@drawable/nav_settings_top_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/iv_voice_right_image"
+                        android:layout_width="40.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_common_icon_next_arrow"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@id/tv_voice_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_voice_mode_title"
+                        android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                    <TextView
+                        android:id="@id/nav_voice_mode_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_voice_right_image"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_navi_voice_mode_subtitle"
+                        android:textAppearance="@style/NavCommonListItemInfoText" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_voice_msg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_multiline_middle_normal"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <TextView
+                        android:id="@id/tv_current_voice_msg_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:singleLine="true"
+                        android:text="@string/menu_app_nav_settings_voice_msg_title"
+                        android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8.0dip"
+                    android:background="@drawable/nav_settings_multiline_bottom_normal"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="10.0dip"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_marginRight="15.0dip"
+                        android:layout_marginTop="10.0dip"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:orientation="vertical">
+
+                            <CheckBox
+                                android:id="@id/bnav_rg_menu_ele_camera"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6.0dip"
+                                android:button="@drawable/nsdk_drawable_common_checkbox_selector"
+                                android:text="@string/nsdk_string_ele_camera"
+                                android:textColor="#ff888888"
+                                android:textSize="14.0sp" />
+
+                            <CheckBox
+                                android:id="@id/bnav_rg_menu_front_road_condition"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:button="@drawable/nsdk_drawable_common_checkbox_selector"
+                                android:text="@string/nsdk_string_front_road_condition"
+                                android:textColor="#ff888888"
+                                android:textSize="14.0sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:orientation="vertical">
+
+                            <CheckBox
+                                android:id="@id/bnav_rg_menu_speed_limit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="6.0dip"
+                                android:button="@drawable/nsdk_drawable_common_checkbox_selector"
+                                android:text="@string/nsdk_string_speed_limit"
+                                android:textColor="#ff888888"
+                                android:textSize="14.0sp" />
+
+                            <CheckBox
+                                android:id="@id/bnav_rg_menu_straight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:button="@drawable/nsdk_drawable_common_checkbox_selector"
+                                android:text="@string/nsdk_string_speak_straight"
+                                android:textColor="#ff888888"
+                                android:textSize="14.0sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:orientation="vertical">
+
+                            <CheckBox
+                                android:id="@id/bnav_rg_menu_drive_safty"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:button="@drawable/nsdk_drawable_common_checkbox_selector"
+                                android:text="@string/nsdk_string_drive_safty"
+                                android:textColor="#ff888888"
+                                android:textSize="14.0sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_auto_update"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_top_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_settings_auto_update_cb"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_audo_update_multiline_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_auto_update_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_auto_update_title"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                        <TextView
+                            android:id="@id/tv_auto_update_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_marginTop="-3.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_auto_udpate_subtitle"
+                            android:textAppearance="@style/NavCommonListItemInfoText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_always_light"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_settings_always_light_cb"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_listitem_multiline_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_settings_always_light_cb"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_listitem_multiline_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_keep_screen_awake_title"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_park"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_settings_park_cb"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_settings_park_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_settings_park_cb"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_settings_park_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_park_info"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_walk_navi"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_walk_navi_subtitle"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_walk_navi_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_walk_navi_subtitle"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_walk_navi_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_walk_navi_info"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_real_enlargement"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_settings_real_enlargement_cb"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_real_enlargement_multiline_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_real_enlargement_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_real_enlargement_title"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                        <TextView
+                            android:id="@id/tv_real_enlargement_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_marginTop="-3.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_real_enlargement_subtitle"
+                            android:textAppearance="@style/NavCommonListItemInfoText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_settings_speech_interaction"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_settings_speech_interaction_cb"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_settings_speech_interaction_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_settings_speech_interaction_cb"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_settings_speech_interaction_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_settings_speech_interaction"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_fellow_show"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@id/nav_fellow_show_subtitle"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_fellow_show_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_fellow_show_subtitle"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_fellow_show_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_fellow_show_info"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_auto_level_mode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:background="@drawable/nav_settings_middle_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_auto_level_subtitle"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_auto_level_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_auto_level_subtitle"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_auto_sacle_info"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_collada_show"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:layout_marginBottom="8.0dip"
+                    android:background="@drawable/nav_settings_bottom_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_collada_show_subtitle"
+                        android:layout_width="@dimen/common_searchbox_home_voicebtn_width"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="-5.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_checkout_icon" />
+
+                    <LinearLayout
+                        android:id="@id/ll_collada_show_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_collada_show_subtitle"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_collada_show_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_collada_show_info"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                        <TextView
+                            android:id="@id/tv_collada_show_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_marginTop="-3.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_collada_show_info_detail"
+                            android:textAppearance="@style/NavCommonListItemInfoText" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="fill_parent"
+                        android:layout_height="1.0px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="10.0dip"
+                        android:layout_marginRight="10.0dip"
+                        android:background="@drawable/nav_settings_divider_line"
+                        android:contentDescription="@null" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@id/nav_ugc"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60.0dip"
+                    android:layout_marginBottom="8.0dip"
+                    android:background="@drawable/common_listitem_singleline_selector"
+                    android:clickable="true"
+                    android:minHeight="60.0dip">
+
+                    <ImageView
+                        android:id="@id/nav_ugc_subtitle"
+                        android:layout_width="40.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2.0dip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/nav_common_icon_next_arrow" />
+
+                    <LinearLayout
+                        android:id="@id/ll_ugc_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15.0dip"
+                        android:layout_toLeftOf="@id/nav_ugc_subtitle"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@id/tv_ugc_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_ugc_title"
+                            android:textAppearance="@style/NavCommonListItemTitleText" />
+
+                        <TextView
+                            android:id="@id/tv_ugc_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10.0dip"
+                            android:layout_marginTop="-3.0dip"
+                            android:singleLine="true"
+                            android:text="@string/nav_ugc_info"
+                            android:textAppearance="@style/NavCommonListItemInfoText" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <include
+            layout="@layout/common_title_bar_shadow"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top" />
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/common_dialog_right_list" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:background="@drawable/com_shape_dialog_bg" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+        <LinearLayout android:orientation="vertical" android:id="@id/btnlistview_left" android:visibility="gone" android:layout_width="72.0dip" android:layout_height="fill_parent">
+            <ImageButton android:id="@id/btnlistview_btn_prev" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="48.0dip" android:layout_marginTop="72.0dip" android:src="@drawable/com_ic_prev" android:scaleType="center" />
+            <FrameLayout android:layout_gravity="center_horizontal" android:id="@id/btnlistview_scroller" android:background="@color/transparent" android:layout_width="2.0dip" android:layout_height="192.0dip">
+                <FrameLayout android:id="@id/btnlistview_scroll_bar" android:background="#33ffffff" android:layout_width="fill_parent" android:layout_height="12.0dip" />
+            </FrameLayout>
+            <ImageButton android:id="@id/btnlistview_btn_next" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="48.0dip" android:src="@drawable/com_ic_next" android:scaleType="center" />
+        </LinearLayout>
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:gravity="center" android:id="@id/tv_title" android:layout_width="fill_parent" android:layout_height="64.0dip" android:singleLine="true" android:layout_toRightOf="@id/btnlistview_left" />
+        <ListView android:id="@id/lv_menu" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/com_bg_item_selector" android:cacheColorHint="@android:color/transparent" android:divider="@null" android:layout_toRightOf="@id/btnlistview_left" android:layout_below="@id/tv_title" />
+    </RelativeLayout>
+</RelativeLayout>

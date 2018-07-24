@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/carmode_cr_layout_web_parent" android:layout_width="fill_parent" android:layout_height="120.0dip">
+        <WebView android:id="@id/carmode_cl_webview" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/carmode_cl_webViewMark" android:background="#ff2e333c" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ImageView android:background="@drawable/bnav_carmode_cr_webview_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+    </RelativeLayout>
+    <ImageView android:id="@id/carmode_cr_refresh" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginRight="10.0dip" android:src="@drawable/carmode_refresh_icon" android:scaleType="centerInside" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    <RelativeLayout android:orientation="vertical" android:id="@id/carmode_cr_layout_grid_parent" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/carmode_cr_layout_web_parent">
+        <GridView android:gravity="center" android:id="@id/carmode_cr_plungin_gridview" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/carmode_list_bg_selector" android:stretchMode="columnWidth" android:numColumns="3" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" />
+    </RelativeLayout>
+    <FrameLayout android:gravity="center" android:id="@id/fl_mark" android:background="#c0000000" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <TextView android:textSize="24.0sp" android:gravity="center" android:layout_gravity="center" android:id="@id/tv_choice" android:background="#ffffffff" android:layout_width="200.0dip" android:layout_height="60.0dip" android:text="更改车辆信息" />
+    </FrameLayout>
+</RelativeLayout>

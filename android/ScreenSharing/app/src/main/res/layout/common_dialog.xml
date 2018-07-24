@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="#fff2f2f2" android:layout_width="304.0dip" android:layout_height="170.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="18.0sp" android:textColor="@color/card_bg" android:gravity="center" android:id="@id/dialog_content" android:layout_width="fill_parent" android:layout_height="120.0dip" android:text="I am a Dialog" android:layout_centerInParent="true" />
+    <ImageView android:background="@color/card_bg" android:layout_width="fill_parent" android:layout_height="1.0dip" android:alpha="0.2" />
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="48.0dip" android:layout_below="@id/text_name">
+        <TextView android:textSize="18.0sp" android:textColor="@color/card_bg" android:gravity="center" android:id="@id/dialog_left_button" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="取消" android:layout_weight="1.0" android:layout_centerInParent="true" />
+        <ImageView android:background="@color/card_bg" android:layout_width="1.0dip" android:layout_height="fill_parent" android:alpha="0.2" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/card_bg" android:gravity="center" android:id="@id/dialog_right_button" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="确定" android:layout_weight="1.0" android:layout_centerInParent="true" />
+    </LinearLayout>
+</LinearLayout>

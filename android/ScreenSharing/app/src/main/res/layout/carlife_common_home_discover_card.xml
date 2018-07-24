@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/home_ic_discover_card_shadow" android:layout_width="@dimen/home_card_focus_view_width" android:layout_height="@dimen/home_card_focus_view_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:orientation="vertical" android:id="@id/home_card_ll" android:background="#3394b6ff" android:layout_width="@dimen/home_card_width" android:layout_height="@dimen/home_card_height" android:layout_centerInParent="true">
+        <ImageView android:id="@id/card_iv_icon" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_marginTop="36.0dip" android:layout_centerHorizontal="true" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:gravity="center_horizontal" android:id="@id/card_tv_name" android:paddingLeft="12.0dip" android:paddingRight="12.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="38.0dip" android:layout_below="@id/card_iv_icon" android:layout_centerHorizontal="true" />
+        <View android:id="@id/red_point" android:background="@drawable/com_shape_red_point" android:visibility="gone" android:layout_width="10.0dip" android:layout_height="10.0dip" android:layout_marginLeft="102.0dip" android:layout_marginTop="116.0dip" />
+    </RelativeLayout>
+    <View android:id="@id/card_press_view" android:background="#33ffffff" android:visibility="gone" android:clickable="false" android:layout_width="@dimen/home_card_width" android:layout_height="@dimen/home_card_height" android:layout_centerInParent="true" />
+    <View android:id="@id/card_focus_view" android:background="@drawable/com_bg_foucs" android:visibility="gone" android:clickable="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerInParent="true" />
+</RelativeLayout>

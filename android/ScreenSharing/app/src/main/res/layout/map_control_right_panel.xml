@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/map_control_right_panel" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_focus_switch" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="true" android:layout_width="56.0dip" android:layout_height="56.0dip">
+        <ImageView android:id="@id/image_focus_switch" android:src="@drawable/map_ic_home_drag" style="@style/MapButton" />
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:id="@id/nav_zoom_panel" android:background="@drawable/map_bg_btn" android:padding="4.0dip" android:layout_width="56.0dip" android:layout_height="wrap_content" android:layout_below="@id/layout_focus_switch">
+        <ImageView android:id="@id/btn_zoom_in" android:background="@drawable/common_btn_bg_zoom_in_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:src="@drawable/map_ic_home_enlarge" android:scaleType="center" />
+        <View android:id="@id/zoom_dirver" android:background="#ffd9d9d9" android:layout_width="fill_parent" android:layout_height="1.0px" />
+        <ImageView android:id="@id/btn_zoom_out" android:background="@drawable/common_btn_bg_zoom_out_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:src="@drawable/map_ic_home_narrow" android:scaleType="center" />
+    </LinearLayout>
+</LinearLayout>

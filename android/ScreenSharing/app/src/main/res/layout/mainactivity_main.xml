@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <FrameLayout android:id="@id/map_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <FrameLayout android:id="@id/fragment_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
+            <Button android:id="@id/btn_test1" android:layout_width="68.0dip" android:layout_height="48.0dip" android:text="跟随" />
+            <Button android:id="@id/btn_test2" android:layout_width="68.0dip" android:layout_height="48.0dip" android:text="正北" />
+            <Button android:id="@id/btn_test3" android:layout_width="68.0dip" android:layout_height="48.0dip" android:text="普通" />
+            <Button android:id="@id/btn_zoomin" android:layout_width="68.0dip" android:layout_height="48.0dip" android:text="+" />
+            <Button android:id="@id/btn_zoomout" android:layout_width="68.0dip" android:layout_height="48.0dip" android:text="-" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

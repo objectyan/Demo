@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="bottom" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/header_content" android:layout_width="fill_parent" android:layout_height="60.0dip">
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/header_text_layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true">
+            <TextView android:gravity="center" android:id="@id/header_hint_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/header_hint_refresh_normal" />
+            <LinearLayout android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip">
+                <TextView android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/header_hint_refresh_time" />
+                <TextView android:id="@id/header_hint_time" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <ImageView android:id="@id/header_arrow" android:layout_width="25.0dip" android:layout_height="25.0dip" android:layout_marginLeft="70.0dip" android:src="@drawable/bnav_common_ic_refresh_down" android:layout_alignParentLeft="true" android:layout_centerVertical="true" android:contentDescription="@null" />
+    </RelativeLayout>
+</LinearLayout>

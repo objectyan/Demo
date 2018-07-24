@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@null" android:clickable="true" android:layout_width="fill_parent" android:layout_height="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include android:id="@id/home" android:layout_width="fill_parent" android:layout_height="30.0dip" android:layout_margin="10.0dip" layout="@layout/navi_des_history_item" />
+    <include android:id="@id/company" android:layout_width="fill_parent" android:layout_height="30.0dip" android:layout_margin="10.0dip" layout="@layout/navi_des_history_item" />
+</LinearLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@null" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:dslv="http://schemas.android.com/apk/res-auto" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navi.view.CommonTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/btn_route_and_clear_layout" android:layout_width="fill_parent" android:layout_height="60.0dip" android:layout_alignParentBottom="true">
+        <Button android:textSize="25.0sp" android:textColor="#ff787d7c" android:gravity="center" android:id="@id/btn_clear_route" android:background="@drawable/route_plan_clean_btn_selector_carmode" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/route_plan_clear_nav_route" android:layout_weight="1.0" />
+        <Button android:textSize="25.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/ll_route_plan" android:background="@drawable/carmode_btn_blue_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/route_plan_calc_nav_route" android:layout_weight="1.0" />
+    </LinearLayout>
+    <com.baidu.navi.view.draglistview.NaviScrollView android:id="@id/scroll_view_layout" android:background="@color/carmode_list_bg_color" android:scrollbars="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/btn_route_and_clear_layout" android:layout_below="@id/title_bar" android:fadeScrollbars="true">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <RelativeLayout android:orientation="horizontal" android:id="@id/rl_route_plan_start_node" android:focusable="true" android:focusableInTouchMode="true" android:descendantFocusability="blocksDescendants" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <RelativeLayout android:id="@id/rp_add_btn_layout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_alignParentBottom="true">
+                    <ImageView android:id="@id/iv_route_plan_add_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_rp_btn_add_carmode" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="53.0dip" android:layout_below="@id/iv_route_plan_add_btn" android:layout_alignParentBottom="true" />
+                </RelativeLayout>
+                <com.baidu.navi.view.draglistview.DragListView android:id="@id/drag_sort_list_1" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:listSelector="@android:color/transparent" android:cacheColorHint="@android:color/transparent" android:divider="@null" android:dividerHeight="0.0dip" android:layout_toRightOf="@id/rp_add_btn_layout" android:footerDividersEnabled="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </com.baidu.navi.view.draglistview.NaviScrollView>
+    <RelativeLayout android:id="@id/history_route_view" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <RelativeLayout android:id="@id/title_bar_view" android:background="@drawable/carmode_titlebar_btn_normal" android:layout_width="fill_parent" android:layout_height="48.0dip">
+            <RelativeLayout android:gravity="center" android:id="@id/back_layout" android:background="@drawable/carmode_titlebar_back_selector" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginLeft="16.0dip" android:minWidth="80.0dip">
+                <ImageView android:layout_gravity="center" android:id="@id/img_history_bar_back" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carmode_titlebar_back_icon" android:scaleType="centerInside" />
+            </RelativeLayout>
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_titlebar_text_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="历史路线" android:layout_centerInParent="true" />
+        </RelativeLayout>
+        <ListView android:id="@id/history_route_list" android:background="@color/carmode_list_bg_color" android:paddingLeft="28.0dip" android:focusable="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/carmode_list_bg_selector" android:cacheColorHint="@android:color/transparent" android:divider="@null" android:dividerHeight="0.0dip" android:layout_below="@id/title_bar_view" />
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/preference_list_layout" android:background="@color/carmode_poig_dialog_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+</RelativeLayout>

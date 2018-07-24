@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="80.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/btn_poi_parent" android:layout_width="fill_parent" android:layout_height="80.0dip" android:layout_alignParentTop="true">
+        <View android:id="@id/line_poi_horizontal_b" android:background="@color/cl_line_a5" android:layout_width="2.0px" android:layout_height="40.0dip" android:layout_alignLeft="@id/btn_poi_gonavi" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_poi_gonavi" android:background="@drawable/com_bg_item_btn_selector" android:clickable="true" android:layout_width="104.0dip" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <ImageView android:gravity="right" android:layout_width="24.0dip" android:layout_height="24.0dip" android:src="@drawable/map_ic_poi_details" />
+            <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:gravity="right" android:id="@id/tv_poi_distance" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dip" android:text="@string/nsdk_string_open_detail" android:lines="1" />
+        </LinearLayout>
+        <View android:id="@id/line_poi_vertical_a" android:visibility="gone" android:layout_width="1.0dip" android:layout_height="wrap_content" android:layout_marginTop="16.0dip" android:layout_marginBottom="16.0dip" android:layout_toLeftOf="@id/btn_poi_gonavi" android:layout_centerVertical="true" />
+        <ImageView android:id="@id/ic_result" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="3.0dip" android:layout_marginRight="17.0dip" android:layout_marginBottom="14.0dip" android:layout_toLeftOf="@id/line_poi_vertical_a" android:layout_alignParentBottom="true" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/poi_name_addr_layout" android:background="@drawable/com_bg_item_btn_selector" android:paddingLeft="@dimen/common_listview_item_padding_left" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/ic_result">
+            <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_num" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a5_content" android:ellipsize="end" android:gravity="left" android:id="@id/tv_poi_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="深圳百度国际大厦" android:singleLine="true" android:layout_toRightOf="@id/tv_num" />
+                <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:layout_toRightOf="@id/tv_num" android:layout_below="@id/tv_poi_title">
+                    <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a3_content" android:gravity="center_vertical" android:id="@id/tv_poi_distance_new" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="8.0dip" android:text="1.2公里" />
+                    <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a3_content" android:ellipsize="end" android:gravity="center_vertical" android:id="@id/tv_poi_addr" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="广东省深圳市南山区学府路东" android:singleLine="true" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+        <View android:id="@id/line_poi_horizontal" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="2.0px" android:layout_marginLeft="@dimen/common_listview_item_padding_left" android:layout_marginRight="@dimen/common_listview_item_padding_right" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="vertical" android:id="@id/layout_child_bottom" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/btn_poi_parent">
+        <GridView android:gravity="center" android:id="@id/grideview" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="30.0dip" android:layout_marginTop="10.0dip" android:layout_marginBottom="10.0dip" android:horizontalSpacing="0.0dip" android:verticalSpacing="0.0dip" android:stretchMode="columnWidth" android:numColumns="3" android:scrollbarFadeDuration="0" />
+    </LinearLayout>
+</RelativeLayout>

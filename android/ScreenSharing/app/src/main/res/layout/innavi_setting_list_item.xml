@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="@dimen/map_in_navi_setting_listitem_height" android:minHeight="@dimen/map_in_navi_setting_listitem_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/north2dorcar3dicon" android:focusable="false" android:clickable="false" android:layout_width="32.0dip" android:layout_height="32.0dip" android:layout_marginLeft="16.0dip" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_item_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="@string/map_in_navi_setting_route_its" android:layout_toRightOf="@id/north2dorcar3dicon" android:layout_centerVertical="true" />
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_item_name2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:text="@string/map_in_navi_setting_route_its" android:layout_toRightOf="@id/north2dorcar3dicon" android:layout_centerVertical="true" />
+    <com.baidu.carlife.view.SwitchButton android:id="@id/sw_01" android:focusable="false" android:visibility="gone" android:clickable="false" android:layout_width="wrap_content" android:layout_height="28.0dip" android:layout_marginRight="16.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/checkicon" android:focusable="false" android:visibility="gone" android:clickable="false" android:layout_width="16.0dip" android:layout_height="16.0dip" android:layout_marginRight="16.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <View android:id="@id/cl_line" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_alignParentBottom="true" />
+</RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/ll_user_center_new" android:background="#ff000000" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/user_login_layout" android:layout_width="fill_parent" android:layout_height="170.0dip">
+        <WebView android:id="@id/web_view_head" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <com.baidu.navi.view.MapTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" />
+        <FrameLayout android:layout_width="fill_parent" android:layout_height="50.0dip" android:layout_alignParentBottom="true">
+            <RelativeLayout android:background="#ff000000" android:layout_width="fill_parent" android:layout_height="50.0dip" android:alpha="0.2" />
+            <RelativeLayout android:orientation="horizontal" android:id="@id/mileage_score_layout" android:layout_width="fill_parent" android:layout_height="50.0dip">
+                <ImageView android:id="@id/divider_vertical" android:background="#ff8a9db6" android:layout_width="1.0dip" android:layout_height="22.0dip" android:layout_centerInParent="true" />
+                <LinearLayout android:gravity="bottom|center" android:orientation="vertical" android:id="@id/mileage_layout" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/divider_vertical">
+                    <TextView android:textSize="14.0sp" android:textColor="#ffffffff" android:id="@id/distance_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:text="@string/mileage_name" />
+                    <TextView android:textSize="16.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:id="@id/distance_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:layout_marginBottom="3.0dip" />
+                </LinearLayout>
+                <LinearLayout android:gravity="bottom|center" android:orientation="vertical" android:id="@id/score_layout" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginBottom="0.0dip" android:layout_toRightOf="@id/divider_vertical">
+                    <TextView android:textSize="14.0sp" android:textColor="#ffffffff" android:id="@id/score_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:text="@string/score_name" />
+                    <TextView android:textSize="16.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:id="@id/score_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:layout_marginBottom="3.0dip" />
+                </LinearLayout>
+            </RelativeLayout>
+        </FrameLayout>
+    </RelativeLayout>
+    <LinearLayout android:orientation="vertical" android:id="@id/user_data_layout" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <com.baidu.navi.view.NaviGridView android:gravity="center" android:id="@id/user_center_grid_view" android:layout_width="fill_parent" android:layout_height="wrap_content" android:listSelector="@drawable/carmode_list_bg_selector" android:cacheColorHint="@android:color/transparent" android:horizontalSpacing="0.0dip" android:verticalSpacing="0.0dip" android:stretchMode="columnWidth" android:numColumns="3" android:scrollbarFadeDuration="0" />
+    </LinearLayout>
+</LinearLayout>

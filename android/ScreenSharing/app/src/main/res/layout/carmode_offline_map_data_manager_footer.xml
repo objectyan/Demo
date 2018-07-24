@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="@dimen/default_80"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/offline_data_round_progressbar_roundWidth" android:layout_marginLeft="@dimen/offline_data_rl_status_margin_left" android:layout_marginRight="@dimen/offline_data_rl_status_margin_left" />
+    <RelativeLayout android:paddingLeft="@dimen/default_8" android:paddingRight="@dimen/default_8" android:layout_width="fill_parent" android:layout_height="@dimen/default_78">
+        <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true">
+            <TextView android:textSize="@dimen/default_text_20" android:textColor="@color/cl_text_a5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/carlife_map_data_auto_download" />
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/cl_text_a2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_4" android:text="@string/carlife_map_data_auto_download_hint" />
+        </LinearLayout>
+        <com.baidu.carlife.view.SwitchButton android:id="@id/map_control_panel_list_item_its_checkbox" android:focusable="false" android:layout_width="@dimen/default_30" android:layout_height="@dimen/default_24" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/offline_data_round_progressbar_roundWidth" android:layout_marginLeft="@dimen/offline_data_rl_status_margin_left" android:layout_marginRight="@dimen/offline_data_rl_status_margin_left" />
+</LinearLayout>

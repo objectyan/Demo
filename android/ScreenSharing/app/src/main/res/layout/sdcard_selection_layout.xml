@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/cl_bg_d" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/top_content" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <TextView android:textSize="20.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:gravity="center" android:id="@id/title_bar" android:background="#ff3477eb" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="@string/alert_title_choose_sdcard" />
+        <TextView android:textSize="14.0sp" android:textColor="#ff4285f4" android:id="@id/title_detail" android:padding="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/muti_sdcard_choose_alert" />
+    </LinearLayout>
+    <View android:id="@id/list_item_margin1" android:background="@color/common_list_bg_press_color" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_below="@id/top_content" />
+    <ListView android:id="@id/listView1" android:focusable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:divider="@color/common_list_bg_press_color" android:dividerHeight="0.5dip" android:layout_below="@id/list_item_margin1" />
+    <View android:id="@id/list_item_margin2" android:background="@color/common_list_bg_press_color" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_below="@id/listView1" />
+    <TextView android:textSize="14.0sp" android:textColor="#ffabaeb2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:text="选择存储卡后将不能更改数据存储位置" android:layout_below="@id/list_item_margin2" android:layout_centerHorizontal="true" />
+    <RelativeLayout android:background="#ff3477ea" android:layout_width="fill_parent" android:layout_height="50.0dip" android:layout_alignParentBottom="true">
+        <TextView android:textSize="20.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/ok_btn" android:background="@drawable/carmode_list_bg_focus_selector" android:focusable="true" android:layout_width="fill_parent" android:layout_height="50.0dip" android:text="@string/title_finish" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="72.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/iv_playing_hint" android:visibility="visible" android:layout_width="16.0dip" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="18.0dip" android:src="@drawable/music_ic_currently_playing" />
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_music_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14.0dip" android:layout_marginRight="16.0dip" android:singleLine="true" android:layout_toRightOf="@id/iv_playing_hint" />
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_music_artist" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:layout_marginRight="60.0dip" android:singleLine="true" android:layout_toRightOf="@id/iv_playing_hint" android:layout_below="@id/tv_music_name" />
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a1_content" android:id="@id/tv_music_duration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="16.0dip" android:layout_below="@id/tv_music_name" android:layout_alignTop="@id/tv_music_artist" android:layout_alignParentRight="true" />
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_toRightOf="@id/iv_playing_hint" android:layout_alignParentBottom="true" />
+</RelativeLayout>

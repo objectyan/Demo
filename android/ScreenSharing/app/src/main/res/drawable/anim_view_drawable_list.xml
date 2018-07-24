@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+    <item android:duration="50" android:drawable="@color/bnav_map_home_gird_transparent" />
+</animation-list>

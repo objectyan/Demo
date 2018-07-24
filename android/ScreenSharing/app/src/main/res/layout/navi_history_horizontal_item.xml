@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/download_list_item_layout" android:background="@android:color/transparent" android:descendantFocusability="blocksDescendants" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="@dimen/horizontal_listview_item_height_with_margin" android:layout_height="@dimen/horizontal_listview_item_height_with_margin">
+        <RelativeLayout android:id="@id/nav_route_history_item_layout" android:background="@drawable/bnav_common_card_selector" android:focusable="false" android:layout_width="@dimen/horizontal_listview_item_height" android:layout_height="@dimen/horizontal_listview_item_width" android:layout_margin="@dimen/horizontal_listview_half_margin">
+            <ImageView android:id="@id/time_icon_view" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="28.0dip" android:src="@drawable/bnav_rp_icon_sug_from_history_horizontal" android:layout_centerHorizontal="true" />
+            <TextView android:textSize="16.0sp" android:textColor="#ff333333" android:ellipsize="end" android:id="@id/route_info_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_marginTop="16.0dip" android:layout_marginRight="3.0dip" android:singleLine="true" android:layout_below="@id/time_icon_view" android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

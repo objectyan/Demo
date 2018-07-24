@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.LoginView android:orientation="vertical" android:clickable="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:background="@drawable/card_default_bg" android:paddingRight="16.0dip" android:clickable="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" android:layout_marginBottom="12.0dip">
+        <TextView android:textSize="18.0sp" android:textColor="@color/white" android:id="@id/login_text" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="18.0dip" android:text="请用手机扫描二维码登录" android:alpha="0.6" />
+        <RelativeLayout android:id="@id/web_rl" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginTop="24.0dip" android:layout_below="@id/login_text">
+            <com.baidu.che.codriver.widget.LoginWebview android:id="@id/feedback_qrcode" android:background="#ffffffff" android:scrollbars="none" android:clickable="false" android:layout_width="128.0dip" android:layout_height="128.0dip" />
+            <ImageView android:id="@id/sapi_iv" android:visibility="gone" android:layout_width="33.0dip" android:layout_height="33.0dip" android:layout_marginLeft="48.0dip" android:src="@drawable/login_qrcode_scan_success" android:layout_centerVertical="true" />
+            <RelativeLayout android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:layout_toRightOf="@id/feedback_qrcode">
+                <TextView android:textSize="16.0sp" android:textColor="@color/white" android:id="@id/login_help_text" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15.0dip" android:text="1. 打开百度系手机应用，扫描二维码" android:alpha="0.6" />
+                <TextView android:textSize="16.0sp" android:textColor="@color/white" android:id="@id/login_help_text2" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15.0dip" android:layout_marginTop="13.0dip" android:text="2. 登录百度账号，即可在车机登录" android:layout_below="@id/login_help_text" android:alpha="0.6" />
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="24.0dip" android:layout_below="@id/web_rl" />
+    </RelativeLayout>
+</com.baidu.che.codriver.widget.LoginView>

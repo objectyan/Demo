@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:descendantFocusability="blocksDescendants" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="72.0dip">
+        <ImageView android:id="@id/add" android:layout_width="56.0dip" android:layout_height="56.0dip" android:src="@drawable/bnav_feedback_add" android:scaleType="fitXY" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="wrap_content" android:layout_height="@dimen/common_top_bar_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.baidu.carlife.view.TimeTextView android:textSize="16.0sp" android:textColor="@color/cl_text_a5_title" android:id="@id/view_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="16.0dip" android:layout_centerVertical="true" />
+    <com.baidu.carlife.view.BatteryView android:id="@id/view_battery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@id/view_time" android:layout_centerVertical="true" />
+</RelativeLayout>

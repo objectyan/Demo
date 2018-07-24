@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="22.0sp" android:textColor="#ffa5acc3" android:gravity="center" android:id="@id/plugin_manager_title" android:background="#ff1d2026" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="插件" />
+    <RelativeLayout android:orientation="vertical" android:id="@id/carmode_cr_layout_grid_parent" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/plugin_manager_title">
+        <GridView android:gravity="center" android:id="@id/carmode_cr_plungin_gridview" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/carmode_list_bg_selector" android:stretchMode="columnWidth" android:numColumns="3" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" />
+    </RelativeLayout>
+</RelativeLayout>

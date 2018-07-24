@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/recyclerview_item_menu_layout" android:background="@drawable/home_bg_item_selector" android:layout_width="122.0dip" android:layout_height="148.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a5" android:gravity="center_horizontal" android:id="@id/recyclerview_item_menu_textview" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="item" android:drawableTop="@mipmap/home_ic_setting" android:drawablePadding="20.0dip" android:layout_centerInParent="true" />
+    <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a5" android:gravity="center" android:id="@id/recyclerview_item_menu_count" android:background="@drawable/red_dot_bg" android:layout_width="18.0dip" android:layout_height="18.0dip" android:layout_marginLeft="64.0dip" android:layout_marginTop="22.0dip" android:text="99" android:singleLine="true" />
+</RelativeLayout>

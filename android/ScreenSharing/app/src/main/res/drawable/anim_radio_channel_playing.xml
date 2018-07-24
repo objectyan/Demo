@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic01" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic02" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic03" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic04" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic05" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic06" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic07" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic08" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic09" />
+    <item android:duration="50" android:drawable="@drawable/radio_ic_play_dynamic10" />
+</animation-list>

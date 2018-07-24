@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:gravity="center" android:id="@id/layout_merge" android:background="#ff3477eb" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="2.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/img_merge" android:layout_width="40.0dip" android:layout_height="fill_parent" android:src="@drawable/data_merge_front" />
+</FrameLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/ll_dial_num" android:paddingLeft="@dimen/frag_tele_horizontal_margin" android:paddingTop="@dimen/frag_tele_vertical_margin" android:paddingRight="@dimen/frag_tele_horizontal_margin" android:paddingBottom="@dimen/frag_tele_vertical_margin" android:layout_width="fill_parent" android:layout_height="fill_parent" android:baselineAligned="false"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="0.5">
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <FrameLayout android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_one" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="one" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_one" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_one" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_two" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="two" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_two" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_two" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_three" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="three" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_three" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_three" />
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_four" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="four" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_four" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_four" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_five" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="five" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_five" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_five" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_six" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="six" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_six" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_six" />
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_seven" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="seven" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_seven" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_seven" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_eight" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="eight" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_eight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_eight" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_nine" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="nine" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_nine" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_nine" />
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_xing" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="xing" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_xing" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_xing" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_zero" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="zero" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_zero" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_zero" />
+            </FrameLayout>
+            <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageButton android:layout_gravity="center" android:id="@id/ib_inputnum_jing" android:background="@null" android:layout_width="48.0dip" android:layout_height="48.0dip" android:layout_margin="10.0dip" android:src="@drawable/phone_ic_number_selector" android:scaleType="fitCenter" android:contentDescription="jing" />
+                <TextView android:textSize="28.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center" android:id="@id/text_inputnum_jing" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/module_tele_num_jing" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <FrameLayout android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="0.6">
+        <RelativeLayout android:orientation="vertical" android:id="@id/ll_call_idle" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <LinearLayout android:orientation="horizontal" android:id="@id/ll_input_layout" android:background="@color/cl_bg_a_input" android:layout_width="fill_parent" android:layout_height="52.0dip" android:layout_marginRight="60.0dip">
+                <EditText android:textSize="20.0sp" android:textColor="@color/cl_text_a1_input" android:ellipsize="middle" android:id="@id/et_tele_inputnum" android:background="@null" android:focusable="false" android:focusableInTouchMode="false" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_marginLeft="16.0sp" android:hint="@string/module_tele_inputnum_hint" android:singleLine="true" android:layout_weight="3.0" />
+                <ImageButton android:id="@id/ib_inputnum_backspace" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" android:contentDescription="backspace" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/ll_search_result_first" android:focusable="true" android:layout_width="fill_parent" android:layout_height="52.0dip" android:layout_below="@id/ll_input_layout">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:ellipsize="middle" android:id="@id/tv_search_name_first" android:layout_width="120.0dip" android:layout_height="wrap_content" android:singleLine="true" />
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:ellipsize="middle" android:id="@id/tv_search_num_first" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:singleLine="true" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/ll_search_result_second" android:focusable="true" android:layout_width="fill_parent" android:layout_height="52.0dip" android:layout_below="@id/ll_search_result_first">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:ellipsize="middle" android:id="@id/tv_search_name_second" android:layout_width="120.0dip" android:layout_height="wrap_content" android:singleLine="true" />
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_title" android:ellipsize="middle" android:id="@id/tv_search_num_second" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:singleLine="true" />
+            </LinearLayout>
+            <ImageButton android:id="@id/ib_tele_call" android:background="@drawable/common_btn_bg_focus" android:layout_width="60.0dip" android:layout_height="60.0dip" android:layout_marginBottom="20.0dip" android:src="@drawable/phone_ic_call_selector" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+        <RelativeLayout android:id="@id/rl_in_call" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <TextView android:textSize="26.0sp" android:textColor="@color/cl_text_a5_title" android:ellipsize="middle" android:gravity="center" android:id="@id/tv_incall_name" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="20.0dip" android:singleLine="true" />
+            <Chronometer android:textSize="24.0sp" android:textColor="@color/cl_text_a2_content" android:gravity="center" android:id="@id/view_incall_time" android:layout_width="fill_parent" android:layout_height="wrap_content" android:format="%s" android:text="@string/module_tele_default_incall_time" android:layout_below="@id/tv_incall_name" />
+            <LinearLayout android:orientation="horizontal" android:id="@id/ll_incoming_call" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_margin="20.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
+                <ImageButton android:id="@id/ib_incoming_call_break" android:background="@drawable/common_btn_bg_focus" android:layout_width="0.0dip" android:layout_height="60.0dip" android:src="@drawable/phone_ic_hangup_selector" android:layout_weight="1.0" />
+                <ImageButton android:id="@id/ib_incoming_call_answer" android:background="@drawable/common_btn_bg_focus" android:layout_width="0.0dip" android:layout_height="60.0dip" android:src="@drawable/phone_ic_call_selector" android:layout_weight="1.0" />
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</LinearLayout>

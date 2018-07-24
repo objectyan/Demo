@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/common_icon_exit_height"
+        android:paddingLeft="0.0dip"
+        android:paddingRight="0.0dip">
+
+        <RelativeLayout
+            android:id="@id/rl_person"
+            android:layout_width="86.0dip"
+            android:layout_height="64.0dip"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/common_btn_bg_focus"
+            android:focusable="true">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@id/btn_person"
+                android:layout_width="26.0dip"
+                android:layout_height="26.0dip"
+                android:layout_centerInParent="true"
+                android:layout_gravity="right"
+                android:cropToPadding="true"
+                fresco:actualImageScaleType="focusCrop"
+                fresco:placeholderImage="@drawable/com_ic_default_avatar_home"
+                fresco:placeholderImageScaleType="centerInside"
+                fresco:roundAsCircle="true" />
+
+            <View
+                android:id="@id/red_point"
+                android:layout_width="10.0dip"
+                android:layout_height="10.0dip"
+                android:layout_alignTop="@id/btn_person"
+                android:layout_toRightOf="@id/btn_person"
+                android:background="@drawable/com_shape_red_point" />
+        </RelativeLayout>
+
+        <com.baidu.carlife.view.MainTopBarView
+            android:id="@id/main_comm_top_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="19.0dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@id/layout_icons"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1.0">
+
+                <com.baidu.carlife.view.HomeCardView
+                    android:id="@id/home_card_navi"
+                    android:layout_width="@dimen/home_card_focus_view_width"
+                    android:layout_height="@dimen/home_card_focus_view_height"
+                    android:focusable="true"
+                    fresco:cardBackground="@drawable/com_shape_home_card_navi_normal"
+                    fresco:cardTitle="@string/home_card_navi"
+                    fresco:cardType="Navi"
+                    fresco:firstIv="@drawable/com_home_ic_navigation_home_selector"
+                    fresco:secendIv="@drawable/com_home_ic_navigation_company_selector" />
+            </RelativeLayout>
+
+            <View
+                android:id="@id/card_bank_1"
+                android:layout_width="@dimen/home_card_big_screen_margin"
+                android:layout_height="@dimen/home_card_focus_view_height"
+                android:background="@color/transparent"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/home_card_left_padding"
+                android:layout_weight="1.0">
+
+                <com.baidu.carlife.view.HomeCardView
+                    android:id="@id/home_card_music"
+                    android:layout_width="@dimen/home_card_focus_view_width"
+                    android:layout_height="@dimen/home_card_focus_view_height"
+                    android:focusable="true"
+                    fresco:cardBackground="@drawable/com_shape_home_card_music_normal"
+                    fresco:cardTitle="@string/home_card_media"
+                    fresco:cardType="Music"
+                    fresco:firstIv="@drawable/com_home_ic_music_play_selector" />
+            </RelativeLayout>
+
+            <View
+                android:id="@id/card_bank_2"
+                android:layout_width="@dimen/home_card_big_screen_margin"
+                android:layout_height="@dimen/home_card_focus_view_height"
+                android:background="@color/transparent"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/home_card_left_padding"
+                android:layout_weight="1.0">
+
+                <com.baidu.carlife.view.HomeCardView
+                    android:id="@id/home_card_discover"
+                    android:layout_width="@dimen/home_card_focus_view_width"
+                    android:layout_height="@dimen/home_card_focus_view_height"
+                    android:focusable="true"
+                    fresco:cardBackground="@drawable/com_shape_home_card_discover_normal"
+                    fresco:cardTitle="@string/home_card_discover"
+                    fresco:cardType="Discover"
+                    fresco:firstIv="@drawable/home_ic_discover_card"
+                    fresco:info="@string/home_card_discover_info" />
+            </RelativeLayout>
+
+            <View
+                android:id="@id/card_bank_3"
+                android:layout_width="@dimen/home_card_big_screen_margin"
+                android:layout_height="@dimen/home_card_focus_view_height"
+                android:background="@color/transparent"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/home_card_left_padding"
+                android:layout_weight="1.0">
+
+                <com.baidu.carlife.view.HomeCardView
+                    android:id="@id/home_card_carlife"
+                    android:layout_width="@dimen/home_card_focus_view_width"
+                    android:layout_height="@dimen/home_card_focus_view_height"
+                    android:focusable="true"
+                    fresco:cardBackground="@drawable/com_shape_home_card_carlife_normal"
+                    fresco:cardType="Carlife"
+                    fresco:vehicleLogo="@drawable/home_ic_carlife_card"
+                    fresco:vehicleName="@drawable/home_ic_carlife_name" />
+            </RelativeLayout>
+
+            <View
+                android:id="@id/card_bank_4"
+                android:layout_width="@dimen/home_card_big_screen_margin"
+                android:layout_height="@dimen/home_card_focus_view_height"
+                android:background="@color/transparent"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@id/viewadapt"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/home_card_left_padding"
+                android:layout_weight="1.0"
+                android:visibility="gone">
+
+                <com.baidu.carlife.view.HomeCardView
+                    android:id="@id/home_card_exit"
+                    android:layout_width="@dimen/home_card_focus_view_width"
+                    android:layout_height="@dimen/home_card_focus_view_height"
+                    android:focusable="true"
+                    fresco:cardBackground="@drawable/com_shape_home_card_exit_normal"
+                    fresco:cardTitle="@string/home_card_exit"
+                    fresco:cardType="ExitCarlife"
+                    fresco:firstIv="@drawable/home_ic_quit"
+                    fresco:info="@string/home_card_exit_info" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

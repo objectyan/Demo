@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="28.0dip" android:textColor="@color/cl_text_a5_content" android:gravity="center_horizontal" android:id="@id/tv_name" android:background="@drawable/com_bg_btn_selector" android:focusable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerInParent="true" />
+    <TextView android:textSize="8.0dip" android:textColor="@color/cl_text_a2_content" android:gravity="center_horizontal" android:id="@id/tv_desc" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="6.0dip" android:layout_alignBottom="@id/tv_name" android:layout_centerHorizontal="true" />
+</merge>

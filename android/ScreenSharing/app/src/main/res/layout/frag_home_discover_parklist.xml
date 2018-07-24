@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/temp" layout="@layout/carlife_common_title_bar_new" />
+    <LinearLayout android:gravity="right" android:orientation="horizontal" android:id="@id/common_top_title" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height" android:layout_marginRight="32.0dip" android:layout_alignBottom="@id/temp">
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:gravity="center" android:id="@id/home_parking_book" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:text="预定车位" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:gravity="center" android:id="@id/home_parking_etcp" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:text="ETCP" />
+    </LinearLayout>
+    <com.baidu.carlife.view.CommonTipView android:id="@id/common_tip_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/temp" />
+    <ListView android:id="@id/listview" android:paddingLeft="72.0dip" android:paddingRight="72.0dip" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginBottom="24.0dip" android:listSelector="@drawable/com_bg_item_selector" android:cacheColorHint="@android:color/transparent" android:divider="@null" android:layout_below="@id/temp" />
+</RelativeLayout>

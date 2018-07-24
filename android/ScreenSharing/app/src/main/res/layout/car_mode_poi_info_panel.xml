@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/layout_poi_panell" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/info_layout" android:background="@drawable/carlife_map_its_bg_selector" android:focusable="false" android:layout_width="fill_parent" android:layout_height="80.0dip">
+        <ImageView android:id="@id/img_back" android:background="@drawable/carmode_titlebar_back_selector" android:focusable="false" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginLeft="10.0dip" android:src="@drawable/carmode_titlebar_back_icon" android:scaleType="centerInside" android:minWidth="80.0dip" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+        <TextView android:textSize="14.0sp" android:textColor="#ff000000" android:gravity="center" android:id="@id/tv_num" android:background="@drawable/carmode_ic_common_serial_bg" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:text="2" android:layout_toRightOf="@id/img_back" android:layout_centerVertical="true" />
+        <RelativeLayout android:id="@id/right_content" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <View android:id="@id/line_poi_vertical_a" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginLeft="3.0dip" android:layout_marginTop="10.0dip" android:layout_marginBottom="10.0dip" android:layout_centerVertical="true" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_poi_gonavi" android:background="@drawable/carmode_btn_blue_bg_selector" android:paddingLeft="40.0dip" android:paddingRight="40.0dip" android:clickable="true" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_toRightOf="@id/line_poi_vertical_a">
+                <TextView android:textSize="25.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:id="@id/tv_poi_gonavi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_navi" android:singleLine="true" />
+                <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/tv_poi_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:lines="1" />
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout android:id="@id/poi_name_addr_layout" android:background="@drawable/carmode_list_bg_selector" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/right_content" android:layout_toRightOf="@id/tv_num">
+            <FrameLayout android:id="@id/tv_detail_open_layout" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true" android:layout_alignParentBottom="true">
+                <TextView android:textColor="#ff36bfff" android:gravity="bottom" android:id="@id/tv_detail_open" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_margin="16.0dip" android:text="@string/nsdk_string_open_detail" />
+            </FrameLayout>
+            <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:paddingLeft="10.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/tv_detail_open_layout">
+                <TextView android:textSize="20.0sp" android:textStyle="bold" android:textColor="#ffa5aec3" android:ellipsize="end" android:gravity="left" android:id="@id/tv_poi_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="2" />
+                <TextView android:textSize="14.0sp" android:textColor="#ff787d8c" android:ellipsize="end" android:gravity="left" android:id="@id/tv_poi_addr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4.0dip" android:singleLine="true" />
+                <ProgressBar android:id="@id/progress_antigeo" android:background="@drawable/common_loading_drop" android:visibility="gone" android:layout_width="50.0dip" android:layout_height="50.0dip" android:layout_marginLeft="20.0dip" android:indeterminateDrawable="@drawable/common_loading" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+    <View android:id="@id/line_poi_horizontal_a" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_below="@id/info_layout" />
+    <RelativeLayout android:orientation="vertical" android:id="@id/rl_poi_info_inner" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/line_poi_horizontal_a">
+        <View android:id="@id/line_poi_horizontal_c" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_centerInParent="true" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/layout_button_panel_1" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/line_poi_horizontal_c">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_street" android:background="@drawable/carmode_list_bg_selector" android:visibility="visible" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ProgressBar android:id="@id/progress_hasstreet" android:background="@drawable/common_loading_drop" android:visibility="gone" android:layout_width="40.0dip" android:layout_height="40.0dip" android:indeterminateDrawable="@drawable/common_loading" />
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:id="@id/tv_poi_street" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_street_scape" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_street_disable" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+            <View android:id="@id/line_poi_vertical_1a" android:background="@color/carmode_line" android:layout_width="1.5dip" android:layout_height="fill_parent" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_phone_call" android:background="@drawable/carmode_list_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/tv_poi_call" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_phone_call" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_hasphone" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+            <View android:id="@id/line_poi_vertical_1b" android:background="@color/carmode_line" android:layout_width="1.5dip" android:layout_height="fill_parent" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_trip_ref" android:background="@drawable/carmode_list_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/tv_trip_ref" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_trip_ref" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_goout" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/layout_button_panel_3" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/line_poi_horizontal_c">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_space_search" android:background="@drawable/carmode_list_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/tv_poi_space_search" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_space_search" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_around" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+            <View android:id="@id/line_poi_vertical_3a" android:background="@color/carmode_line" android:layout_width="1.5dip" android:layout_height="fill_parent" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_fav" android:background="@drawable/carmode_list_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ProgressBar android:id="@id/progress_isfav" android:background="@drawable/common_loading_drop" android:visibility="gone" android:layout_width="40.0dip" android:layout_height="40.0dip" android:indeterminateDrawable="@drawable/common_loading" />
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/tv_poi_fav" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_unfavorite" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_not_faverities" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+            <View android:id="@id/line_poi_vertical_3b" android:background="@color/carmode_line" android:layout_width="1.5dip" android:layout_height="fill_parent" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/btn_share_pos" android:background="@drawable/carmode_list_bg_selector" android:clickable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <TextView android:textSize="20.0sp" android:textColor="#ffa5aec3" android:gravity="center" android:id="@id/tv_poi_share_pos" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/detail_share_pos" android:drawableTop="@drawable/bnav_car_mode_poi_detail_ic_share" android:drawablePadding="6.0dip" />
+            </LinearLayout>
+        </LinearLayout>
+        <View android:id="@id/line_poi_horizontal_d" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/app_header" android:layout_alignParentTop="true" layout="@layout/tools_common_header" />
+    <RelativeLayout android:id="@id/app_body" android:padding="10.0sp" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="20.0sp" android:layout_below="@id/app_header" android:layout_centerInParent="true">
+        <EditText android:id="@id/app_user_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:hint="请输入用户名" android:width="240.0sp" android:singleLine="true" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:inputType="text" />
+        <EditText android:id="@id/app_user_password" android:layout_width="wrap_content" android:layout_height="wrap_content" android:hint="请输入密码" android:width="240.0sp" android:singleLine="true" android:layout_below="@id/app_user_name" android:layout_centerHorizontal="true" android:inputType="textPassword" />
+        <Button android:textColor="@android:color/black" android:id="@id/app_user_login" android:background="@drawable/bnav_common_btn_white_selector" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20.0sp" android:layout_marginTop="20.0sp" android:text="登录" android:layout_below="@id/app_user_password" android:layout_alignLeft="@id/app_user_password" />
+        <Button android:textColor="@android:color/black" android:id="@id/app_user_reset" android:background="@drawable/bnav_common_btn_white_selector" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="20.0sp" android:text="重置" android:layout_alignTop="@id/app_user_login" android:layout_alignRight="@id/app_user_password" />
+    </RelativeLayout>
+    <ScrollView android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/app_body" android:layout_centerInParent="true">
+        <TextView android:gravity="left" android:id="@id/app_footer" android:background="@android:drawable/edit_text" android:padding="10.0sp" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    </ScrollView>
+</RelativeLayout>

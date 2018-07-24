@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="#ffffffff" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical" android:id="@id/fav_title_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
+        <com.baidu.navi.view.CommonTitleBar android:id="@id/fav_title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" app:rightContentText="@string/title_edit" app:middleContentText="@string/favorite" />
+        <TextView android:textSize="14.0sp" android:textColor="#ff7d8487" android:gravity="center_horizontal" android:id="@id/subtitle_textview" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="20.0dip" android:layout_marginBottom="3.0dip" android:text="底部测试" />
+    </LinearLayout>
+    <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@id/delect_viewll" android:background="@drawable/bg_delect_bt_selector" android:focusable="true" android:layout_width="fill_parent" android:layout_height="52.0dip" android:layout_alignParentBottom="true" android:alpha="0.9">
+        <View android:background="@color/cp_map_line_a" android:layout_width="fill_parent" android:layout_height="1.0px" />
+        <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a5_title" android:gravity="center" android:id="@id/delect_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="16.0dip" android:layout_marginTop="8.0dip" android:layout_marginRight="16.0dip" android:layout_marginBottom="8.0dip" android:text="@string/cloud_sync" android:layout_alignParentBottom="true" />
+    </LinearLayout>
+    <ListView android:id="@id/fav_vertical_list_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:divider="@drawable/divide_list" android:dividerHeight="0.5dip" android:layout_above="@id/delect_viewll" android:layout_below="@id/fav_title_layout" android:footerDividersEnabled="true" />
+    <LinearLayout android:gravity="center_vertical" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_below="@id/fav_title_layout">
+        <com.baidu.navi.view.HorizontalListView android:id="@id/fav_horizontal_list_view" android:background="#ffffffff" android:layout_width="wrap_content" android:layout_height="155.0dip" />
+    </LinearLayout>
+</RelativeLayout>

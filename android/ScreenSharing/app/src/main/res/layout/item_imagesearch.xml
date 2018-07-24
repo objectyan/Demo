@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.ImageSearchView android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="8.0dip">
+        <ImageView android:tag="placeholder" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" />
+        <com.android.volley.toolbox.NetworkImageView android:id="@id/imageView" android:layout_width="fill_parent" android:layout_height="224.0dip" />
+    </RelativeLayout>
+</com.baidu.che.codriver.widget.ImageSearchView>

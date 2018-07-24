@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.baidu.carlife.view.MultiImageView android:id="@id/ib_app_icon" android:layout_width="@dimen/left_bar_image_size" android:layout_height="@dimen/left_bar_image_size" android:layout_marginLeft="16.0dip" android:src="@drawable/music_ic_default" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_app_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:text="@string/module_music" android:layout_toRightOf="@id/ib_app_icon" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/iv_selected_app_mark" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="16.0dip" android:src="@drawable/com_ic_selected" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_alignLeft="@id/tv_app_name" android:layout_alignParentBottom="true" />
+</RelativeLayout>

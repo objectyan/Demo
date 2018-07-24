@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/common_progress_dialog" android:background="@drawable/com_dialog_bg" android:layout_width="wrap_content" android:layout_height="@dimen/common_item_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/temp" android:background="@drawable/com_ic_dialog_loading_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginRight="10.0dip" android:layout_centerVertical="true">
+        <ImageView android:id="@id/progress_cycle_normal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/com_ic_dialog_loading" />
+    </RelativeLayout>
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_c_dialog" android:ellipsize="end" android:id="@id/progress_tip_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="16.0dip" android:text="@string/progress_searching" android:singleLine="true" android:layout_toRightOf="@id/temp" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/iv_dialog_close" android:background="@drawable/com_bg_dialog_item_selector" android:focusable="true" android:layout_width="48.0dip" android:layout_height="48.0dip" android:src="@drawable/com_ic_dialog_close" android:layout_toRightOf="@id/progress_tip_text" />
+</RelativeLayout>

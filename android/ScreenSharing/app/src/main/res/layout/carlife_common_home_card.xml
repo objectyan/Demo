@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@drawable/home_ic_card_shadow" android:layout_width="@dimen/home_card_focus_view_width" android:layout_height="@dimen/home_card_focus_view_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@id/home_card_ll" android:layout_width="@dimen/home_card_width" android:layout_height="@dimen/home_card_height" android:layout_centerInParent="true">
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:id="@id/home_card_content_ll" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerInParent="true">
+            <RelativeLayout android:layout_width="@dimen/home_card_up_width" android:layout_height="@dimen/home_card_up_height" android:layout_marginTop="13.0dip">
+                <View android:id="@id/home_card_up_ll" android:layout_width="@dimen/home_card_up_width" android:layout_height="fill_parent" android:layout_centerHorizontal="true" />
+                <TextView android:textSize="18.0dip" android:textColor="#ffffffff" android:gravity="center_horizontal" android:id="@id/tv_home_card_up_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="15.0dip" android:layout_marginBottom="2.0dip" android:text="" android:maxLines="1" android:layout_centerHorizontal="true" />
+                <TextView android:textSize="12.0dip" android:textColor="#ccffffff" android:gravity="center" android:id="@id/tv_home_card_up_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:layout_below="@id/tv_home_card_up_title" android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <LinearLayout android:gravity="center_vertical" android:id="@id/home_card_middle_ll" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="88.0dip" android:layout_marginTop="11.0dip">
+                <ImageView android:id="@id/iv_home_card_middle_first" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/home_ic_navigation_home" />
+                <ImageView android:id="@id/iv_home_card_middle_secend" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/home_ic_navigation_company" />
+            </LinearLayout>
+            <ImageView android:id="@id/iv_home_card_vehicle_logo" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="76.0dip" android:layout_marginTop="9.0dip" android:src="@drawable/home_ic_carlife_card" />
+        </LinearLayout>
+        <com.baidu.carlife.view.HomeCardMusicMelodyView android:id="@id/music_melody" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="24.0dip" android:layout_alignParentBottom="true" />
+        <View android:id="@id/red_point" android:background="@drawable/com_shape_red_point" android:visibility="gone" android:layout_width="10.0dip" android:layout_height="10.0dip" android:layout_marginTop="24.0dip" android:layout_marginRight="4.0dip" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    </RelativeLayout>
+    <View android:id="@id/card_press_view" android:background="@drawable/com_shape_bg_home_card_press" android:visibility="gone" android:clickable="false" android:layout_width="@dimen/home_card_width" android:layout_height="@dimen/home_card_height" android:layout_centerInParent="true" />
+    <View android:id="@id/card_focus_view" android:background="@drawable/com_bg_foucs" android:visibility="gone" android:clickable="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerInParent="true" />
+</RelativeLayout>

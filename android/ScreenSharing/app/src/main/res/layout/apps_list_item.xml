@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@id/iv_app_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/douban_fm"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@id/ll_app_status"
+        android:layout_width="400.0dip"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_app_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@id/tv_app_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="16.0sp" />
+
+        <ProgressBar
+            android:id="@id/pb_app_download_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="300.0dip"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@id/btn_app_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="@string/btn_app_download"
+        android:textColor="@android:color/black"
+        android:textSize="18.0sp" />
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/frag_home_my_detail" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include layout="@layout/carlife_common_title_bar_new" />
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_height" android:layout_marginLeft="32.0dip" android:layout_marginRight="32.0dip">
+        <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/temp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/user_name" />
+        <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a2_content" android:gravity="right" android:id="@id/tv_username" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="unknown" />
+    </LinearLayout>
+    <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_marginLeft="32.0dip" android:layout_marginRight="32.0dip" />
+    <Button android:textSize="16.0sp" android:textColor="@color/cl_text_a5_bgtext" android:layout_gravity="center_horizontal" android:id="@id/btn_logout" android:background="@drawable/common_bg_red_btn_coner_selector" android:focusable="true" android:layout_width="414.0dip" android:layout_height="48.0dip" android:layout_marginTop="48.0dip" android:text="@string/user_logout" />
+</LinearLayout>

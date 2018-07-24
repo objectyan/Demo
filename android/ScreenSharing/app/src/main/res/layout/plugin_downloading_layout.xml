@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ProgressBar android:id="@id/plugin_downloading_progress_bar" android:layout_width="fill_parent" android:layout_height="2.0dip" android:layout_marginLeft="5.0dip" android:layout_marginTop="8.0dip" android:layout_marginRight="5.0dip" android:layout_marginBottom="8.0dip" android:max="100" android:progressDrawable="@drawable/nsdk_drawable_od_bg_progress_downloading_selector" android:layout_centerHorizontal="true" style="?android:attr/progressBarStyleHorizontal" />
+    <TextView android:id="@id/plugin_downloading_percent_tv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_marginTop="8.0dip" android:layout_marginRight="5.0dip" android:layout_marginBottom="8.0dip" android:text="100%" android:layout_below="@id/plugin_downloading_progress_bar" android:layout_alignParentLeft="true" />
+    <TextView android:id="@id/plugin_downloading_size_tv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5.0dip" android:layout_marginTop="8.0dip" android:layout_marginRight="5.0dip" android:layout_marginBottom="8.0dip" android:text="100%" android:layout_below="@id/plugin_downloading_progress_bar" android:layout_alignParentRight="true" />
+</RelativeLayout>

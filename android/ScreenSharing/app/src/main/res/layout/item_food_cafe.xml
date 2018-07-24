@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:paddingLeft="@dimen/common_listview_item_padding_left" android:paddingRight="@dimen/common_listview_item_padding_right" android:layout_width="fill_parent" android:layout_height="96.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.baidu.carlife.view.MultiImageView android:id="@id/iv_logo" android:layout_width="88.0dip" android:layout_height="68.0dip" android:layout_marginRight="16.0dip" android:layout_centerVertical="true" />
+    <RelativeLayout android:id="@id/rl_number" android:layout_width="110.0dip" android:layout_height="fill_parent" android:layout_marginLeft="4.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true">
+        <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true">
+            <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_temp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="41.0dip" android:text="@string/home_food_waitnum" android:layout_alignParentRight="true" />
+            <TextView android:textSize="36.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_waitnum" android:paddingRight="8.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:maxLines="1" android:layout_toLeftOf="@id/tv_temp" android:layout_alignBaseline="@id/tv_temp" />
+        </RelativeLayout>
+        <TextView android:textSize="14.0sp" android:textColor="@color/cl_other_a_highlight" android:id="@id/tv_notice" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="41.0dip" android:text="@string/home_food_no_status" android:layout_alignParentRight="true" />
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/rl_info" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_toLeftOf="@id/rl_number" android:layout_toRightOf="@id/iv_logo" android:layout_centerVertical="true">
+        <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+        <RatingBar android:id="@id/rb_score" android:layout_marginTop="4.0dip" android:layout_below="@id/tv_name" style="@style/RatingBar" />
+        <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_price" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_toRightOf="@id/rb_score" android:layout_alignTop="@id/rb_score" />
+        <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_style" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3.0dip" android:layout_below="@id/rb_score" />
+        <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_distant" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_toRightOf="@id/tv_style" android:layout_alignTop="@id/tv_style" />
+    </RelativeLayout>
+    <View android:id="@id/cl_line" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_alignParentBottom="true" />
+</RelativeLayout>

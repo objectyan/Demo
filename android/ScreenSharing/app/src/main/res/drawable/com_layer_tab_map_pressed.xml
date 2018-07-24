@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <size android:height="56.0dip" android:width="56.0dip" />
+            <gradient android:startColor="#26ffffff" android:endColor="#26ffffff" />
+        </shape>
+    </item>
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/com_ic_map_focused" />
+    </item>
+</layer-list>

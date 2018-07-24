@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:paddingLeft="5.0dip" android:paddingRight="5.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/left_margin" android:layout_width="5.0dip" android:layout_height="133.0dip" />
+    <RelativeLayout android:id="@id/item_layout" android:background="@drawable/bnav_common_card_selector" android:paddingLeft="10.0dip" android:paddingTop="10.0dip" android:paddingRight="10.0dip" android:paddingBottom="10.0dip" android:layout_width="127.0dip" android:layout_height="133.0dip">
+        <TextView android:textSize="17.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/item_status" android:background="@drawable/nsdk_drawable_bg_green_ellipse" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:minWidth="90.0dip" android:text="@string/car_drv_recycle_record_on" android:layout_centerHorizontal="true" />
+        <ImageView android:id="@id/item_image" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_car_drv_recycle" android:layout_centerInParent="true" />
+        <TextView android:textSize="25.0sp" android:textColor="#ff7b8487" android:id="@id/item_value" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/car_drv_recycle_record" android:layout_centerInParent="true" />
+        <TextView android:textSize="19.0sp" android:textColor="#ff697377" android:id="@id/item_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/car_drv_recycle_record" android:layout_below="@id/item_image" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</LinearLayout>

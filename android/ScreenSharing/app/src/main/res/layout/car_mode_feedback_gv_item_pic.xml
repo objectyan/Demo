@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/carmode_common_bg" android:descendantFocusability="blocksDescendants" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:gravity="center" android:layout_gravity="center" android:layout_width="100.0dip" android:layout_height="60.0dip">
+        <ImageButton android:id="@id/pic" android:background="@null" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginRight="0.0dip" android:scaleType="fitXY" />
+        <ImageButton android:gravity="center" android:layout_gravity="center" android:id="@id/delete" android:background="@drawable/bnav_feedback_del_pic" android:layout_width="20.0dip" android:layout_height="20.0dip" android:scaleType="fitXY" android:layout_centerInParent="true" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/item_layout" android:background="@drawable/carmode_list_bg_selector" android:layout_width="fill_parent" android:layout_height="80.0dip" android:minHeight="80.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true">
+        <ImageView android:id="@id/title_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_mycenter_data_manager" android:contentDescription="@null" />
+        <TextView android:textSize="20.0sp" android:textColor="#ffa5acc3" android:layout_gravity="center_vertical" android:id="@id/title_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="12.0dip" android:text="@string/offline_data" />
+    </LinearLayout>
+    <TextView android:textSize="14.0sp" android:textColor="#ff888888" android:gravity="center" android:id="@id/data_count" android:visibility="visible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2.0dip" android:layout_marginRight="5.0dip" android:text="@string/new_label" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    <ImageView android:id="@id/data_notify" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5.0dip" android:layout_marginRight="5.0dip" android:src="@drawable/red_notify" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    <View android:id="@id/line_top" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_alignParentTop="true" />
+    <View android:id="@id/line_bottom" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="0.5dip" android:layout_alignParentBottom="true" />
+    <View android:id="@id/line_left" android:background="@color/carmode_line" android:layout_width="0.5dip" android:layout_height="fill_parent" android:layout_alignParentLeft="true" />
+    <View android:id="@id/line_right" android:background="@color/carmode_line" android:layout_width="0.5dip" android:layout_height="fill_parent" android:layout_alignParentRight="true" />
+</RelativeLayout>

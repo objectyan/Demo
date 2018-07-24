@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <size android:height="@dimen/home_card_height" android:width="@dimen/home_card_width" />
+    <gradient android:startColor="#ff2e3f73" android:endColor="#ff5199cc" android:angle="315.0" />
+</shape>

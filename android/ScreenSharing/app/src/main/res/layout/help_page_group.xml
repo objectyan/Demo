@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/expandlistview_selector" android:layout_width="fill_parent" android:layout_height="@dimen/default_72"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/divider" android:background="#ff1e294a" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_alignParentBottom="true" />
+    <RelativeLayout android:orientation="horizontal" android:background="@color/ninety_five_percent_white" android:layout_width="fill_parent" android:layout_height="@dimen/default_72">
+        <TextView android:textSize="@dimen/default_text_18" android:textColor="@color/white" android:gravity="center_vertical" android:id="@id/group_text" android:layout_width="wrap_content" android:layout_height="@dimen/default_72" android:layout_marginLeft="@dimen/default_24" android:text="日历" />
+        <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/sixty_percent_white" android:gravity="center_vertical" android:id="@id/group_text_two" android:layout_width="wrap_content" android:layout_height="@dimen/default_72" android:layout_marginLeft="@dimen/default_96" android:text="现在几点" />
+        <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ImageView android:id="@id/group_down" android:layout_width="24.0dip" android:layout_height="24.0dip" android:layout_marginRight="34.0dip" android:src="@drawable/com_ic_dropdown" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

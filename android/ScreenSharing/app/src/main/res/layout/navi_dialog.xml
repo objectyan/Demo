@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="287.0dip"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@id/top_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="12.5dip"
+            android:paddingTop="12.5dip">
+
+            <TextView
+                android:id="@id/title_bar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.5dip"
+                android:gravity="center"
+                android:textColor="#ff333333"
+                android:textSize="21.0sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@id/content"
+                android:layout_width="fill_parent"
+                android:layout_height="0.0dip"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16.0dip"
+                android:layout_marginTop="16.0dip"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:minWidth="112.0dip" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@id/first_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_marginLeft="0.0dip"
+                android:layout_marginRight="0.0dip"
+                android:layout_weight="1.0"
+                android:background="@drawable/com_common_btn_white_selector"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="#ffffffff"
+                android:textSize="16.0sp" />
+
+            <TextView
+                android:id="@id/second_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="50.0dip"
+                android:layout_marginLeft="0.0dip"
+                android:layout_marginRight="0.0dip"
+                android:layout_weight="1.0"
+                android:background="@drawable/com_common_btn_white_selector"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="#ffffffff"
+                android:textSize="16.0sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@id/layout_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@id/title_bar_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#ff333333"
+            android:textSize="18.0sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:id="@id/content_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:minWidth="112.0dip" />
+    </LinearLayout>
+</FrameLayout>

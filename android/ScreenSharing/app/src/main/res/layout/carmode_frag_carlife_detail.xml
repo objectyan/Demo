@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:gravity="center_vertical" android:id="@id/carmode_cl_header_parent" android:layout_width="fill_parent" android:layout_height="100.0dip">
+        <ImageView android:id="@id/carmode_cl_header_imgview" android:layout_width="60.0dip" android:layout_height="60.0dip" android:layout_marginLeft="20.0dip" android:src="@drawable/cr_camera" android:scaleType="centerInside" android:layout_centerVertical="true" />
+        <RelativeLayout android:gravity="center" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="15.0dip" android:layout_marginTop="15.0dip" android:layout_toRightOf="@id/carmode_cl_header_imgview">
+            <TextView android:textSize="20.0sp" android:textColor="#ffffffff" android:id="@id/carmode_cl_header_txtname" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="违章查询" android:layout_centerVertical="true" />
+            <RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/carmode_cl_header_txtname">
+                <TextView android:textSize="15.0sp" android:textColor="#ffffffff" android:id="@id/carmode_cl_header_txtver" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/carlife_version" />
+                <TextView android:textSize="15.0sp" android:textColor="#ffffffff" android:id="@id/carmode_cl_header_txtsize" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="@string/carlife_size" android:layout_toRightOf="@id/carmode_cl_header_txtver" />
+                <TextView android:textSize="15.0sp" android:textColor="#ffffffff" android:id="@id/carmode_cl_header_txtdevelop" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="@string/carlife_develop" android:layout_toRightOf="@id/carmode_cl_header_txtsize" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/carmode_cl_foot_parent" android:layout_width="fill_parent" android:layout_height="60.0dip" android:layout_alignParentBottom="true">
+        <Button android:textSize="20.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/carmode_cl_foot_txtview" android:background="#ff36bfff" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="@string/carlife_download" />
+    </RelativeLayout>
+    <View android:id="@id/divider_line4" android:background="#ff646973" android:layout_width="fill_parent" android:layout_height="2.0dip" android:layout_marginLeft="30.0dip" android:layout_marginRight="30.0dip" android:layout_below="@id/carmode_cl_header_parent" android:contentDescription="@null" />
+    <RelativeLayout android:id="@id/carmode_cl_plugin_parent" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_above="@id/carmode_cl_foot_parent" android:layout_below="@id/divider_line4">
+        <WebView android:id="@id/carmode_item_detail" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="1.0dip" />
+    </RelativeLayout>
+</RelativeLayout>

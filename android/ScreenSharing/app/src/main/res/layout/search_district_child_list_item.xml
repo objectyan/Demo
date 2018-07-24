@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="#ffebedf0" android:layout_width="fill_parent" android:layout_height="60.0dip" android:minHeight="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="17.0sp" android:textColor="@color/common_list_main_text_color_night" android:ellipsize="end" android:gravity="center_vertical" android:id="@id/catalog_child_tv" android:layout_width="wrap_content" android:layout_height="60.0dip" android:layout_marginLeft="10.0dip" android:singleLine="true" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+    <View android:id="@id/list_item_divider" android:background="@drawable/divide_list" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginLeft="17.0dip" android:layout_marginRight="17.0dip" android:layout_alignParentBottom="true" />
+</RelativeLayout>

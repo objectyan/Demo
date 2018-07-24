@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageButton android:id="@id/ib_left" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:src="@drawable/com_ic_back" />
+    <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4_title" android:gravity="center" android:id="@id/tv_title" android:layout_width="wrap_content" android:layout_height="@dimen/common_item_height_64" android:layout_marginLeft="80.0dip" android:maxWidth="300.0dip" android:text="title" android:singleLine="true" />
+</RelativeLayout>

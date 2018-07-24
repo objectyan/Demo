@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.NLPWeatherView android:orientation="vertical" android:paddingTop="@dimen/default_21" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="horizontal" android:background="@color/ninety_five_percent_white" android:layout_width="fill_parent" android:layout_height="@dimen/default_192">
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+            <LinearLayout android:orientation="vertical" android:layout_width="@dimen/default_128" android:layout_height="@dimen/default_132" android:layout_marginLeft="@dimen/default_32">
+                <TextView android:textSize="@dimen/default_text_72" android:textColor="#ffffffff" android:id="@id/weather_current_temp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="-10.0dip" android:text="12°" android:fontFamily="sans-serif-thin" />
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_weight="1.0">
+                    <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="bottom" android:id="@id/weather_temp" android:layout_width="fill_parent" android:layout_height="fill_parent" android:text="今天：18~23°" android:maxLines="1" android:layout_weight="1.0" />
+                    <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="bottom|center|right" android:id="@id/weather_wind" android:layout_width="wrap_content" android:layout_height="fill_parent" android:text="微风" android:maxLines="1" />
+                </LinearLayout>
+                <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/default_20" android:layout_marginTop="@dimen/default_4">
+                    <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:id="@id/weather_air_qulity" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="空气质量" android:layout_weight="1.0" />
+                    <TextView android:textSize="@dimen/default_10" android:textColor="#ffffffff" android:gravity="center" android:id="@id/weather_air_qulity_text" android:background="@drawable/weather_qulity_text_bg" android:paddingLeft="@dimen/default_6" android:paddingRight="@dimen/default_6" android:layout_width="wrap_content" android:layout_height="@dimen/default_16" android:text="良" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_gravity="center_vertical" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="@dimen/default_132" android:layout_marginLeft="@dimen/default_16">
+                <ImageView android:id="@id/weather_pic" android:layout_width="@dimen/default_72" android:layout_height="@dimen/default_72" android:layout_marginTop="4.0dip" android:src="@drawable/weather_cloudy" />
+                <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="bottom" android:id="@id/weather_weather" android:layout_width="@dimen/default_120" android:layout_height="fill_parent" android:layout_marginLeft="@dimen/default_9" android:text="晴转多云" android:singleLine="true" android:layout_weight="1.0" />
+                <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="center_vertical" android:id="@id/weather_city" android:layout_width="@dimen/default_120" android:layout_height="@dimen/default_20" android:layout_marginLeft="@dimen/default_9" android:layout_marginTop="@dimen/default_4" android:text="深圳市" android:singleLine="true" android:drawableLeft="@drawable/duer_ic_weather_position" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/two_percent_white" android:paddingBottom="@dimen/default_14" android:layout_width="@dimen/default_80" android:layout_height="fill_parent">
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_24" android:text="明天" />
+            <ImageView android:id="@id/weather_pic_tomorrow" android:layout_width="@dimen/default_24" android:layout_height="@dimen/default_24" android:layout_marginTop="@dimen/default_28" android:src="@drawable/weather_sun_b" />
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#ffffffff" android:id="@id/weather_temp_tomorrow" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_4" android:text="18～23°" />
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="center" android:id="@id/weather_weather_tomorrow" android:layout_width="@dimen/default_61" android:layout_height="@dimen/default_40" android:layout_marginTop="@dimen/default_18" android:text="晴天" android:lineSpacingExtra="@dimen/default_2" />
+        </LinearLayout>
+        <ImageView android:background="#801c2645" android:layout_width="2.0px" android:layout_height="fill_parent" />
+        <LinearLayout android:gravity="center_horizontal" android:orientation="vertical" android:background="@color/two_percent_white" android:layout_width="@dimen/default_80" android:layout_height="fill_parent">
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_24" android:text="后天" />
+            <ImageView android:id="@id/weather_pic_tdat" android:layout_width="@dimen/default_24" android:layout_height="@dimen/default_24" android:layout_marginTop="@dimen/default_28" android:src="@drawable/weather_wind_b" />
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#ffffffff" android:id="@id/weather_temp_tdat" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_4" android:text="8～16°" />
+            <TextView android:textSize="@dimen/default_text_14" android:textColor="#80ffffff" android:gravity="center" android:id="@id/weather_weather_tdat" android:layout_width="@dimen/default_61" android:layout_height="@dimen/default_40" android:layout_marginTop="@dimen/default_18" android:text="多云" android:lineSpacingExtra="@dimen/default_2" />
+        </LinearLayout>
+    </LinearLayout>
+</com.baidu.che.codriver.widget.NLPWeatherView>

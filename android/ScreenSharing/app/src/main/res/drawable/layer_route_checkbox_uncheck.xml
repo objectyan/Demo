@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/layer_route_checkbox_bg" />
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/layer_route_checkbox_on" />
+    </item>
+</layer-list>

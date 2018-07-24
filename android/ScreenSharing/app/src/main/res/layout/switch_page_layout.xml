@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.SwitchPageLayout android:paddingTop="@dimen/default_21" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/default_text_14" android:textColor="@color/sixty_percent_white" android:id="@id/title" android:paddingBottom="@dimen/default_8" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" />
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/title">
+        <LinearLayout android:orientation="vertical" android:id="@id/container" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
+        <LinearLayout android:orientation="vertical" android:id="@id/control_bar" android:background="@color/two_percent_white" android:paddingTop="@dimen/default_8" android:paddingBottom="@dimen/default_8" android:layout_width="@dimen/default_72" android:layout_height="fill_parent">
+            <com.baidu.che.codriver.widget.CompoundImageView android:layout_gravity="center_horizontal" android:id="@id/page_prev" android:background="@drawable/baidu_bton_cricel_select" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/prev_page" />
+            <TextView android:textSize="@dimen/default_text_16" android:textColor="@color/fifty_percent_white" android:gravity="center" android:id="@id/page_index" android:layout_width="fill_parent" android:layout_height="0.0dip" android:maxLines="1" android:layout_weight="1.0" />
+            <com.baidu.che.codriver.widget.CompoundImageView android:layout_gravity="center_horizontal" android:id="@id/page_next" android:background="@drawable/baidu_bton_cricel_select" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/next_page" />
+        </LinearLayout>
+    </LinearLayout>
+</com.baidu.che.codriver.widget.SwitchPageLayout>

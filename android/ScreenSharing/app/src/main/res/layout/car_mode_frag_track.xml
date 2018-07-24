@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_gravity="center_horizontal" android:background="#ff23262d" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/track_title_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true">
+        <RelativeLayout android:gravity="center_vertical" android:layout_gravity="center" android:background="@color/carmode_titlebar_bg" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_offline_status_text" android:gravity="center" android:id="@id/delect_view" android:background="@color/carmode_titlebar_bg" android:layout_width="wrap_content" android:layout_height="60.0dip" android:layout_marginLeft="10.0dip" android:text="@string/track_car_mode_sync" android:layout_alignParentLeft="true" />
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_offline_title_text_pressed" android:gravity="center" android:layout_gravity="center_horizontal" android:background="@color/carmode_titlebar_bg" android:layout_width="wrap_content" android:layout_height="60.0dip" android:text="@string/my_track" android:layout_centerHorizontal="true" />
+            <TextView android:textSize="20.0sp" android:textColor="@color/carmode_offline_title_text_pressed" android:gravity="center" android:id="@id/Edit_View" android:background="@color/carmode_titlebar_bg" android:layout_width="wrap_content" android:layout_height="60.0dip" android:layout_marginRight="10.0dip" android:text="@string/title_edit" android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <TextView android:textSize="14.0sp" android:textColor="#ff7d8487" android:gravity="center_horizontal" android:id="@id/subtitle_textview" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="20.0dip" android:layout_marginBottom="3.0dip" />
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:id="@id/listview_layout" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/track_title_layout">
+        <ListView android:id="@id/track_vertical_list_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:divider="@null" android:dividerHeight="1.0px" android:footerDividersEnabled="true" />
+    </LinearLayout>
+</RelativeLayout>

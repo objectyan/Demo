@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <nine-patch android:src="@drawable/nsdk_drawable_od_bg_card_progress_background_night" />
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="10.0dip" />
+                <gradient android:startColor="#ffe6b317" android:endColor="#ffe6b317" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

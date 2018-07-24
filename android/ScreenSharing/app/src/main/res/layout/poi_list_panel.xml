@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.baidu.navi.view.HeightWrapableViewPager android:id="@id/vp_poi_switch" android:persistentDrawingCache="animation" android:layout_width="fill_parent" android:layout_height="wrap_content" android:flipInterval="30" />
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="40.0dip">
+        <ImageView android:id="@id/pager_up" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+        <ImageView android:id="@id/pager_down" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/tag_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_toLeftOf="@id/pager_down" android:layout_toRightOf="@id/pager_up" android:layout_centerInParent="true" />
+    </RelativeLayout>
+</LinearLayout>

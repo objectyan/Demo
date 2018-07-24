@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="vertical" android:id="@id/listview_layout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <include android:id="@id/title_bar1" layout="@layout/carlife_common_title_bar_new" />
+            <LinearLayout android:gravity="right" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height" android:layout_marginRight="32.0dip" android:layout_alignBottom="@id/title_bar1">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:gravity="center" android:id="@id/search_result_btn_jyb" android:layout_width="@dimen/common_item_width" android:layout_height="@dimen/common_item_height_64" android:text="@string/home_discovery_jyb" />
+            </LinearLayout>
+        </RelativeLayout>
+        <TextView android:textSize="20.0dip" android:textColor="#ffa5aec3" android:gravity="left" android:id="@id/poi_confirm_title_view" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="64.0dip" android:layout_marginLeft="72.0dip" android:text="你要找的是不是" android:layout_below="@id/title_bar" />
+        <com.baidu.navi.view.xpulltorefresh.XListView android:id="@id/lv_search_result" android:paddingLeft="72.0dip" android:paddingRight="72.0dip" android:focusable="true" android:scrollbars="none" android:descendantFocusability="beforeDescendants" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/com_bg_item_selector" android:divider="@null" android:layout_below="@id/title_bar" android:overScrollMode="never" />
+    </LinearLayout>
+    <RelativeLayout android:id="@id/sr_cover_sorting" android:background="@color/carmode_poig_dialog_bg" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:gravity="center" android:id="@id/iv_close_sorting" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginRight="10.0dip" android:src="@drawable/carmode_ic_poiresult_close" android:scaleType="centerInside" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+        <LinearLayout android:orientation="vertical" android:background="@color/carmode_common_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
+            <View android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+            <RelativeLayout android:id="@id/rl_sort_by_key" android:background="@drawable/carmode_list_bg_selector" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:clickable="true" android:layout_width="fill_parent" android:layout_height="70.0dip" android:layout_above="@id/rl_sort_by_distance">
+                <TextView android:textSize="20.0dip" android:textColor="@color/carmode_text_main_color" android:gravity="center" android:id="@id/tv_sort_by_key" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="按关键词排序" android:layout_centerVertical="true" />
+                <ImageView android:id="@id/iv_sort_by_key" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carmode_icon_checkbox_checked" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+            </RelativeLayout>
+            <View android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+            <RelativeLayout android:id="@id/rl_sort_by_distance" android:background="@drawable/carmode_list_bg_selector" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:clickable="true" android:layout_width="fill_parent" android:layout_height="70.0dip">
+                <TextView android:textSize="20.0dip" android:textColor="@color/carmode_text_main_color" android:gravity="center" android:id="@id/tv_sort_by_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="按距离排序" android:layout_centerVertical="true" />
+                <ImageView android:id="@id/iv_sort_by_distance" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/carmode_icon_checkbox_checked" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/city_result_view" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:gravity="center" android:id="@id/iv_close_city_result" android:visibility="gone" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginRight="10.0dip" android:src="@drawable/carmode_ic_poiresult_close" android:scaleType="centerInside" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+        <include android:id="@id/title_bar2" layout="@layout/carlife_common_title_bar_new" />
+        <TextView android:textSize="20.0dip" android:textColor="#ffa5aec3" android:gravity="left" android:id="@id/title_view" android:layout_width="fill_parent" android:layout_height="64.0dip" android:layout_marginLeft="72.0dip" android:text="请选择下列城市进行搜索" android:layout_below="@id/title_bar2" />
+        <View android:id="@id/hor_devide_line" android:background="@color/carmode_line" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_below="@id/title_view" />
+        <ListView android:id="@id/city_listview" android:paddingLeft="72.0dip" android:paddingRight="72.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:listSelector="@drawable/com_bg_item_selector" android:layout_below="@id/hor_devide_line" />
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/view_map_layout" android:background="@android:color/transparent" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:gravity="center" android:id="@id/iv_back_to_resultlist" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:layout_marginRight="10.0dip" android:src="@drawable/carmode_ic_poiresult_back_resultlist" android:scaleType="centerInside" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+        <FrameLayout android:id="@id/layout_map_control_panel" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
+            <include layout="@layout/map_control_panel" />
+        </FrameLayout>
+    </RelativeLayout>
+</RelativeLayout>

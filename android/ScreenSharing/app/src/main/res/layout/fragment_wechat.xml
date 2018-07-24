@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:fresco="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="@dimen/common_title_bar_height">
+        <ImageButton android:id="@id/fragment_wechat_back" android:background="@android:color/transparent" android:layout_width="@dimen/common_item_width" android:layout_height="fill_parent" android:src="@mipmap/com_ic_back" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="微信" />
+        <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a1_title" android:layout_gravity="center_vertical" android:id="@id/fragment_wechat_title_desc" android:paddingTop="2.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="此服务由第三方提供" />
+        <View android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0" />
+        <FrameLayout android:id="@id/fragment_wechat_layout_usericon" android:background="@drawable/com_bg_btn_selector" android:layout_width="@dimen/common_item_width" android:layout_height="fill_parent">
+            <com.facebook.drawee.view.SimpleDraweeView android:layout_gravity="center" android:id="@id/fragment_wechat_img_usericon" android:layout_width="30.0dip" android:layout_height="30.0dip" android:scaleType="fitXY" fresco:placeholderImage="@mipmap/main_left_user" fresco:roundedCornerRadius="6.0dip" />
+        </FrameLayout>
+    </LinearLayout>
+    <GridView android:gravity="center_horizontal" android:id="@id/fragment_wechat_gridview" android:scrollbars="none" android:fadingEdge="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="24.0dip" android:layout_marginTop="35.0dip" android:layout_marginRight="24.0dip" android:listSelector="@android:color/transparent" android:cacheColorHint="@android:color/transparent" android:stretchMode="columnWidth" android:numColumns="4" />
+</LinearLayout>

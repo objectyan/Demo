@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:paddingLeft="@dimen/common_listview_item_padding_left" android:paddingRight="@dimen/common_listview_item_padding_right" android:layout_width="fill_parent" android:layout_height="60.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_calllog_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxWidth="250.0dip" android:singleLine="true" android:layout_centerVertical="true" />
+    <TextView android:textSize="20.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_calllog_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@id/tv_calllog_name" android:layout_centerVertical="true" />
+    <ImageView android:id="@id/iv_calllog_type" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:src="@drawable/phone_ic_callout" android:layout_toRightOf="@id/tv_calllog_count" android:layout_centerVertical="true" />
+    <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_calllog_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+    <View android:id="@id/cl_line" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" android:layout_alignParentBottom="true" />
+</RelativeLayout>

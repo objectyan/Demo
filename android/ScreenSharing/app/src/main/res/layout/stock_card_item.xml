@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.StockCardView android:orientation="vertical" android:paddingTop="2.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="14.0sp" android:textColor="@color/fifty_percent_white" android:id="@id/stock_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="百度现在187.6美元，涨幅0.18%" android:maxLines="1" />
+    <LinearLayout android:background="#ffffffff" android:paddingLeft="10.0dip" android:paddingTop="20.0dip" android:paddingRight="10.0dip" android:paddingBottom="20.0dip" android:layout_width="fill_parent" android:layout_height="252.0dip" android:layout_marginTop="4.0dip">
+        <com.android.volley.toolbox.NetworkImageView android:id="@id/stock_pic" android:background="#ffffffff" android:layout_width="fill_parent" android:layout_height="330.0dip" android:scaleType="fitXY" />
+    </LinearLayout>
+</com.baidu.che.codriver.widget.StockCardView>

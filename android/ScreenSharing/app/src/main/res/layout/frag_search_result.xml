@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navi.view.MapTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" app:rightContentImage="@drawable/bnav_common_ic_navi_white" app:rightContentVisible="true" />
+    <LinearLayout android:orientation="vertical" android:id="@id/slide_drawer" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginTop="250.0dip">
+        <ImageView android:gravity="center" android:id="@id/pull_handle" android:layout_width="fill_parent" android:layout_height="30.0dip" android:src="@drawable/bnav_rp_ic_drag_default_night" android:scaleType="centerInside" />
+        <com.baidu.navi.view.xpulltorefresh.XListView android:id="@id/lv_search_result" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@android:color/transparent" android:dividerHeight="0.0dip" android:footerDividersEnabled="false" />
+        <android.support.v4.view.ViewPager android:id="@id/vp_search_result" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    </LinearLayout>
+    <RelativeLayout android:id="@id/sr_cover_sorting" android:background="#cc000000" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <RelativeLayout android:gravity="center_vertical" android:id="@id/sr_title_bar_inner" android:background="@android:color/transparent" android:paddingTop="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <ImageView android:gravity="center" android:id="@id/iv_close_sorting" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bd_sr_selector" android:scaleType="centerInside" android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <ImageView android:id="@id/iv_list_indicatore_triangle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="26.0dip" android:src="@drawable/nsdk_drawable_common_layoute_indicator_triangle" android:layout_below="@id/sr_title_bar_inner" android:layout_alignParentRight="true" />
+        <LinearLayout android:orientation="vertical" android:background="#ffffffff" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/iv_list_indicatore_triangle">
+            <RelativeLayout android:id="@id/rl_sort_by_key" android:background="@drawable/bnav_common_bg_pressed_mask_selector" android:padding="10.0dip" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                <TextView android:textSize="16.0sp" android:textColor="#ff3477ef" android:gravity="center" android:id="@id/tv_sort_by_key" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="按关键词排序" android:layout_centerVertical="true" />
+                <ImageView android:id="@id/iv_sort_by_key" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_common_check_box_checked" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+            </RelativeLayout>
+            <View android:id="@id/line_poi_horizontal" android:background="@drawable/bnav_common_line_horizontal" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+            <RelativeLayout android:id="@id/rl_sort_by_distance" android:background="@drawable/bnav_common_bg_pressed_mask_selector" android:padding="10.0dip" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                <TextView android:textSize="16.0sp" android:textColor="#ff49526f" android:gravity="center" android:id="@id/tv_sort_by_distance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="按距离排序" android:layout_centerVertical="true" />
+                <ImageView android:id="@id/iv_sort_by_distance" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_common_check_box_checked" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:paddingLeft="@dimen/default_8" android:focusable="false" android:clickable="false" android:layout_width="fill_parent" android:layout_height="@dimen/default_38"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/list_item_divider" android:background="@color/cl_line_a1_item" android:focusable="false" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="@dimen/default_1" />
+    <TextView android:textSize="@dimen/default_text_16" android:textColor="@color/cl_text_a2" android:gravity="bottom|center|left" android:id="@id/tv_map_data_title" android:focusable="false" android:layout_width="fill_parent" android:layout_height="@dimen/default_38" android:includeFontPadding="false" />
+</RelativeLayout>

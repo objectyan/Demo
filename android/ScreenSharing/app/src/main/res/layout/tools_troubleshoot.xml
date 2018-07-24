@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@android:drawable/title_bar" android:paddingBottom="10.0sp" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textColor="@android:color/white" android:id="@id/app_taskid" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0sp" android:text="" android:layout_alignParentLeft="true" />
+    <TextView android:textColor="@android:color/white" android:id="@id/app_email_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0sp" android:text="邮箱地址：" android:layout_below="@id/app_taskid" />
+    <EditText android:textColor="@android:color/black" android:id="@id/app_email" android:background="@android:drawable/edit_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:maxLength="50" android:layout_below="@id/app_email_title" android:inputType="textEmailAddress" android:textCursorDrawable="@null" />
+    <TextView android:textColor="@android:color/white" android:id="@id/app_phone_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="联系电话：" android:layout_below="@id/app_email" />
+    <EditText android:textColor="@android:color/black" android:id="@id/app_phone" android:background="@android:drawable/edit_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:maxLength="20" android:layout_below="@id/app_phone_title" android:inputType="phone" android:textCursorDrawable="@null" />
+    <TextView android:textColor="@android:color/white" android:id="@id/app_trouble_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="问题描述：" android:layout_below="@id/app_phone" />
+    <EditText android:textColor="@android:color/black" android:gravity="center|left|top" android:id="@id/app_trouble" android:background="@android:drawable/edit_text" android:layout_width="fill_parent" android:layout_height="200.0sp" android:maxLength="1000" android:layout_below="@id/app_trouble_title" android:inputType="text" android:textCursorDrawable="@null" />
+</RelativeLayout>

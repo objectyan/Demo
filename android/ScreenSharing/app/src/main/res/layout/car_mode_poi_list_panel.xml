@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:background="@color/carmode_common_bg" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/rl_poi_indicator" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="40.0dip" android:layout_alignParentBottom="true">
+        <ImageView android:id="@id/pager_up" android:background="@drawable/carmode_list_bg_selector" android:paddingLeft="20.0dip" android:paddingRight="20.0dip" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginLeft="10.0dip" android:src="@drawable/bnav_poi_detail_ic_up_normal" android:scaleType="center" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+        <ImageView android:id="@id/pager_down" android:background="@drawable/carmode_list_bg_selector" android:paddingLeft="20.0dip" android:paddingRight="20.0dip" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_marginRight="10.0dip" android:src="@drawable/bnav_poi_detail_ic_down_normal" android:scaleType="center" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/tag_layout" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_toLeftOf="@id/pager_down" android:layout_toRightOf="@id/pager_up" android:layout_centerInParent="true" />
+    </RelativeLayout>
+    <com.baidu.navi.view.HeightWrapableViewPager android:id="@id/vp_poi_switch" android:background="@drawable/carlife_map_its_bg_selector" android:paddingLeft="2.0dip" android:paddingTop="1.0dip" android:paddingRight="1.0dip" android:paddingBottom="1.0dip" android:focusable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_above="@id/rl_poi_indicator" />
+</RelativeLayout>

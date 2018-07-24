@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.BaiKeCardView android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="14.0sp" android:textColor="@color/sixty_percent_white" android:ellipsize="end" android:id="@id/baikeIntroductionTV" android:layout_width="430.0dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_16" android:text="万圣节是一个西方的传统的节日" android:singleLine="true" />
+    <LinearLayout android:orientation="horizontal" android:background="@color/six_percent_white" android:padding="@dimen/default_24" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_9">
+        <com.android.volley.toolbox.NetworkImageView android:id="@id/baikeImageView" android:layout_width="136.0dip" android:layout_height="192.0dip" android:src="@drawable/default_normal" android:scaleType="fitStart" />
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/default_28">
+            <TextView android:textSize="18.0sp" android:textColor="@color/white" android:ellipsize="end" android:id="@id/baikeTitleTv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="天安门" android:maxLines="1" android:includeFontPadding="false" />
+            <TextView android:textSize="16.0sp" android:textColor="@color/seventy_percent_white" android:ellipsize="end" android:id="@id/baikeDetailTv" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_12" android:text="天安门，坐落在中华人民共和国首都北京市的中心" android:maxLines="7" android:includeFontPadding="false" android:lineSpacingMultiplier="1.2" />
+        </LinearLayout>
+    </LinearLayout>
+</com.baidu.che.codriver.widget.BaiKeCardView>

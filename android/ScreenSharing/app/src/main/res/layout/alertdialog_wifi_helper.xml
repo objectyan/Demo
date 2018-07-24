@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/wifi_helper_top_view" android:layout_width="fill_parent" android:layout_height="119.0dip">
+        <TextView android:textSize="18.0sp" android:textColor="#ff333333" android:id="@id/wifi_helper_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40.0dip" android:text="@string/wifi_helper_alert_title" android:layout_centerHorizontal="true" />
+        <LinearLayout android:gravity="center_horizontal" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" android:layout_below="@id/wifi_helper_title" android:layout_centerHorizontal="true">
+            <ImageView android:layout_gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/wifi_helper_msg_icon" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/wifi_helper_alert_msg" />
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="50.0dip" android:layout_below="@id/wifi_helper_top_view">
+        <Button android:textSize="18.0sp" android:textColor="#ff3385ff" android:gravity="center" android:id="@id/wifi_helper_positive_button" android:background="@drawable/alert_dialog_leftbutton" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/wifi_helper_positive" android:layout_weight="1.0" />
+        <Button android:textSize="18.0sp" android:textColor="#ff3385ff" android:gravity="center" android:id="@id/wifi_helper_negative_button" android:background="@drawable/alert_dialog_rightbutton" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/wifi_helper_negative" android:layout_weight="1.0" />
+    </LinearLayout>
+</RelativeLayout>

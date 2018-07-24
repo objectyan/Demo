@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@id/nav_route_history_item_layout" android:layout_width="fill_parent" android:layout_height="@dimen/vertical_listview_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="@dimen/vertical_listview_double_line_height">
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/route_custom_enter_layout" android:background="@drawable/carmode_list_bg_selector" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <ImageView android:id="@id/divider_vertical" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" />
+            <ImageView android:id="@id/route_custom_enter_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15.0dip" android:layout_marginRight="15.0dip" android:src="@drawable/bnav_ic_travelref_alarm_normal" />
+        </LinearLayout>
+        <TextView android:textSize="14.0sp" android:textColor="#ff000000" android:gravity="center" android:id="@id/tv_num" android:background="@drawable/carmode_ic_common_serial_bg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_toLeftOf="@id/route_custom_enter_layout" android:layout_toRightOf="@id/tv_num" android:layout_centerVertical="true">
+            <TextView android:textSize="@dimen/carmode_list_text_title" android:textColor="@color/carmode_common_main_text" android:ellipsize="end" android:id="@id/route_info_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" style="@style/Text.histroyTitle" />
+            <TextView android:textSize="@dimen/carmode_list_text_info" android:textColor="@color/carmode_common_second_text" android:ellipsize="end" android:id="@id/route_time_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:singleLine="true" style="@style/Text.historySubTitle" />
+        </LinearLayout>
+        <View android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+</LinearLayout>

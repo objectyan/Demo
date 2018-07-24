@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include android:id="@id/title_bar" layout="@layout/carlife_common_title_bar_new" />
+    <ListView android:id="@id/setting_list" android:focusable="true" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="72.0dip" android:layout_marginRight="72.0dip" android:listSelector="@drawable/com_bg_item_selector" android:divider="@color/cl_line_a1_item" android:dividerHeight="@dimen/common_item_line" android:layout_below="@id/title_bar" />
+</RelativeLayout>

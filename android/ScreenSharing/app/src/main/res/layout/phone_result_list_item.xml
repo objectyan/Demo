@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.CompoundRelativeLayout android:background="@drawable/selectors_checked" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="@dimen/default_text_18" android:textColor="@color/white" android:id="@id/tv_result" android:paddingLeft="@dimen/default_24" android:paddingTop="@dimen/default_23" android:paddingBottom="@dimen/default_23" android:layout_width="fill_parent" android:layout_height="wrap_content" android:maxLines="1" />
+    <View android:id="@id/route_layout_item_line" android:background="@color/conversation_list_divider" android:layout_width="fill_parent" android:layout_height="1.0px" android:layout_marginRight="@dimen/default_24" android:layout_below="@id/tv_result" />
+</com.baidu.che.codriver.widget.CompoundRelativeLayout>

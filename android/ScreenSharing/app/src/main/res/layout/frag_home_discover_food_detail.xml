@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/common_top_bar" layout="@layout/carlife_common_title_bar_new" />
+    <com.baidu.carlife.view.CommonTipView android:id="@id/common_tip_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/common_top_bar" />
+    <ScrollView android:id="@id/layout_content" android:paddingLeft="72.0dip" android:paddingRight="72.0dip" android:visibility="gone" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/common_top_bar">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <com.baidu.carlife.view.MultiImageView android:id="@id/iv_logo" android:layout_width="88.0dip" android:layout_height="64.0dip" android:layout_marginTop="10.0dip" android:layout_marginBottom="10.0dip" />
+                <Button android:textSize="16.0sp" android:textColor="@color/cl_text_a5_bgtext" android:gravity="center" android:id="@id/btn_state" android:background="@drawable/com_bg_btn_b_selector" android:focusable="true" android:visibility="invisible" android:layout_width="136.0dip" android:layout_height="44.0dip" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="16.0dip" android:layout_marginRight="16.0dip" android:layout_toLeftOf="@id/btn_state" android:layout_toRightOf="@id/iv_logo" android:layout_centerVertical="true">
+                    <TextView android:textSize="18.0dip" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_distant" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a1_content" android:id="@id/tv_notice" android:paddingTop="4.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/tv_distant" />
+                </RelativeLayout>
+            </RelativeLayout>
+            <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            <ViewStub android:id="@id/view_queues" android:layout="@layout/layout_food_queues" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <ViewStub android:id="@id/view_queueing" android:layout="@layout/layout_food_queueing" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+            <View android:id="@id/temp" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            <RelativeLayout android:paddingTop="10.0dip" android:paddingBottom="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_name" android:layout_width="320.0dip" android:layout_height="wrap_content" />
+                <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a1_content" android:id="@id/tv_addr" android:paddingTop="4.0dip" android:layout_width="320.0dip" android:layout_height="wrap_content" android:layout_below="@id/tv_name" />
+                <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a1_content" android:id="@id/tv_open" android:paddingTop="4.0dip" android:layout_width="320.0dip" android:layout_height="wrap_content" android:layout_below="@id/tv_addr" />
+                <RatingBar android:id="@id/rb_score" android:layout_alignParentRight="true" style="@style/RatingBar" />
+                <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a1_content" android:gravity="right" android:id="@id/tv_style" android:paddingTop="4.0dip" android:layout_width="120.0dip" android:layout_height="wrap_content" android:layout_below="@id/rb_score" android:layout_alignParentRight="true" />
+                <TextView android:textSize="14.0sp" android:textColor="@color/cl_text_a1_content" android:gravity="right" android:id="@id/tv_price" android:paddingTop="4.0dip" android:layout_width="120.0dip" android:layout_height="wrap_content" android:layout_below="@id/tv_style" android:layout_alignParentRight="true" />
+            </RelativeLayout>
+            <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            <LinearLayout android:orientation="horizontal" android:id="@id/ll_btn" android:layout_width="fill_parent" android:layout_height="64.0dip">
+                <RelativeLayout android:id="@id/btn_gothere" android:background="@drawable/com_bg_item_selector" android:focusable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                    <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a4_content" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/home_food_gothere" android:drawableLeft="@drawable/com_ic_navigate" android:drawablePadding="8.0dip" android:layout_centerInParent="true" />
+                </RelativeLayout>
+                <RelativeLayout android:id="@id/btn_tel" android:background="@drawable/com_bg_item_selector" android:focusable="true" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                    <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a4_content" android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/home_food_tel" android:drawableLeft="@drawable/com_ic_call" android:drawablePadding="8.0dip" android:layout_centerInParent="true" />
+                </RelativeLayout>
+            </LinearLayout>
+            <View android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a1_content" android:id="@id/tv_discount" android:paddingBottom="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" />
+            <View android:id="@id/temp1" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a0_content" android:gravity="center" android:layout_width="fill_parent" android:layout_height="64.0dip" android:text="@string/home_food_nowait" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

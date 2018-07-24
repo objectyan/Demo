@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a5_bgtext" android:gravity="center" android:id="@id/btn_load_more" android:layout_width="fill_parent" android:layout_height="80.0dip" android:text="@string/module_music_list_load_more" />
+    <include android:id="@id/view_loading" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="80.0dip" android:layout_centerInParent="true" layout="@layout/common_ic_loading" />
+</merge>

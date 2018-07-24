@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/parentPanel" android:background="@android:color/transparent" android:paddingLeft="@dimen/alert_dialog_frame_margin" android:paddingTop="@dimen/alert_dialog_frame_margin" android:paddingRight="@dimen/alert_dialog_frame_margin" android:paddingBottom="@dimen/alert_dialog_frame_margin" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minWidth="@dimen/alert_dialog_min_width"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:orientation="horizontal" android:id="@id/topPanel" android:background="@drawable/alert_dialog_title_bg" android:paddingLeft="@dimen/alert_dialog_title_margin_left" android:paddingRight="@dimen/alert_dialog_title_margin_right" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <ImageView android:layout_gravity="center|left" android:id="@id/alertIcon" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="10.0dip" />
+            <TextView android:textSize="@dimen/alert_dialog_title_textsize" android:textColor="#ff333333" android:ellipsize="end" android:gravity="center|left" android:id="@id/alertTitle" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="@dimen/alert_dialog_title_height" android:text="标题" android:singleLine="true" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/contentPanel" android:background="@drawable/alert_dialog_message_bg" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="@dimen/alert_dialog_message_height" android:layout_weight="1.0">
+            <ScrollView android:id="@id/scrollView" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <TextView android:textSize="@dimen/alert_dialog_message_textsize" android:textColor="#ff666666" android:gravity="center|left" android:id="@id/message" android:paddingLeft="@dimen/alert_dialog_message_margin_left" android:paddingTop="@dimen/alert_dialog_message_margin_top" android:paddingRight="@dimen/alert_dialog_message_margin_right" android:paddingBottom="@dimen/alert_dialog_message_margin_bottom" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="对话框测试内容" />
+            </ScrollView>
+        </LinearLayout>
+        <RelativeLayout android:gravity="center" android:id="@id/customPanel" android:background="@drawable/alert_dialog_message_bg" android:paddingLeft="2.0dip" android:paddingRight="2.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:minHeight="@dimen/alert_dialog_message_height" android:layout_weight="1.0" />
+        <LinearLayout android:orientation="horizontal" android:id="@id/buttonPanel" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <Button android:textSize="@dimen/alert_dialog_button_textsize" android:textColor="@drawable/alertdialog_button_text_color" android:id="@id/positiveButton" android:background="@drawable/alert_dialog_leftbutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="@dimen/alert_dialog_button_height" android:singleLine="true" android:layout_weight="1.0" />
+            <Button android:textSize="@dimen/alert_dialog_button_textsize" android:textColor="@drawable/alertdialog_button_text_color" android:layout_gravity="end" android:id="@id/negativeButton" android:background="@drawable/alert_dialog_rightbutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="@dimen/alert_dialog_button_height" android:singleLine="true" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

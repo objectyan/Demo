@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/common_dialog_left_list" android:background="@drawable/com_shape_dialog_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android"> // 个人登录信息，方案调整为作为List一部分进行显示
+<ListView android:id="@id/lv_menu" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/com_bg_item_selector" android:cacheColorHint="@android:color/transparent" android:divider="@null" />
+</RelativeLayout>

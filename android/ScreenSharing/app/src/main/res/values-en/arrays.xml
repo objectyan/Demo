@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="carlife_setting_name">
+        <item>Wake up via “Xiaodu Xiaodu”</item>
+        <item>Color adjustment of HEAD UNIT images</item>
+        <item>Navi Settings</item>
+        <item>CarLife voice mode</item>
+        <item>Itinerary</item>
+        <item>USB Debug</item>
+        <item>Clear Cache</item>
+        <item>About</item>
+    </string-array>
+    <string-array name="carlife_setting_name_elh">
+        <item>Wake up via “Xiaodu Xiaodu”</item>
+        <item>Color adjustment of HEAD UNIT images</item>
+        <item>Navi Settings</item>
+        <item>CarLife voice mode</item>
+        <item>Itinerary</item>
+        <item>Update firmware of rearview mirror</item>
+        <item>Clear Cache</item>
+        <item>About</item>
+    </string-array>
+    <string-array name="carlife_setting_name_usb">
+        <item>Wake up via “Xiaodu Xiaodu”</item>
+        <item>Color adjustment of HEAD UNIT images</item>
+        <item>Navi Settings</item>
+        <item>CarLife Voice Mode</item>
+        <item>Itinerary</item>
+        <item>Clear Cache</item>
+        <item>About</item>
+    </string-array>
+    <string-array name="custom_info_list">
+        <item>Personal information</item>
+        <item>支付管理</item>
+        <item>Exit</item>
+    </string-array>
+    <string-array name="feedback_image">
+        <item>Take a picture</item>
+        <item>Select from album</item>
+        <item>Close</item>
+    </string-array>
+    <string-array name="home_discovery">
+        <item>Find a spot</item>
+        <item>Fill it up</item>
+        <item>Look for food</item>
+        <item>Call rescue</item>
+    </string-array>
+    <string-array name="home_food_menu">
+        <item>By Distance</item>
+        <item>By Comment</item>
+    </string-array>
+    <string-array name="home_help_items">
+        <item>@string/home_more_voice</item>
+        <item>@string/home_more_connect_help</item>
+        <item>@string/commonquestion_setting_title</item>
+        <item>@string/feedback</item>
+    </string-array>
+    <string-array name="home_my">
+        <item>Itinerary</item>
+        <item>Offline Maps</item>
+        <item>Theme</item>
+        <item>Setting</item>
+    </string-array>
+    <string-array name="home_my_skin">
+        <item>Prime Black</item>
+        <item>Sensational blue</item>
+    </string-array>
+    <string-array name="map_ctrl_menu_item">
+        <item>@string/carlife_map_ctrl_address</item>
+        <item>@string/carlife_map_ctrl_its</item>
+        <item>@string/carlife_map_ctrl_cruise</item>
+    </string-array>
+    <string-array name="map_in_navi_route_search_list_item_keywords">
+        <item>@string/map_in_navi_route_search_keyword_oil</item>
+        <item>@string/map_in_navi_route_search_keyword_park</item>
+        <item>@string/map_in_navi_route_search_keyword_toilets</item>
+        <item>@string/map_in_navi_route_search_keyword_food</item>
+        <item>@string/map_in_navi_route_search_keyword_hotel</item>
+        <item>@string/map_in_navi_route_search_keyword_bank</item>
+    </string-array>
+    <string-array name="module_music_apps_list">
+        <item>Local Music</item>
+        <item>QQMusic</item>
+        <item>Netease</item>
+    </string-array>
+    <string-array name="person_ctrl_menu_item">
+        <item>@string/carlife_person_ctrl_journey_setting</item>
+        <item>@string/carlife_person_ctrl_map_setting</item>
+        <item>@string/carlife_person_ctrl_voice_setting</item>
+        <item>@string/carlife_person_ctrl_help</item>
+        <item>Clear Cache</item>
+        <item>@string/carlife_person_ctrl_about</item>
+    </string-array>
+    <string-array name="space_catalog_name_main">
+        <item>Gas Station</item>
+        <item>Parking Lot</item>
+        <item>Car Maintenance</item>
+        <item>Bank</item>
+        <item>Restaurant</item>
+        <item>Hotel</item>
+        <item>Washroom</item>
+        <item>Medical Care</item>
+    </string-array>
+</resources>

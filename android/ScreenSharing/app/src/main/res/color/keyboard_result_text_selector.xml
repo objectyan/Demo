@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:color="@color/cl_other_c_highlight" />
+    <item android:color="@color/cl_text_a4_bgtext" />
+</selector>

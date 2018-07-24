@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="@dimen/common_title_bar_height">
+        <ImageButton android:id="@id/fragment_login_back" android:background="@android:color/transparent" android:layout_width="@dimen/common_item_width" android:layout_height="fill_parent" android:src="@mipmap/com_ic_back" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+            <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:id="@id/fragment_login_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="返回二维码登录" />
+            <TextView android:textSize="12.0sp" android:textColor="@color/cl_text_a1_title" android:layout_gravity="center_vertical" android:id="@id/fragment_login_title_desc" android:paddingTop="2.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="8.0dip" android:text="此服务由第三方提供" />
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout android:gravity="center_horizontal" android:paddingTop="16.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <ImageView android:id="@id/fragment_login_img" android:background="#ffffffff" android:layout_width="116.0dip" android:layout_height="116.0dip" android:scaleType="fitXY" android:layout_centerHorizontal="true" />
+        <ImageView android:id="@id/fragment_login_imgv_refresh" android:layout_width="116.0dip" android:layout_height="116.0dip" android:src="@drawable/wx_login_btn_refresh_selector" android:layout_centerHorizontal="true" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4" android:gravity="center" android:id="@id/fragment_login_tips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24.0dip" android:text="@string/login_qrcode_tips" android:layout_below="@id/fragment_login_img" android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/ll_frag_setting" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/carlife_common_title_bar_new" />
+    <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+    <ScrollView android:id="@id/vertical_layout" android:scrollbars="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <LinearLayout android:orientation="vertical" android:id="@id/speak_setting" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <RelativeLayout android:id="@id/rl_speak_personality" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_speak_personality" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speak_personality_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.carlife.view.StatusButton android:id="@id/bt_personality" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                    <ImageView android:id="@id/iv_speak_personality" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:src="@drawable/red_notify" android:layout_toRightOf="@id/tv_speak_personality" />
+                    <ProgressBar android:id="@id/pb_media_downloading" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="2.0dip" android:max="100" android:progressDrawable="@drawable/nsdk_drawable_od_bg_progress_downloading_selector" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" style="?android:attr/progressBarStyleHorizontal" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider_personality" android:background="@color/cl_line_a1_item" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <RelativeLayout android:id="@id/rl_day_night_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_day_night_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/day_night_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.carlife.view.StatusButton android:id="@id/bt_day_night_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:visibility="visible" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <RelativeLayout android:id="@id/rl_speak_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_speak_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speak_mode_title" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.carlife.view.StatusButton android:id="@id/bt_speak_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <LinearLayout android:orientation="vertical" android:id="@id/ll_speak_content" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                    <LinearLayout android:layout_width="fill_parent" android:layout_height="60.0dip">
+                        <TextView android:layout_gravity="center_vertical" android:id="@id/tv_speak_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/speak_content_title" style="@style/Text.CarModeSettingsText" />
+                    </LinearLayout>
+                    <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="10.0dip" android:baselineAligned="false">
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_road_condition" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_elec_eye" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_elec_eye" />
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_road_condition" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_road_condition" />
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_bobao_setting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_over_speed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_limit_speed" />
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_straight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10.0dip" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_straight" />
+                        </LinearLayout>
+                        <LinearLayout android:orientation="vertical" android:id="@id/ll_safe_setting" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1.0">
+                            <CheckBox android:textSize="20.0sp" android:textColor="#ff787d8c" android:id="@id/cb_safe_drive" android:layout_width="wrap_content" android:layout_height="wrap_content" android:button="@drawable/carmode_checkbox_selector" android:text="@string/speak_safe_drive" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:orientation="vertical" android:id="@id/other_setting" android:layout_width="fill_parent" android:layout_height="wrap_content">
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <RelativeLayout android:id="@id/rl_routplan_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_routplan_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pref_route_plan_mode" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.carlife.view.StatusButton android:id="@id/bt_routplan_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+                <RelativeLayout android:id="@id/rl_search_mode" android:paddingLeft="10.0dip" android:paddingRight="10.0dip" android:layout_width="fill_parent" android:layout_height="60.0dip">
+                    <TextView android:id="@id/tv_search_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pref_search_mode" style="@style/Text.CarModeSettingsText" />
+                    <com.baidu.carlife.view.StatusButton android:id="@id/bt_search_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:layout_centerVertical="true" />
+                </RelativeLayout>
+                <View android:id="@id/setting_divider" android:background="@color/cl_line_a1_item" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_line" />
+            </LinearLayout>
+            <Button android:textSize="18.0sp" android:textColor="#ffffffff" android:gravity="center" android:id="@id/tv_lougout" android:background="@drawable/logout_bt_bg_selector" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="50.0dip" android:text="@string/user_logout" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

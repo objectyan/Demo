@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/layout_phone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <RelativeLayout android:id="@id/layout_title" android:layout_width="fill_parent" android:layout_height="@dimen/common_item_height_64">
+            <RelativeLayout android:id="@id/btn_title_contacts" android:background="@drawable/common_btn_bg_focus" android:focusable="true" android:layout_width="@dimen/common_two_tap_width" android:layout_height="@dimen/common_item_height_64" android:layout_toRightOf="@id/temp">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4_highlight_selector" android:id="@id/tv_title_contacts" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/phone_title_contacts" android:layout_centerInParent="true" />
+                <View android:id="@id/line_title_contacts" android:background="@color/cl_other_c_highlight" android:visibility="gone" android:layout_width="72.0dip" android:layout_height="2.0dip" android:layout_marginTop="8.0dip" android:layout_below="@id/tv_title_contacts" android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <View android:id="@id/temp" android:background="@color/cl_line_a3" android:layout_width="1.0dip" android:layout_height="20.0dip" android:layout_marginLeft="12.0dip" android:layout_marginRight="12.0dip" android:layout_toRightOf="@id/btn_title_calllog" android:layout_centerVertical="true" />
+            <RelativeLayout android:id="@id/btn_title_calllog" android:background="@drawable/com_bg_item_selector" android:focusable="true" android:layout_width="@dimen/common_two_tap_width" android:layout_height="@dimen/common_item_height_64" android:layout_marginLeft="76.0dip">
+                <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a4_highlight_selector" android:id="@id/tv_title_calllog" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/phone_title_calllog" android:layout_centerInParent="true" />
+                <View android:id="@id/line_title_calllog" android:background="@color/cl_other_c_highlight" android:visibility="visible" android:layout_width="72.0dip" android:layout_height="2.0dip" android:layout_marginTop="8.0dip" android:layout_below="@id/tv_title_calllog" android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <ImageButton android:id="@id/btn_keyboard" android:layout_width="@dimen/phone_dial_voice_width" android:layout_height="@dimen/common_item_height_64" android:layout_marginRight="8.0dip" android:src="@drawable/phone_ic_dial" android:layout_alignParentRight="true" />
+        </RelativeLayout>
+        <com.baidu.carlife.view.CommonTipView android:id="@id/common_tip_view" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/layout_title" />
+        <com.baidu.carlife.view.InterceptTouchRelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="72.0dip" android:layout_marginRight="72.0dip" android:layout_below="@id/layout_title">
+            <ListView android:id="@id/lv_calllog" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/com_bg_item_selector" android:divider="@null" />
+            <ListView android:id="@id/lv_contacts" android:scrollbars="none" android:layout_width="fill_parent" android:layout_height="fill_parent" android:listSelector="@drawable/com_bg_item_selector" android:divider="@null" />
+        </com.baidu.carlife.view.InterceptTouchRelativeLayout>
+        <LinearLayout android:orientation="vertical" android:id="@id/btnlistview_left" android:visibility="invisible" android:layout_width="72.0dip" android:layout_height="fill_parent" android:layout_below="@id/layout_title" android:layout_alignParentLeft="true">
+            <ImageButton android:id="@id/btnlistview_btn_prev" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="48.0dip" android:layout_marginTop="8.0dip" android:src="@drawable/com_ic_prev" android:scaleType="center" />
+            <FrameLayout android:layout_gravity="center_horizontal" android:id="@id/btnlistview_scroller" android:layout_width="2.0dip" android:layout_height="0.0dip" android:layout_weight="1.0">
+                <FrameLayout android:id="@id/btnlistview_scroll_bar" android:background="#33ffffff" android:layout_width="fill_parent" android:layout_height="12.0dip" />
+            </FrameLayout>
+            <ImageButton android:id="@id/btnlistview_btn_next" android:background="@drawable/com_bg_item_selector" android:layout_width="fill_parent" android:layout_height="48.0dip" android:src="@drawable/com_ic_next" android:scaleType="center" />
+        </LinearLayout>
+    </RelativeLayout>
+    <com.baidu.carlife.view.CommonTipView android:id="@id/layout_nobt" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <RelativeLayout android:id="@id/layout_incoming" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <TextView android:textSize="28.0dip" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_incoming_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16.0dip" android:maxWidth="400.0dip" android:singleLine="true" android:layout_centerHorizontal="true" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_incoming_desc" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:text="@string/phone_state_incoming" android:layout_below="@id/tv_incoming_name" android:layout_centerHorizontal="true" />
+        <RelativeLayout android:layout_width="424.0dip" android:layout_height="48.0dip" android:layout_marginBottom="40.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true">
+            <ImageButton android:id="@id/ib_incoming_answer" android:background="@drawable/com_bg_btn_d_selector" android:layout_width="192.0dip" android:layout_height="fill_parent" android:src="@drawable/phone_ic_calling_call" />
+            <ImageButton android:id="@id/ib_incoming_break" android:background="@drawable/com_bg_btn_c_selector" android:layout_width="192.0dip" android:layout_height="fill_parent" android:src="@drawable/phone_ic_calling_hangup" android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout android:id="@id/layout_offhook" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <TextView android:textSize="28.0dip" android:textColor="@color/cl_text_a5_content" android:id="@id/tv_offhook_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16.0dip" android:maxWidth="400.0dip" android:singleLine="true" android:layout_centerHorizontal="true" />
+        <TextView android:textSize="18.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/tv_offhook_desc" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:text="@string/phone_state_calling" android:layout_below="@id/tv_offhook_name" android:layout_centerHorizontal="true" />
+        <Chronometer android:textSize="18.0sp" android:textColor="@color/cl_text_a2_content" android:id="@id/view_offhook_start_timing" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:format="%s" android:layout_below="@id/tv_offhook_name" android:layout_centerHorizontal="true" />
+        <ImageButton android:id="@id/ib_offhook_break" android:background="@drawable/com_bg_btn_c_selector" android:layout_width="208.0dip" android:layout_height="48.0dip" android:layout_marginLeft="32.0dip" android:layout_marginRight="32.0dip" android:layout_marginBottom="40.0dip" android:src="@drawable/phone_ic_calling_hangup" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+        <ImageButton android:id="@id/ib_offhook_voice" android:background="@drawable/phone_bg_btn_mute_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:layout_marginBottom="36.0dip" android:src="@drawable/phone_ic_calling_mute" android:layout_toLeftOf="@id/ib_offhook_break" android:layout_alignParentBottom="true" />
+        <ImageButton android:id="@id/ib_offhook_keyboard" android:background="@drawable/com_bg_btn_selector" android:layout_width="56.0dip" android:layout_height="56.0dip" android:layout_marginBottom="36.0dip" android:src="@drawable/phone_ic_calling_dialpad" android:layout_toRightOf="@id/ib_offhook_break" android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+    <TextView android:textSize="16.0sp" android:textColor="@color/cl_text_a3_toast" android:id="@id/phone_toast_tv" android:background="@drawable/shape_for_toast_text" android:paddingLeft="16.0dip" android:paddingTop="12.0dip" android:paddingRight="16.0dip" android:paddingBottom="12.0dip" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxWidth="256.0dip" android:text="@string/phone_multi_tip" android:layout_centerInParent="true" />
+</RelativeLayout>

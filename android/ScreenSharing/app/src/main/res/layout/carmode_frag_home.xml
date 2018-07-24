@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:id="@id/layout_side_bar" android:background="@color/carmode_home_text" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    <View android:id="@id/line_home_bottom_0" android:background="@color/carmode_line" android:visibility="gone" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginBottom="0.0dip" />
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="vertical" android:id="@id/layout_home_bottom" android:background="@color/carmode_home_bg" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/layout_home_line_1" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_home_iwantgo" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/measure_home_iwantgo" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center" android:id="@id/img_home_iwantgo" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_iwantgo" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_iwantgo" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/i_want_go" />
+                </LinearLayout>
+            </LinearLayout>
+            <View android:id="@id/line_home_bottom_1" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginBottom="0.0dip" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_home_route" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/measure_home_route" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center" android:id="@id/img_home_route" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_map" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_route" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/view_map" />
+                </LinearLayout>
+            </LinearLayout>
+            <View android:id="@id/line_home_bottom_2" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginBottom="0.0dip" />
+            <RelativeLayout android:id="@id/layout_home_user" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <ImageView android:id="@id/img_user_news" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:layout_marginRight="30.0dip" android:src="@drawable/red_notify" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+                <LinearLayout android:orientation="vertical" android:id="@id/measure_home_user" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true">
+                    <ImageView android:layout_gravity="center_horizontal" android:id="@id/img_home_user" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_routeplan" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_user" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/route_plan_name" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+        <View android:id="@id/line_home_bottom_3" android:background="@color/carmode_line" android:layout_width="fill_parent" android:layout_height="1.0dip" />
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/layout_home_line_2" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0">
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_home_carlife" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/measure_home_carlife" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center_horizontal" android:id="@id/img_home_carlife" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_carlife" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_carlife" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/car_life" />
+                </LinearLayout>
+            </LinearLayout>
+            <View android:id="@id/line_home_bottom_4" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginBottom="0.0dip" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_home_tools" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/measure_home_tools" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center_horizontal" android:id="@id/img_home_tools" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_tools" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_tools" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="插件" />
+                </LinearLayout>
+            </LinearLayout>
+            <View android:id="@id/line_home_bottom_5" android:background="@color/carmode_line" android:layout_width="1.0dip" android:layout_height="fill_parent" android:layout_marginTop="0.0dip" android:layout_marginBottom="0.0dip" />
+            <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/layout_home_me" android:background="@drawable/carmode_common_button_selector" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@id/measure_home_me" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="center_horizontal" android:id="@id/img_home_me" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/bnav_carmode_home_ic_me" />
+                    <TextView android:textSize="20.0sp" android:textColor="@color/carmode_home_text" android:layout_gravity="center" android:id="@id/text_home_me" android:paddingTop="@dimen/car_mode_home_bottom_btn_padding" android:paddingBottom="@dimen/home_bottom_btn_padding" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="我的" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

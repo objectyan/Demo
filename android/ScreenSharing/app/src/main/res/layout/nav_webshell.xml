@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="#ffffffff" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navisdk.ui.widget.BNCommonTitleBar android:id="@id/webshell_title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_alignParentTop="true" />
+    <RelativeLayout android:id="@id/nav_webshell_container" android:background="@color/common_background" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_below="@id/webshell_title_bar" />
+</RelativeLayout>

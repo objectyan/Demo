@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/rp_node_clear_layout" android:layout_width="fill_parent" android:layout_height="70.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView android:textSize="17.0sp" android:textColor="#ff787d8c" android:gravity="center" android:id="@id/btn_clear_history_desc" android:layout_width="fill_parent" android:layout_height="fill_parent" android:minHeight="69.0dip" android:text="@string/route_plan_clear_history" />
+    <ImageView android:id="@id/clear_history_desc_divider" android:background="@drawable/divide_list" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_marginBottom="0.0dip" />
+</LinearLayout>

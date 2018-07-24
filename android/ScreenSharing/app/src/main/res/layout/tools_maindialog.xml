@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <include android:id="@id/app_header" android:layout_alignParentTop="true" layout="@layout/tools_common_header" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/app_tab" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/app_header">
+        <CheckedTextView android:gravity="center" android:id="@id/app_tasklist" android:padding="5.0sp" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="任务列表" android:layout_weight="1.0" />
+        <CheckedTextView android:gravity="center" android:id="@id/app_mytasklist" android:padding="5.0sp" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="我的任务" android:layout_weight="1.0" />
+    </LinearLayout>
+    <com.google.android.support.v4.view.ViewPager android:id="@id/app_viewpager" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/app_tab" />
+</RelativeLayout>

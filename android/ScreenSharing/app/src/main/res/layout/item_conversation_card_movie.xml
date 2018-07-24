@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.baidu.che.codriver.widget.CardMovieView android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:background="@drawable/card_default_bg" android:padding="@dimen/default_24" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <RelativeLayout android:id="@id/movie_data" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="20.0sp" android:textColor="#ffffffff" android:id="@id/movie_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="叶问3" />
+            <com.android.volley.toolbox.NetworkImageView android:id="@id/movie_post" android:layout_width="120.0dip" android:layout_height="135.0dip" android:layout_marginTop="@dimen/default_14" android:src="@drawable/movie_zmc" android:scaleType="fitXY" android:layout_below="@id/movie_title" />
+            <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_sorce" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="评分：暂无" android:layout_alignParentRight="true" android:alpha="0.6" />
+            <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/default_23" android:layout_toRightOf="@id/movie_post" android:layout_below="@id/movie_title">
+                <LinearLayout android:orientation="horizontal" android:id="@id/movie_assess" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="18.0dip" android:layout_below="@id/movie_title">
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2015/09/12" android:alpha="0.6" />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal" android:id="@id/movie_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_13" android:layout_below="@id/movie_assess">
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_type_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="类型：" android:alpha="0.6" />
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_type_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="武术、动作、剧情" android:maxEms="8" android:alpha="0.6" />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal" android:id="@id/movie_direct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_6" android:layout_below="@id/movie_type">
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_direct_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="导演：" android:alpha="0.6" />
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_direct_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="叶伟信" android:maxEms="8" android:alpha="0.6" />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal" android:id="@id/movie_actor" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/default_6" android:layout_below="@id/movie_direct">
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_actor_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="演员：" android:alpha="0.6" />
+                    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:id="@id/movie_actor_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="甄子丹/张晋/熊黛林/麦克。泰森/谭耀文/吴千语/喻亢" android:maxEms="12" android:alpha="0.6" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</com.baidu.che.codriver.widget.CardMovieView>

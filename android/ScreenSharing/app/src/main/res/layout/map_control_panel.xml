@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@id/map_control_panel" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View android:id="@id/map_control_panel_layer" android:background="@drawable/map_bg_top" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="88.0dip" />
+    <RelativeLayout android:gravity="center" android:id="@id/mapfocus_layout" android:focusable="true" android:visibility="visible" android:layout_width="56.0dip" android:layout_height="56.0dip" android:layout_centerInParent="true">
+        <ImageView android:gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/map_ic_drag_select_poi" android:scaleType="centerInside" />
+    </RelativeLayout>
+    <include android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="12.0dip" layout="@layout/map_control_carlife_left_panel" />
+    <include android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="12.0dip" android:layout_alignParentBottom="true" layout="@layout/map_control_left_panel" />
+    <include android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="12.0dip" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" layout="@layout/map_control_right_panel" />
+    <com.baidu.carlife.view.TopBarView android:id="@id/common_top_bar" android:layout_marginTop="19.0dip" android:layout_marginRight="24.0dip" app:TopBarType="black" style="@style/CommonTopBar" />
+</RelativeLayout>

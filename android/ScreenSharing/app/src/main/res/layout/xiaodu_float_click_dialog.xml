@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_gravity="center" android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:layout_marginRight="10.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout android:gravity="center" android:id="@id/top_content" android:paddingBottom="20.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <TextView android:textSize="19.0sp" android:textColor="@color/xiaodu_help_text_color" android:gravity="center_horizontal" android:id="@id/quite_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="0.0dip" android:layout_marginTop="5.0dip" android:text="@string/xiaodu_help_title" />
+        <LinearLayout android:gravity="right" android:orientation="vertical" android:id="@id/help_content" android:paddingRight="0.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="45.0dip" android:layout_alignParentRight="true">
+            <TextView android:textSize="15.0sp" android:textColor="@color/xiaodu_help_text_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="您可以说" />
+            <TextView android:textSize="19.0sp" android:textColor="@color/xiaodu_help_content_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:text="我要去百度大厦" />
+            <TextView android:textSize="19.0sp" android:textColor="@color/xiaodu_help_content_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:text="我要回家" />
+            <TextView android:textSize="19.0sp" android:textColor="@color/xiaodu_help_content_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip" android:text="附近的加油站" />
+        </LinearLayout>
+    </RelativeLayout>
+    <TextView android:textSize="15.0sp" android:textColor="@color/xiaodu_help_text_color" android:gravity="center" android:id="@id/bnav_rg_quit" android:layout_width="fill_parent" android:layout_height="50.0dip" android:text="查看更多语音指令" />
+</LinearLayout>

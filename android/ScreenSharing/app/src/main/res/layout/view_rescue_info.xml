@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    <LinearLayout android:orientation="vertical" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_name" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_phone" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_phone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_car_num" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_car_num" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_car_color" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_car_color" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+        <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16.0dip" android:text="@string/rescue_emergency_contact" />
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_contact_name" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_contact_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8.0dip">
+            <TextView android:textSize="14.0dip" android:textColor="@color/cl_text_a2_content" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rescue_connect_phone" />
+            <TextView android:textSize="12.0dip" android:textColor="@color/cl_text_a0_content" android:id="@id/tv_rescue_contact_phone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="24.0dip" />
+        </LinearLayout>
+    </LinearLayout>
+    <View android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="2.0" />
+</LinearLayout>

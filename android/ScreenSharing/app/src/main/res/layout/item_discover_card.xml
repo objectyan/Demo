@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView android:id="@id/icon" android:layout_width="@dimen/default_56" android:layout_height="@dimen/default_56" android:layout_marginLeft="@dimen/default_16" android:src="@drawable/duer_ic_score_full" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toTopOf="parent" />
+    <TextView android:textSize="@dimen/default_text_18" android:textColor="@color/white" android:id="@id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/default_16" android:layout_marginTop="@dimen/default_6" android:text="找车位" app:layout_constraintLeft_toRightOf="@id/icon" app:layout_constraintTop_toTopOf="@id/icon" />
+    <TextView android:textSize="@dimen/default_text_12" android:textColor="@color/white" android:id="@id/description" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/default_6" android:text="100人正在使用" android:alpha="0.6" app:layout_constraintBottom_toBottomOf="@id/icon" app:layout_constraintLeft_toLeftOf="@id/title" />
+    <View android:id="@id/card_focus_view" android:background="@drawable/com_bg_foucs" android:visibility="gone" android:clickable="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_centerInParent="true" />
+    <View android:id="@id/red_point" android:background="@drawable/com_shape_red_point" android:visibility="gone" android:layout_width="10.0dip" android:layout_height="10.0dip" app:layout_constraintLeft_toRightOf="@id/title" app:layout_constraintTop_toTopOf="@id/icon" />
+</android.support.constraint.ConstraintLayout>

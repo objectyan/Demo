@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/cl_bg_d" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navi.view.CommonTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <ExpandableListView android:id="@id/lv_search_district" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_below="@id/title_bar" android:overScrollMode="never" style="@style/NaviExpandableListStyle" />
+</RelativeLayout>

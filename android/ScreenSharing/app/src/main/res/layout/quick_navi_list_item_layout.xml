@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="horizontal" android:id="@id/quick_navi_item" android:layout_width="fill_parent" android:layout_height="@dimen/vertical_listview_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="@dimen/vertical_listview_double_line_height">
+        <ImageView android:id="@id/quick_navi_item_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="10.0dip" android:src="@drawable/bnav_quickroute_ic_favority" android:layout_centerVertical="true" />
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@id/quick_navi_item_info_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/vertical_listview_margin_left" android:layout_marginRight="@dimen/vertical_listview_margin_right" android:layout_toLeftOf="@id/travel_ref_layout" android:layout_toRightOf="@id/quick_navi_item_icon" android:layout_centerVertical="true">
+            <RelativeLayout android:orientation="horizontal" android:id="@id/quick_navi_poi_info_layout" android:layout_width="fill_parent" android:layout_height="fill_parent">
+                <TextView android:textSize="17.0sp" android:textStyle="bold" android:ellipsize="end" android:id="@id/quick_navi_poi_name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" />
+                <TextView android:textSize="17.0sp" android:ellipsize="end" android:id="@id/quick_navi_time_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="@dimen/vertical_listview_margin_right" android:singleLine="true" android:layout_alignParentRight="true" />
+            </RelativeLayout>
+            <com.baidu.navi.view.QuickNaviRoadCondLayout android:id="@id/road_cond_and_description_layout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" />
+        </LinearLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/travel_ref_layout" android:paddingRight="@dimen/vertical_listview_margin_right" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentRight="true">
+            <ImageView android:id="@id/travel_ref_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:contentDescription="@null" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

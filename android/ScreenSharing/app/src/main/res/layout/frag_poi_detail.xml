@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.baidu.navi.view.MapTitleBar android:id="@id/title_bar" android:layout_width="fill_parent" android:layout_height="wrap_content" app:rightContentImage="@drawable/bnav_common_ic_navi_white" app:rightContentVisible="true" />
+    <FrameLayout android:id="@id/poilayout" android:background="@drawable/bnav_common_shadow" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
+        <com.baidu.navi.view.PoiListView android:id="@id/poilistview" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+        <com.baidu.navi.view.PoiDetailView android:id="@id/poidetailview" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    </FrameLayout>
+    <FrameLayout android:id="@id/layout_map_control_panel" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_above="@id/poilayout">
+        <include layout="@layout/map_control_panel" />
+    </FrameLayout>
+</RelativeLayout>

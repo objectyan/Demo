@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:id="@id/app_container" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="54.0dip" android:layout_alignParentBottom="true">
+        <RelativeLayout android:gravity="center" android:orientation="horizontal" android:id="@id/app_panel" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerHorizontal="true">
+            <ImageView android:gravity="center" android:id="@id/app_picture" android:background="@drawable/tools_left_selector" android:layout_width="48.0dip" android:layout_height="47.0dip" android:src="@drawable/tools_picture" android:scaleType="centerInside" android:contentDescription="@null" />
+            <ImageView android:gravity="center" android:id="@id/app_capture" android:background="@drawable/tools_center_selector" android:layout_width="48.0dip" android:layout_height="47.0dip" android:layout_marginLeft="-1.0dip" android:src="@drawable/tools_capture" android:scaleType="centerInside" android:layout_toRightOf="@id/app_picture" android:contentDescription="@null" />
+            <ImageView android:gravity="center" android:id="@id/app_audio" android:background="@drawable/tools_right_selector" android:layout_width="48.0dip" android:layout_height="47.0dip" android:layout_marginLeft="-1.0dip" android:src="@drawable/tools_recordaudio" android:scaleType="centerInside" android:layout_toRightOf="@id/app_capture" android:contentDescription="@null" />
+            <View android:id="@id/app_line_1" android:background="@drawable/tools_line_vertical" android:layout_width="1.0dip" android:layout_height="25.0dip" android:layout_alignRight="@id/app_picture" android:layout_centerVertical="true" />
+            <View android:id="@id/app_line_2" android:background="@drawable/tools_line_vertical" android:layout_width="1.0dip" android:layout_height="25.0dip" android:layout_alignRight="@id/app_capture" android:layout_centerVertical="true" />
+        </RelativeLayout>
+        <ImageView android:gravity="center" android:id="@id/app_control" android:background="@drawable/tools_card_selector" android:layout_width="48.0dip" android:layout_height="47.0dip" android:layout_marginRight="52.0dip" android:src="@drawable/tools_control" android:scaleType="centerInside" android:layout_alignParentRight="true" android:contentDescription="@null" />
+    </RelativeLayout>
+</RelativeLayout>
