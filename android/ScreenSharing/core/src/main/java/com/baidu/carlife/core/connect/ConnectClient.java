@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
+
 import com.baidu.carlife.core.KeepClass;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
@@ -23,7 +24,7 @@ public class ConnectClient implements KeepClass {
     /* renamed from: b */
     private static final String f3309b = "ConnectClientHandlerThread";
     /* renamed from: l */
-    private static ConnectClient f3310l = null;
+    private static ConnectClient sConnectClient = null;
     /* renamed from: c */
     private Context f3311c = null;
     /* renamed from: d */
@@ -86,12 +87,12 @@ public class ConnectClient implements KeepClass {
                     case 1031:
                         if (msg.arg1 == CommonParams.fe) {
                             this.f3307a.f3317i = true;
-                            LogUtil.m4445e(ConnectClient.f3308a, "USB Cable is connected!");
+                            LogUtil.e(ConnectClient.f3308a, "USB Cable is connected!");
                             return;
                         } else if (msg.arg1 == CommonParams.ff) {
                             this.f3307a.f3317i = false;
-                            LogUtil.m4445e(ConnectClient.f3308a, "USB Cable is disconnected!");
-                            if (ConnectManager.m4228a().m4240b() == 2 && this.f3307a.f3318j) {
+                            LogUtil.e(ConnectClient.f3308a, "USB Cable is disconnected!");
+                            if (ConnectManager.newInstance().getType() == 2 && this.f3307a.f3318j) {
                                 this.f3307a.m4222a(false);
                                 return;
                             }
@@ -118,15 +119,15 @@ public class ConnectClient implements KeepClass {
     }
 
     /* renamed from: a */
-    public static ConnectClient m4207a() {
-        if (f3310l == null) {
+    public static ConnectClient newInstance() {
+        if (sConnectClient == null) {
             synchronized (ConnectClient.class) {
-                if (f3310l == null) {
-                    f3310l = new ConnectClient();
+                if (sConnectClient == null) {
+                    sConnectClient = new ConnectClient();
                 }
             }
         }
-        return f3310l;
+        return sConnectClient;
     }
 
     private ConnectClient() {
@@ -147,7 +148,7 @@ public class ConnectClient implements KeepClass {
             m4218j();
             m4215g();
         } catch (Exception e) {
-            LogUtil.m4445e(f3308a, "UsbConnectStateManager init fail");
+            LogUtil.e(f3308a, "UsbConnectStateManager init fail");
             e.printStackTrace();
         }
     }
@@ -160,7 +161,7 @@ public class ConnectClient implements KeepClass {
             m4220l();
             m4216h();
         } catch (Exception e) {
-            LogUtil.m4445e(f3308a, "UsbConnectStateManager uninit fail");
+            LogUtil.e(f3308a, "UsbConnectStateManager uninit fail");
             e.printStackTrace();
         }
     }
@@ -226,10 +227,10 @@ public class ConnectClient implements KeepClass {
     public boolean m4223a(Message msg) {
         LogUtil.d(f3308a, "Send Msg to Service, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
         if (this.f3315g == null) {
-            LogUtil.m4445e(f3308a, "mConnectService is null");
+            LogUtil.e(f3308a, "mConnectService is null");
             return false;
         } else if (this.f3316h == null) {
-            LogUtil.m4445e(f3308a, "mConnectClient is null");
+            LogUtil.e(f3308a, "mConnectClient is null");
             return false;
         } else {
             try {
@@ -247,10 +248,10 @@ public class ConnectClient implements KeepClass {
     public synchronized void m4222a(boolean is) {
         if (m4225c() && !is) {
             this.f3318j = is;
-            MsgHandlerCenter.m4461b(1002);
+            MsgHandlerCenter.dispatchMessage(1002);
         } else if (!m4225c() && is) {
             this.f3318j = is;
-            MsgHandlerCenter.m4461b(1004);
+            MsgHandlerCenter.dispatchMessage(1004);
         }
     }
 

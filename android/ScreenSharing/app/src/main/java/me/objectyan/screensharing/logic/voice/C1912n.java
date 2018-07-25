@@ -22,7 +22,7 @@ import com.baidu.carlife.logic.codriver.adapter.C1756c;
 import com.baidu.carlife.model.C1942q;
 import com.baidu.carlife.model.MusicSongModel;
 import com.baidu.carlife.p052m.C1915a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.p101o.C1983b;
 import com.baidu.carlife.util.C2201w;
 import com.baidu.carlife.view.C2252a;
@@ -187,7 +187,7 @@ public class C1912n {
                 return false;
             }
             if (!this.f5877a.f5899p) {
-                MsgHandlerCenter.m4461b((int) CommonParams.hb);
+                MsgHandlerCenter.dispatchMessage((int) CommonParams.hb);
             }
             C1772k.m6480a().m6485a(4, 1);
             C1772k.m6480a().m6484a(1);
@@ -221,7 +221,7 @@ public class C1912n {
             switch (errorCode) {
                 case 0:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0003);
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0002);
                         return;
                     }
@@ -229,63 +229,63 @@ public class C1912n {
                 case 1:
                 case 2:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "网络错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "网络错误");
                         return;
                     }
                     return;
                 case 3:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "麦克风错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "麦克风错误");
                         return;
                     }
                     return;
                 case 4:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "服务端错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "服务端错误");
                         return;
                     }
                     return;
                 case 5:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "客户端错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "客户端错误");
                         return;
                     }
                     return;
                 case 6:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "超时错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "超时错误");
                         return;
                     }
                     return;
                 case 7:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "无匹配错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "无匹配错误");
                         return;
                     }
                     return;
                 case 8:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "引擎忙错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "引擎忙错误");
                         return;
                     }
                     return;
                 case 9:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "无权限错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "无权限错误");
                         return;
                     }
                     return;
                 case 21:
                     StatisticManager.onEvent(StatisticConstants.VOICE_0004, "定位错误");
-                    if (!C1663a.m5979a().m5993N()) {
+                    if (!CarlifeCoreSDK.m5979a().m5993N()) {
                         StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0003, "定位错误");
                         return;
                     }
@@ -303,7 +303,7 @@ public class C1912n {
         /* renamed from: e */
         public void mo1719e() {
             StatisticManager.onEvent(StatisticConstants.VOICE_0002);
-            if (!C1663a.m5979a().m5993N()) {
+            if (!CarlifeCoreSDK.m5979a().m5993N()) {
                 StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0001);
             }
         }
@@ -447,7 +447,7 @@ public class C1912n {
     /* renamed from: a */
     public void m7293a(int what) {
         MsgHandlerCenter.m4452a(what);
-        MsgHandlerCenter.m4461b(what);
+        MsgHandlerCenter.dispatchMessage(what);
     }
 
     /* renamed from: f */
@@ -463,7 +463,7 @@ public class C1912n {
     /* renamed from: g */
     public void m7308g() {
         if (m7315n() || !m7288v() || this.f5904u == C1911a.STATE_BACKGROUND_NOT_SUPPORT_INTENAL_SCREEN) {
-            LogUtil.m4445e(f5889g, "-can not-startWakeUp--");
+            LogUtil.e(f5889g, "-can not-startWakeUp--");
         } else if (C1772k.m6480a().m6490d() == 2) {
             C2201w.m8371a((int) R.string.voice_tips, 0);
             m7309h();
@@ -559,7 +559,7 @@ public class C1912n {
 
     /* renamed from: p */
     public void m7317p() {
-        if (CarlifeConfig.m4065a() && C1663a.m5979a().m5993N()) {
+        if (CarlifeConfig.m4065a() && CarlifeCoreSDK.m5979a().m5993N()) {
             LogUtil.d(f5889g, " onActivityPause internal screen capture ");
             this.f5904u = C1911a.STATE_BACKGROUND_SUPPORT_INTENAL_SCREEN;
             return;
@@ -640,7 +640,7 @@ public class C1912n {
                     return;
                 }
             }
-            if (!C1663a.m5979a().m5993N() || micStatus == 1) {
+            if (!CarlifeCoreSDK.m5979a().m5993N() || micStatus == 1) {
                 this.f5902s.m10727a(C2855a.INSIDE_RAW, null);
             } else if (micStatus == 0) {
                 this.f5902s.m10727a(C2855a.OUTSIDE_RAW, new C1756c());
@@ -691,20 +691,20 @@ public class C1912n {
     /* renamed from: y */
     private void m7291y() {
         LogUtil.d(f5889g, "----MSG_CMD_MIC_RECORD_WAKEUP_START----");
-        C1663a.m5979a().m6026c((int) CommonParams.av);
+        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.av);
     }
 
     /* renamed from: z */
     private void m7292z() {
         LogUtil.d(f5889g, "----MSG_CMD_MIC_RECORD_RECOG_START----");
-        C1663a.m5979a().m6026c((int) CommonParams.ax);
+        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.ax);
         this.f5903t = true;
     }
 
     /* renamed from: A */
     private void m7268A() {
         LogUtil.d(f5889g, "----MSG_CMD_MIC_RECORD_END----");
-        C1663a.m5979a().m6026c((int) CommonParams.aw);
+        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.aw);
         this.f5903t = false;
     }
 }

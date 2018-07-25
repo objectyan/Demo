@@ -1,0 +1,1800 @@
+{
+    "version": "0.1",
+    "slots": {},
+    "rules": {
+        "telephone.call": [
+            {
+                "origin": "我要打电话",
+                "pattern": "^我要打电话$",
+                "groups": []
+            }
+        ],
+        "contacts.view": [
+            {
+               "origin": "前往电话",
+               "pattern": "^前往电话$",
+               "groups": []
+            },
+            {
+                "origin": "打开电话",
+                "pattern": "^打开电话$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__contacts": [
+            {
+                "origin": "查看联系人",
+                "pattern": "^查看联系人$",
+                "groups": []
+            },
+            {
+                "origin": "查看通讯录",
+                "pattern": "^查看通讯录$",
+                "groups": []
+            },
+            {
+                "origin": "打开通讯录",
+                "pattern": "^打开通讯录$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.start_navigate": [
+            {
+                "origin": "开始导航",
+                "pattern": "^开始导航$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.quit": [
+            {
+                "origin": "结束导航",
+                "pattern": "^结束导航$",
+                "groups": []
+            },
+            {
+                "origin": "关闭导航",
+                "pattern": "^关闭导航$",
+                "groups": []
+            },
+            {
+                "origin": "退出导航",
+                "pattern": "^退出导航$",
+                "groups": []
+            },
+            {
+                "origin": "取消导航",
+                "pattern": "^取消导航$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.route_home": [
+            {
+                "origin": "我要回家",
+                "pattern": "^我要回家$",
+                "groups": []
+            },
+            {
+                "origin": "导航回家",
+                "pattern": "^导航回家$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.zoom_in": [
+            {
+                "origin": "放大地图",
+                "pattern": "^放大地图$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.zoom_out": [
+            {
+                "origin": "缩小地图",
+                "pattern": "^缩小地图$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.open__item__route_condition": [
+            {
+                "origin": "打开路况",
+                "pattern": "^打开路况$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.close__item__route_condition": [
+            {
+                "origin": "关闭路况",
+                "pattern": "^关闭路况$",
+                "groups": []
+            },
+            {
+                "origin": "关掉路况",
+                "pattern": "^关掉路况$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__day": [
+            {
+                "origin": "白天模式",
+                "pattern": "^白天模式$",
+                "groups": []
+            },
+            {
+                "origin": "日间模式",
+                "pattern": "^日间模式$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__night": [
+            {
+                "origin": "黑夜模式",
+                "pattern": "^黑夜模式$",
+                "groups": []
+            },
+            {
+                "origin": "夜间模式",
+                "pattern": "^夜间模式$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__full_route": [
+            {
+                "origin": "查看全程",
+                "pattern": "^查看全程$",
+                "groups": []
+            },
+            {
+                "origin": "全览模式",
+                "pattern": "^全览模式$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__continue_navi": [
+            {
+                "origin": "继续导航",
+                "pattern": "^继续导航$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__head_forward": [
+            {
+                "origin": "跟随模式",
+                "pattern": "^跟随模式$",
+                "groups": []
+            },
+            {
+                "origin": "车头朝上",
+                "pattern": "^车头朝上$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.switch_mode__item__north_forward": [
+            {
+                "origin": "正北模式",
+                "pattern": "^正北模式$",
+                "groups": []
+            },
+            {
+                "origin": "正北朝上",
+                "pattern": "^正北朝上$",
+                "groups": []
+            }
+        ],
+        "navigate_instruction.location": [
+            {
+                "origin": "我的位置",
+                "pattern": "^我的位置$",
+                "groups": []
+            },
+            {
+                "origin": "我在哪里",
+                "pattern": "^我在哪里$",
+                "groups": []
+            }
+        ],
+        "codriver.back": [
+            {
+                "origin": "后退",
+                "pattern": "^后退$",
+                "groups": []
+            },
+            {
+                "origin": "返回",
+                "pattern": "^返回$",
+                "groups": []
+            },
+            {
+                "origin": "上一页",
+                "pattern": "^上一页$",
+                "groups": []
+            }
+        ],
+        "codriver.yes": [
+            {
+                "origin": "确定",
+                "pattern": "^确定$",
+                "groups": []
+            },
+            {
+                "origin": "好的",
+                "pattern": "^好的$",
+                "groups": []
+            }
+        ],
+        "codriver.no": [
+            {
+                "origin": "取消",
+                "pattern": "^取消$",
+                "groups": []
+            },
+            {
+                "origin": "不用",
+                "pattern": "^不用$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__help": [
+            {
+                "origin": "打开帮助",
+                "pattern": "^打开帮助$",
+                "groups": []
+            },
+            {
+                "origin": "查看帮助",
+                "pattern": "^查看帮助$",
+                "groups": []
+            }
+        ],
+        "codriver.back_home": [
+            {
+                "origin": "前往首页",
+                "pattern": "^前往首页$",
+                "groups": []
+            },
+            {
+                "origin": "打开首页",
+                "pattern": "^打开首页$",
+                "groups": []
+            },
+            {
+                "origin": "返回主界面",
+                "pattern": "^返回主界面$",
+                "groups": []
+            },
+            {
+                "origin": "回到主界面",
+                "pattern": "^回到主界面$",
+                "groups": []
+            },
+            {
+                "origin": "返回主页",
+                "pattern": "^返回主页$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__system_setting": [
+            {
+                "origin": "打开设置",
+                "pattern": "^打开设置$",
+                "groups": []
+            },
+            {
+                "origin": "打开系统设置",
+                "pattern": "^打开系统设置$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_take_picture": [
+            {
+                "origin": "我要拍照",
+                "pattern": "^我要拍照$",
+                "groups": []
+            },
+            {
+                "origin": "拍张照片",
+                "pattern": "^拍张照片$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_carmer__function__front_carmer": [
+            {
+                "origin": "打开前置摄像头",
+                "pattern": "^打开前置摄像头$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_carmer__function__inner_carmer": [
+            {
+                "origin": "打开内置摄像头",
+                "pattern": "^打开内置摄像头$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_carmer__function__back_carmer": [
+            {
+                "origin": "打开后置摄像头",
+                "pattern": "^打开后置摄像头$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_record__function__start": [
+            {
+                "origin": "开始录像",
+                "pattern": "^开始录像$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_record__function__stop": [
+            {
+                "origin": "停止录像",
+                "pattern": "^停止录像$",
+                "groups": []
+            }
+        ],
+        "codriver.dr_record__function__watch": [
+            {
+                "origin": "查看录像",
+                "pattern": "^查看录像$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__screen": [
+            {
+                "origin": "关闭屏幕",
+                "pattern": "^关闭屏幕$",
+                "groups": []
+            },
+            {
+                "origin": "关掉屏幕",
+                "pattern": "^关掉屏幕$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__screen": [
+            {
+                "origin": "打开屏幕",
+                "pattern": "^打开屏幕$",
+                "groups": []
+            },
+            {
+                "origin": "点亮屏幕",
+                "pattern": "^点亮屏幕$",
+                "groups": []
+            }
+        ],
+        "codriver.light_down_min": [
+            {
+                "origin": "屏幕最暗",
+                "pattern": "^屏幕最暗$",
+                "groups": []
+            },
+            {
+                "origin": "最小亮度",
+                "pattern": "^最小亮度$",
+                "groups": []
+            },
+            {
+                "origin": "调到最暗",
+                "pattern": "^调到最暗$",
+                "groups": []
+            }
+        ],
+        "codriver.light_up_max": [
+            {
+                "origin": "屏幕最亮",
+                "pattern": "^屏幕最亮$",
+                "groups": []
+            },
+            {
+                "origin": "最大亮度",
+                "pattern": "^最大亮度$",
+                "groups": []
+            },
+            {
+                "origin": "调到最亮",
+                "pattern": "^调到最亮$",
+                "groups": []
+            }
+        ],
+        "codriver.light_up": [
+            {
+                "origin": "调高亮度",
+                "pattern": "^调高亮度$",
+                "groups": []
+            },
+            {
+                "origin": "调亮一点",
+                "pattern": "^调亮一点$",
+                "groups": []
+            }
+        ],
+        "codriver.light_down": [
+            {
+                "origin": "调低亮度",
+                "pattern": "^调低亮度$",
+                "groups": []
+            },
+            {
+                "origin": "调暗一点",
+                "pattern": "^调暗一点$",
+                "groups": []
+            }
+        ],
+        "codriver.volume_up": [
+            {
+                "origin": "增大音量",
+                "pattern": "^增大音量$",
+                "groups": []
+            },
+            {
+                "origin": "调高音量",
+                "pattern": "^调高音量$",
+                "groups": []
+            },
+            {
+                "origin": "声音大点",
+                "pattern": "^声音大点$",
+                "groups": []
+            }
+        ],
+        "codriver.volume_down": [
+            {
+                "origin": "降低音量",
+                "pattern": "^降低音量$",
+                "groups": []
+            },
+            {
+                "origin": "调低音量",
+                "pattern": "^调低音量$",
+                "groups": []
+            },
+            {
+                "origin": "声音小点",
+                "pattern": "^声音小点$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__mute": [
+            {
+                "origin": "关闭声音",
+                "pattern": "^关闭声音$",
+                "groups": []
+            },
+            {
+                "origin": "静音模式",
+                "pattern": "^静音模式$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__mute": [
+            {
+                "origin": "打开声音",
+                "pattern": "^打开声音$",
+                "groups": []
+            },
+            {
+                "origin": "取消静音",
+                "pattern": "^取消静音$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__wifi": [
+            {
+                "origin": "打开wifi",
+                "pattern": "^打开wifi$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__wifi": [
+            {
+                "origin": "关闭wifi",
+                "pattern": "^关闭wifi$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__network_sharing": [
+            {
+                "origin": "打开wifi热点",
+                "pattern": "^打开wifi热点$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__network_sharing": [
+            {
+                "origin": "关闭wifi热点",
+                "pattern": "^关闭wifi热点$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__network": [
+            {
+                "origin": "打开网络",
+                "pattern": "^打开网络$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__network": [
+            {
+                "origin": "关闭网络",
+                "pattern": "^关闭网络$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__bluetooth": [
+            {
+                "origin": "打开蓝牙",
+                "pattern": "^打开蓝牙$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__bluetooth": [
+            {
+                "origin": "关闭蓝牙",
+                "pattern": "^关闭蓝牙$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__music_player_bsg": [
+            {
+                "origin": "打开音乐",
+                "pattern": "^打开音乐$",
+                "groups": []
+            },
+            {
+                "origin": "前往音乐",
+                "pattern": "^前往音乐$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__video": [
+            {
+                "origin": "打开视频",
+                "pattern": "^打开视频$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__calendar": [
+            {
+                "origin": "打开日历",
+                "pattern": "^打开日历$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__gallery": [
+            {
+                "origin": "打开图片",
+                "pattern": "^打开图片$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__media_player": [
+            {
+                "origin": "打开本地音乐",
+                "pattern": "^打开本地音乐$",
+                "groups": []
+            },
+            {
+                "origin": "前往本地音乐",
+                "pattern": "^前往本地音乐$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__bt_player": [
+            {
+                "origin": "打开蓝牙音乐",
+                "pattern": "^打开蓝牙音乐$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__bt_phone": [
+            {
+                "origin": "打开蓝牙电话",
+                "pattern": "^打开蓝牙电话$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__mobile_link": [
+            {
+                "origin": "打开手机互联",
+                "pattern": "^打开手机互联$",
+                "groups": []
+            }
+        ],
+        "codriver.select": [
+            {
+                "origin": "第一个",
+                "pattern": "^第一个$",
+                "groups": []
+            },
+            {
+                "origin": "第二个",
+                "pattern": "^第二个$",
+                "groups": []
+            },
+            {
+                "origin": "第三个",
+                "pattern": "^第三个$",
+                "groups": []
+            },
+            {
+                "origin": "第四个",
+                "pattern": "^第四个$",
+                "groups": []
+            },
+            {
+                "origin": "第五个",
+                "pattern": "^第五个$",
+                "groups": []
+            },
+            {
+                "origin": "第六个",
+                "pattern": "^第六个$",
+                "groups": []
+            },
+            {
+                "origin": "第七个",
+                "pattern": "^第七个$",
+                "groups": []
+            },
+            {
+                "origin": "第八个",
+                "pattern": "^第八个$",
+                "groups": []
+            },
+            {
+                "origin": "第九个",
+                "pattern": "^第九个$",
+                "groups": []
+            },
+            {
+                "origin": "第十个",
+                "pattern": "^第十个$",
+                "groups": []
+            },
+            {
+                "origin": "第十一个",
+                "pattern": "^第一个$",
+                "groups": []
+            },
+            {
+                "origin": "第十二个",
+                "pattern": "^第十二个$",
+                "groups": []
+            },
+            {
+                "origin": "第十三个",
+                "pattern": "^第十三个$",
+                "groups": []
+            },
+            {
+                "origin": "第十四个",
+                "pattern": "^第十四个$",
+                "groups": []
+            },
+            {
+                "origin": "第十五个",
+                "pattern": "^第十五个$",
+                "groups": []
+            },
+            {
+                "origin": "第十六个",
+                "pattern": "^第十六个$",
+                "groups": []
+            },
+            {
+                "origin": "第十七个",
+                "pattern": "^第十七个$",
+                "groups": []
+            },
+            {
+                "origin": "第十八个",
+                "pattern": "^第十八个$",
+                "groups": []
+            },
+            {
+                "origin": "第十九个",
+                "pattern": "^第十九个$",
+                "groups": []
+            },
+            {
+                "origin": "第二十个",
+                "pattern": "^第二十个$",
+                "groups": []
+            },
+            {
+                "origin": "第1个",
+                "pattern": "^第1个$",
+                "groups": []
+            },
+            {
+                "origin": "第2个",
+                "pattern": "^第2个$",
+                "groups": []
+            },
+            {
+                "origin": "第3个",
+                "pattern": "^第3个$",
+                "groups": []
+            },
+            {
+                "origin": "第4个",
+                "pattern": "^第4个$",
+                "groups": []
+            },
+            {
+                "origin": "第5个",
+                "pattern": "^第5个$",
+                "groups": []
+            },
+            {
+                "origin": "第6个",
+                "pattern": "^第6个$",
+                "groups": []
+            },
+            {
+                "origin": "第7个",
+                "pattern": "^第7个$",
+                "groups": []
+            },
+            {
+                "origin": "第8个",
+                "pattern": "^第8个$",
+                "groups": []
+            },
+            {
+                "origin": "第9个",
+                "pattern": "^第9个$",
+                "groups": []
+            },
+            {
+                "origin": "第10个",
+                "pattern": "^第10个$",
+                "groups": []
+            },
+            {
+                "origin": "第11个",
+                "pattern": "^第11个$",
+                "groups": []
+            },
+            {
+                "origin": "第12个",
+                "pattern": "^第12个$",
+                "groups": []
+            },
+            {
+                "origin": "第13个",
+                "pattern": "^第13个$",
+                "groups": []
+            },
+            {
+                "origin": "第14个",
+                "pattern": "^第14个$",
+                "groups": []
+            },
+            {
+                "origin": "第15个",
+                "pattern": "^第15个$",
+                "groups": []
+            },
+            {
+                "origin": "第16个",
+                "pattern": "^第16个$",
+                "groups": []
+            },
+            {
+                "origin": "第17个",
+                "pattern": "^第17个$",
+                "groups": []
+            },
+            {
+                "origin": "第18个",
+                "pattern": "^第18个$",
+                "groups": []
+            },
+            {
+                "origin": "第19个",
+                "pattern": "^第19个$",
+                "groups": []
+            },
+            {
+                "origin": "第20个",
+                "pattern": "^第20个$",
+                "groups": []
+            },
+            {
+                "origin": "第一项",
+                "pattern": "^第一项$",
+                "groups": []
+            },
+            {
+                "origin": "第二项",
+                "pattern": "^第二项$",
+                "groups": []
+            },
+            {
+                "origin": "第三项",
+                "pattern": "^第三项$",
+                "groups": []
+            },
+            {
+                "origin": "第四项",
+                "pattern": "^第四项$",
+                "groups": []
+            },
+            {
+                "origin": "第五项",
+                "pattern": "^第五项$",
+                "groups": []
+            },
+            {
+                "origin": "第六项",
+                "pattern": "^第六项$",
+                "groups": []
+            },
+            {
+                "origin": "第七项",
+                "pattern": "^第七项$",
+                "groups": []
+            },
+            {
+                "origin": "第八项",
+                "pattern": "^第八项$",
+                "groups": []
+            },
+            {
+                "origin": "第九项",
+                "pattern": "^第九项$",
+                "groups": []
+            },
+            {
+                "origin": "第十项",
+                "pattern": "^第十项$",
+                "groups": []
+            },
+            {
+                "origin": "第十一项",
+                "pattern": "^第十一项$",
+                "groups": []
+            },
+            {
+                "origin": "第十二项",
+                "pattern": "^第十二项$",
+                "groups": []
+            },
+            {
+                "origin": "第十三项",
+                "pattern": "^第十三项$",
+                "groups": []
+            },
+            {
+                "origin": "第十四项",
+                "pattern": "^第十四项$",
+                "groups": []
+            },
+            {
+                "origin": "第十五项",
+                "pattern": "^第十五项$",
+                "groups": []
+            },
+            {
+                "origin": "第十六项",
+                "pattern": "^第十六项$",
+                "groups": []
+            },
+            {
+                "origin": "第十七项",
+                "pattern": "^第十七项$",
+                "groups": []
+            },
+            {
+                "origin": "第十八项",
+                "pattern": "^第十八项$",
+                "groups": []
+            },
+            {
+                "origin": "第十九项",
+                "pattern": "^第十九项$",
+                "groups": []
+            },
+            {
+                "origin": "第二十项",
+                "pattern": "^第二十项$",
+                "groups": []
+            },
+            {
+                "origin": "第1项",
+                "pattern": "^第1项$",
+                "groups": []
+            },
+            {
+                "origin": "第2项",
+                "pattern": "^第2项$",
+                "groups": []
+            },
+            {
+                "origin": "第3项",
+                "pattern": "^第3项$",
+                "groups": []
+            },
+            {
+                "origin": "第4项",
+                "pattern": "^第4项$",
+                "groups": []
+            },
+            {
+                "origin": "第5项",
+                "pattern": "^第5项$",
+                "groups": []
+            },
+            {
+                "origin": "第6项",
+                "pattern": "^第6项$",
+                "groups": []
+            },
+            {
+                "origin": "第7项",
+                "pattern": "^第7项$",
+                "groups": []
+            },
+            {
+                "origin": "第8项",
+                "pattern": "^第8项$",
+                "groups": []
+            },
+            {
+                "origin": "第9项",
+                "pattern": "^第9项$",
+                "groups": []
+            },
+            {
+                "origin": "第10项",
+                "pattern": "^第10项$",
+                "groups": []
+            },
+            {
+                "origin": "第11项",
+                "pattern": "^第11项$",
+                "groups": []
+            },
+            {
+                "origin": "第12项",
+                "pattern": "^第12项$",
+                "groups": []
+            },
+            {
+                "origin": "第13项",
+                "pattern": "^第13项$",
+                "groups": []
+            },
+            {
+                "origin": "第14项",
+                "pattern": "^第14项$",
+                "groups": []
+            },
+            {
+                "origin": "第15项",
+                "pattern": "^第15项$",
+                "groups": []
+            },
+            {
+                "origin": "第16项",
+                "pattern": "^第16项$",
+                "groups": []
+            },
+            {
+                "origin": "第17项",
+                "pattern": "^第17项$",
+                "groups": []
+            },
+            {
+                "origin": "第18项",
+                "pattern": "^第18项$",
+                "groups": []
+            },
+            {
+                "origin": "第19项",
+                "pattern": "^第19项$",
+                "groups": []
+            },
+            {
+                "origin": "第20项",
+                "pattern": "^第20项$",
+                "groups": []
+            },
+            {
+                "origin": "第一首",
+                "pattern": "^第一首$",
+                "groups": []
+            },
+            {
+                "origin": "第二首",
+                "pattern": "^第二首$",
+                "groups": []
+            },
+            {
+                "origin": "第三首",
+                "pattern": "^第三首$",
+                "groups": []
+            },
+            {
+                "origin": "第四首",
+                "pattern": "^第四首$",
+                "groups": []
+            },
+            {
+                "origin": "第五首",
+                "pattern": "^第五首$",
+                "groups": []
+            },
+            {
+                "origin": "第六首",
+                "pattern": "^第六首$",
+                "groups": []
+            },
+            {
+                "origin": "第七首",
+                "pattern": "^第七首$",
+                "groups": []
+            },
+            {
+                "origin": "第八首",
+                "pattern": "^第八首$",
+                "groups": []
+            },
+            {
+                "origin": "第九首",
+                "pattern": "^第九首$",
+                "groups": []
+            },
+            {
+                "origin": "第十首",
+                "pattern": "^第十首$",
+                "groups": []
+            },
+            {
+                "origin": "第十一首",
+                "pattern": "^第十一首$",
+                "groups": []
+            },
+            {
+                "origin": "第十二首",
+                "pattern": "^第十二首$",
+                "groups": []
+            },
+            {
+                "origin": "第十三首",
+                "pattern": "^第十三首$",
+                "groups": []
+            },
+            {
+                "origin": "第十四首",
+                "pattern": "^第十四首$",
+                "groups": []
+            },
+            {
+                "origin": "第十五首",
+                "pattern": "^第十五首$",
+                "groups": []
+            },
+            {
+                "origin": "第十六首",
+                "pattern": "^第十六首$",
+                "groups": []
+            },
+            {
+                "origin": "第十七首",
+                "pattern": "^第十七首$",
+                "groups": []
+            },
+            {
+                "origin": "第十八首",
+                "pattern": "^第十八首$",
+                "groups": []
+            },
+            {
+                "origin": "第十九首",
+                "pattern": "^第十九首$",
+                "groups": []
+            },
+            {
+                "origin": "第二十首",
+                "pattern": "^第二十首$",
+                "groups": []
+            },
+            {
+                "origin": "第1首",
+                "pattern": "^第1首$",
+                "groups": []
+            },
+            {
+                "origin": "第2首",
+                "pattern": "^第2首$",
+                "groups": []
+            },
+            {
+                "origin": "第3首",
+                "pattern": "^第3首$",
+                "groups": []
+            },
+            {
+                "origin": "第4首",
+                "pattern": "^第4首$",
+                "groups": []
+            },
+            {
+                "origin": "第5首",
+                "pattern": "^第5首$",
+                "groups": []
+            },
+            {
+                "origin": "第6首",
+                "pattern": "^第6首$",
+                "groups": []
+            },
+            {
+                "origin": "第7首",
+                "pattern": "^第7首$",
+                "groups": []
+            },
+            {
+                "origin": "第8首",
+                "pattern": "^第8首$",
+                "groups": []
+            },
+            {
+                "origin": "第9首",
+                "pattern": "^第9首$",
+                "groups": []
+            },
+            {
+                "origin": "第10首",
+                "pattern": "^第10首$",
+                "groups": []
+            },
+            {
+                "origin": "第11首",
+                "pattern": "^第11首$",
+                "groups": []
+            },
+            {
+                "origin": "第12首",
+                "pattern": "^第12首$",
+                "groups": []
+            },
+            {
+                "origin": "第13首",
+                "pattern": "^第13首$",
+                "groups": []
+            },
+            {
+                "origin": "第14首",
+                "pattern": "^第14首$",
+                "groups": []
+            },
+            {
+                "origin": "第15首",
+                "pattern": "^第15首$",
+                "groups": []
+            },
+            {
+                "origin": "第16首",
+                "pattern": "^第16首$",
+                "groups": []
+            },
+            {
+                "origin": "第17首",
+                "pattern": "^第17首$",
+                "groups": []
+            },
+            {
+                "origin": "第18首",
+                "pattern": "^第18首$",
+                "groups": []
+            },
+            {
+                "origin": "第19首",
+                "pattern": "^第19首$",
+                "groups": []
+            },
+            {
+                "origin": "第20首",
+                "pattern": "^第20首$",
+                "groups": []
+            }
+        ],
+        "codriver.select__option__10000001": [
+            {
+                "origin": "最后一个",
+                "pattern": "^最后一个$",
+                "groups": []
+            },
+            {
+                "origin": "倒数第一个",
+                "pattern": "^倒数第一个$",
+                "groups": []
+            }
+        ],
+        "codriver.select__option__10000002": [
+            {
+                "origin": "倒数第二个",
+                "pattern": "^倒数第二个$",
+                "groups": []
+            }
+        ],
+        "codriver.next": [
+            {
+                "origin": "下一页",
+                "pattern": "^下一页$",
+                "groups": []
+            }
+        ],
+        "player.set__action_type__play": [
+            {
+                "origin": "播放音乐",
+                "pattern": "^播放音乐$",
+                "groups": []
+            },
+            {
+                "origin": "继续播放",
+                "pattern": "^继续播放$",
+                "groups": []
+            }
+        ],
+        "player.set__action_type__exitplayer": [
+            {
+                "origin": "停止播放",
+                "pattern": "^停止播放$",
+                "groups": []
+            },
+            {
+                "origin": "停止音乐",
+                "pattern": "^停止音乐$",
+                "groups": []
+            },
+            {
+                "origin": "退出音乐",
+                "pattern": "^退出音乐$",
+                "groups": []
+            },
+            {
+                "origin": "关闭音乐",
+                "pattern": "^关闭音乐$",
+                "groups": []
+            }
+        ],
+        "player.set__action_type__pause": [
+            {
+                "origin": "暂停播放",
+                "pattern": "^暂停播放$",
+                "groups": []
+            },
+            {
+                "origin": "暂停音乐",
+                "pattern": "^暂停音乐$",
+                "groups": []
+            }
+        ],
+        "player.set__action_type__previous": [
+            {
+                "origin": "上一首",
+                "pattern": "^上一首$",
+                "groups": []
+            },
+            {
+                "origin": "上一曲",
+                "pattern": "^上一曲$",
+                "groups": []
+            }
+        ],
+        "player.set__action_type__next": [
+            {
+                "origin": "下一首",
+                "pattern": "^下一首$",
+                "groups": []
+            },
+            {
+                "origin": "下一曲",
+                "pattern": "^下一曲$",
+                "groups": []
+            }
+        ],
+        "player.set__mode__random": [
+            {
+                "origin": "随机播放",
+                "pattern": "^随机播放$",
+                "groups": []
+            }
+        ],
+        "player.set__mode__full_loop": [
+            {
+                "origin": "循环播放",
+                "pattern": "^循环播放$",
+                "groups": []
+            }
+        ],
+        "player.set__mode__order": [
+            {
+                "origin": "顺序播放",
+                "pattern": "^顺序播放$",
+                "groups": []
+            }
+        ],
+        "player.set__mode__single": [
+            {
+                "origin": "单曲播放",
+                "pattern": "^单曲播放$",
+                "groups": []
+            }
+        ],
+        "player.set__mode__single_loop": [
+            {
+                "origin": "单曲循环",
+                "pattern": "^单曲循环$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__climate": [
+            {
+                "origin": "打开气温系统",
+                "pattern": "^打开气温系统$",
+                "groups": []
+            },
+            {
+                "origin": "开启气温系统",
+                "pattern": "^开启气温系统$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__climate": [
+            {
+                "origin": "关闭气温系统",
+                "pattern": "^关闭气温系统$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__air_auto": [
+            {
+                "origin": "打开自动模式",
+                "pattern": "^打开自动模式$",
+                "groups": []
+            },
+            {
+                "origin": "开启自动模式",
+                "pattern": "^开启自动模式$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__air_auto": [
+            {
+                "origin": "关闭自动模式",
+                "pattern": "^关闭自动模式$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__air_sync": [
+            {
+                "origin": "打开同步模式",
+                "pattern": "^打开同步模式$",
+                "groups": []
+            },
+            {
+                "origin": "开启同步模式",
+                "pattern": "^开启同步模式$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__air_sync": [
+            {
+                "origin": "关闭同步模式",
+                "pattern": "^关闭同步模式$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__air_conditioner": [
+            {
+                "origin": "打开空调",
+                "pattern": "^打开空调$",
+                "groups": []
+            },
+            {
+                "origin": "开启空调",
+                "pattern": "^开启空调$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__air_conditioner": [
+            {
+                "origin": "关闭空调",
+                "pattern": "^关闭空调$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__internal_recycle": [
+            {
+                "origin": "打开内循环",
+                "pattern": "^打开内循环$",
+                "groups": []
+            },
+            {
+                "origin": "开启内循环",
+                "pattern": "^开启内循环$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__internal_recycle": [
+            {
+                "origin": "关闭内循环",
+                "pattern": "^关闭内循环$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__air_clean": [
+            {
+                "origin": "打开空气清新系统",
+                "pattern": "^打开空气清新系统$",
+                "groups": []
+            },
+            {
+                "origin": "开启空气清新系统",
+                "pattern": "^开启空气清新系统$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__air_clean": [
+            {
+                "origin": "关闭空气清新系统",
+                "pattern": "^关闭空气清新系统$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__defrost": [
+            {
+                "origin": "打开挡风除霜",
+                "pattern": "^打开挡风除霜$",
+                "groups": []
+            },
+            {
+                "origin": "开启挡风除霜",
+                "pattern": "^开启挡风除霜$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__defrost": [
+            {
+                "origin": "关闭挡风除霜",
+                "pattern": "^关闭挡风除霜$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__auto_defrost": [
+            {
+                "origin": "打开自动除霜系统",
+                "pattern": "^打开自动除霜系统$",
+                "groups": []
+            },
+            {
+                "origin": "开启自动除霜系统",
+                "pattern": "^开启自动除霜系统$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__auto_defrost": [
+            {
+                "origin": "关闭自动除霜系统",
+                "pattern": "^关闭自动除霜系统$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__vehicle_door": [
+            {
+                "origin": "解锁车门",
+                "pattern": "^解锁车门$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__vehicle_door": [
+            {
+                "origin": "上锁车门",
+                "pattern": "^上锁车门$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__vehicle_light": [
+            {
+                "origin": "打开车灯",
+                "pattern": "^打开车灯$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__vehicle_light": [
+            {
+                "origin": "关闭车灯",
+                "pattern": "^关闭车灯$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__vehicle_box": [
+            {
+                "origin": "打开车尾箱",
+                "pattern": "^打开车尾箱$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__vehicle_box": [
+            {
+                "origin": "关闭车尾箱",
+                "pattern": "^关闭车尾箱$",
+                "groups": []
+            }
+        ],
+        "codriver.open__item__heat": [
+            {
+                "origin": "打开座位加热",
+                "pattern": "^打开座位加热$",
+                "groups": []
+            }
+        ],
+        "codriver.close__item__heat": [
+            {
+                "origin": "关闭座位加热",
+                "pattern": "^关闭座位加热$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__up": [
+            {
+                "origin": "提高空调温度",
+                "pattern": "^提高空调温度$",
+                "groups": []
+            },
+            {
+                "origin": "提高温度",
+                "pattern": "^提高温度$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__cold": [
+            {
+                "origin": "我有点冷",
+                "pattern": "^我有点冷$",
+                "groups": []
+            },
+            {
+                "origin": "低温模式",
+                "pattern": "^低温模式$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__down": [
+            {
+                "origin": "降低空调温度",
+                "pattern": "^降低空调温度$",
+                "groups": []
+            },
+            {
+                "origin": "降低温度",
+                "pattern": "^降低温度$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__hot": [
+            {
+                "origin": "我有点热",
+                "pattern": "^我有点热$",
+                "groups": []
+            },
+            {
+                "origin": "高温模式",
+                "pattern": "^高温模式$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__max": [
+            {
+                "origin": "温度最高",
+                "pattern": "^温度最高$",
+                "groups": []
+            },
+            {
+                "origin": "最高温度",
+                "pattern": "^最高温度$",
+                "groups": []
+            }
+        ],
+        "codriver.set_ac__temp__min": [
+            {
+                "origin": "温度最低",
+                "pattern": "^温度最低$",
+                "groups": []
+            },
+            {
+                "origin": "最低温度",
+                "pattern": "^最低温度$",
+                "groups": []
+            }
+        ],
+        "player.set__device__usb": [
+            {
+                "origin": "播放usb音乐",
+                "pattern": "^播放usb音乐$",
+                "groups": []
+            }
+        ],
+        "player.set__device__cd": [
+            {
+                "origin": "播放cd",
+                "pattern": "^播放cd$",
+                "groups": []
+            }
+        ],
+        "player.set__device__aux": [
+            {
+                "origin": "播放aux",
+                "pattern": "^播放aux$",
+                "groups": []
+            }
+        ],
+        "player.set__device__ipod": [
+            {
+                "origin": "播放ipod",
+                "pattern": "^播放ipod$",
+                "groups": []
+            }
+        ],
+        "player.set__device__bt": [
+            {
+                "origin": "播放蓝牙音乐",
+                "pattern": "^播放蓝牙音乐$",
+                "groups": []
+            }
+        ],
+        "player.set__device__mymusic": [
+            {
+                "origin": "播放我的音乐",
+                "pattern": "^播放我的音乐$",
+                "groups": []
+            }
+        ],
+        "radio.open": [
+            {
+                "origin": "打开电台",
+                "pattern": "^打开电台$",
+                "groups": []
+            },
+            {
+                "origin": "打开广播",
+                "pattern": "^打开广播$",
+                "groups": []
+            },
+            {
+                "origin": "打开收音机",
+                "pattern": "^打开收音机$",
+                "groups": []
+            }
+        ],
+        "radio.close": [
+            {
+                "origin": "关闭电台",
+                "pattern": "^关闭电台$",
+                "groups": []
+            },
+            {
+                "origin": "关闭广播",
+                "pattern": "^关闭广播$",
+                "groups": []
+            },
+            {
+                "origin": "关闭收音机",
+                "pattern": "^关闭收音机$",
+                "groups": []
+            },
+            {
+                "origin": "关闭fm",
+                "pattern": "^关闭fm$",
+                "groups": []
+            },
+            {
+                "origin": "关闭am",
+                "pattern": "^关闭am$",
+                "groups": []
+            }
+        ],
+        "radio.switch__mode__fm": [
+            {
+                "origin": "打开fm",
+                "pattern": "^打开fm$",
+                "groups": []
+            }
+        ],
+        "radio.switch__mode__am": [
+            {
+                "origin": "打开am",
+                "pattern": "^打开am$",
+                "groups": []
+            }
+        ]
+    },
+    "grammar": "<auto_create_node> = 我要打电话 | \n前往电话\ | \n打开电话 | \n查看联系人 | \n查看通讯录 | \n打开通讯录
+      | \n开始导航| \n结束导航 | \n关闭导航 | \n退出导航 | \n取消导航 | \n我要回家 | \n导航回家 | \n放大地图 | \n缩小地图
+      | \n打开电子狗| \n启动电子狗 | \n开启电子狗 | \n进入电子狗 | \n前往电子狗
+      | \n打开巡航模式 | \n启动巡航模式 | \n开启巡航模式 | \n进入巡航模式 | \n前往巡航模式
+      | \n打开地图 | \n启动地图 | \n开启地图 | \n进入地图 | \n前往地图
+      | \n打开导航 | \n启动导航 | \n开启导航 | \n进入导航 | \n前往导航
+      | \n打开行车记录 | \n启动行车记录 | \n开启行车记录 | \n进入行车记录 | \n前往行车记录
+      | \n打开记录仪 | \n启动记录仪 | \n开启记录仪 | \n进入记录仪 | \n前往记录仪
+      | \n打开后视镜 | \n启动后视镜 | \n开启后视镜 | \n进入后视镜 | \n前往后视镜
+      | \n打开视频回放 | \n启动视频回放 | \n开启视频回放 | \n进入视频回放 | \n前往视频回放
+      | \n关闭电子狗| \n停止电子狗 | \n退出电子狗 | \n关掉电子狗
+      | \n关闭巡航模式 | \n停止巡航模式 | \n退出巡航模式 | \n关掉巡航模式
+      | \n关闭地图 | \n停止地图 | \n退出地图 | \n关掉地图
+      | \n关闭导航 | \n停止导航 | \n退出导航 | \n关掉导航
+      | \n关闭行车记录 | \n停止行车记录 | \n退出行车记录 | \n关掉行车记录
+      | \n关闭记录仪 | \n停止记录仪 | \n退出记录仪 | \n关掉记录仪
+      | \n关闭后视镜 | \n停止后视镜 | \n退出后视镜 | \n关掉后视镜
+      | \n关闭视频回放 | \n停止视频回放 | \n退出视频回放 | \n关掉视频回放
+      | \n打开路况 | \n关闭路况 | \n关掉路况 | \n白天模式 | \n日间模式 | \n黑夜模式 | \n夜间模式 | \n查看全程 | \n全览模式
+      | \n继续导航 | \n跟随模式 | \n车头朝上 | \n正北模式 | \n正北朝上 | \n我的位置 | \n我在哪里 | \n后退
+      | \n返回 | \n上一页 | \n确定 | \n好的 | \n取消 | \n不用 | \n打开帮助 | \n查看帮助
+      | \n前往首页 | \n打开首页 | \n返回主界面 | \n回到主界面 | \n返回主页 | \n打开设置 | \n打开系统设置
+      | \n我要拍照 | \n拍张照片 | \n打开前置摄像头 | \n打开内置摄像头 | \n打开后置摄像头 | \n开始录像 | \n停止录像 | \n查看录像
+      | \n关闭屏幕 | \n关掉屏幕 | \n打开屏幕 | \n点亮屏幕 | \n屏幕最暗
+      | \n最小亮度 | \n调到最暗 | \n屏幕最亮 | \n最大亮度 | \n调到最亮 | \n调高亮度 | \n调亮一点 | \n调低亮度 | \n调暗一点
+      | \n增大音量 | \n调高音量 | \n声音大点 | \n降低音量 | \n调低音量 | \n声音小点
+      | \n关闭声音 | \n静音模式 | \n打开声音 | \n取消静音
+      | \n打开wifi | \n关闭wifi | \n打开wifi热点 | \n关闭wifi热点
+      | \n打开网络 | \n关闭网络 | \n打开蓝牙 | \n关闭蓝牙
+      | \n打开音乐 | \n前往音乐 | \n打开视频 | \n打开日历 | \n打开图片 | \n打开本地音乐 | \n前往本地音乐 | \n打开蓝牙音乐 | \n打开蓝牙电话 | \n打开手机互联
+      | \n第一个 | \n第二个 | \n第三个 | \n第四个 | \n第五个 | \n第六个 | \n第七个 | \n第八个 | \n第九个 | \n第十个
+      | \n第十一个 | \n第十二个 | \n第十三个 | \n第十四个 | \n第十五个 | \n第十六个 | \n第十七个 | \n第十八个 | \n第十九个 | \n第二十个
+      | \n第1个 | \n第2个 | \n第3个 | \n第4个 | \n第5个 | \n第6个 | \n第7个 | \n第8个 | \n第9个 | \n第10个
+      | \n第11个 | \n第12个 | \n第13个 | \n第14个 | \n第15个 | \n第16个 | \n第17个 | \n第18个 | \n第19个 | \n第20个
+      | \n第一项 | \n第二项 | \n第三项 | \n第四项 | \n第五项 | \n第六项 | \n第七项 | \n第八项 | \n第九项 | \n第十项
+      | \n第十一项 | \n第十二项 | \n第十三项 | \n第十四项 | \n第十五项 | \n第十六项 | \n第十七项 | \n第十八项 | \n第十九项 | \n第二十项
+      | \n第1项 | \n第2项 | \n第3项 | \n第4项 | \n第5项 | \n第6项 | \n第7项 | \n第8项 | \n第9项 | \n第10项
+      | \n第11项 | \n第12项 | \n第13项 | \n第14项 | \n第15项 | \n第16项 | \n第17项 | \n第18项 | \n第19项 | \n第20项
+      | \n第一首 | \n第二首 | \n第三首 | \n第四首 | \n第五首 | \n第六首 | \n第七首 | \n第八首 | \n第九首 | \n第十首
+      | \n第十一首 | \n第十二首 | \n第十三首 | \n第十四首 | \n第十五首 | \n第十六首 | \n第十七首 | \n第十八首 | \n第十九首 | \n第二十首
+      | \n第1首 | \n第2首 | \n第3首 | \n第4首 | \n第5首 | \n第6首 | \n第7首 | \n第8首 | \n第9首 | \n第10首
+      | \n第11首 | \n第12首 | \n第13首 | \n第14首 | \n第15首 | \n第16首 | \n第17首 | \n第18首 | \n第19首 | \n第20首
+      | \n最后一个 | \n倒数第一个 | \n倒数第二个 | \n下一页
+      | \n播放音乐 | \n继续播放 | \n停止播放 | \n停止音乐 | \n退出音乐 | \n关闭音乐 | \n暂停播放 | \n暂停音乐
+      | \n上一首 | \n上一曲 | \n下一首 | \n下一曲 | \n随机播放 | \n循环播放 | \n顺序播放 | \n单曲播放 | \n单曲循环
+      | \n打开气温系统 | \n开启气温系统 | \n关闭气温系统 | \n打开自动模式 | \n开启自动模式 | \n关闭自动模式
+      | \n打开同步模式 | \n开启同步模式 | \n关闭同步模式 | \n打开空调 | \n开启空调 | \n关闭空调
+      | \n打开内循环 | \n开启内循环 | \n关闭内循环
+      | \n打开空气清新系统 | \n开启空气清新系统 | \n关闭空气清新系统 | \n打开挡风除霜 | \n开启挡风除霜 | \n关闭挡风除霜
+      | \n打开自动除霜系统 | \n开启自动除霜系统 | \n关闭自动除霜系统
+      | \n解锁车门 | \n上锁车门 | \n打开车灯 | \n关闭车灯 | \n打开车尾箱 | \n关闭车尾箱 | \n打开座位加热 | \n关闭座位加热
+      | \n提高空调温度 | \n提高温度 | \n我有点冷 | \n低温模式 | \n降低空调温度 | \n降低温度 | \n我有点热
+      | \n高温模式 | \n温度最高 | \n最高温度 | \n温度最低 | \n最低温度
+      | \n播放usb音乐 | \n播放cd | \n播放aux | \n播放ipod | \n播放蓝牙音乐 | \n播放我的音乐
+      | \n打开电台 | \n打开广播 | \n打开收音机 | \n关闭电台 | \n关闭广播 | \n关闭收音机 | \n关闭fm | \n关闭am | \n打开fm
+      | \n打开am;\n<_wakeup> = 唤醒词占位符;\n\n\n_SCENE_ID_ 0\n\n( <auto_create_node> )\n\n( <_wakeup><auto_create_node> )\n\n",
+    "origin_slots": "",
+    "origin_rules": "telephone.call = 我要打电话\ncontacts.view = 前往电话,打开电话\n\ncodriver.open__item__contacts = 查看联系人,查看通讯录,打开通讯录\napp
+    .open__item__电子狗 = 打开电子狗,启动电子狗,开启电子狗,进入电子狗,前往电子狗\napp.open__item__巡航模式 = 打开巡航模式,启动巡航模式,
+    开启巡航模式,进入巡航模式,前往巡航模式\napp.open__item__地图 = 打开地图,启动地图,开启地图,进入地图,前往地图\napp.open__item__导航 =
+    打开导航,启动导航,开启导航,进入导航,前往导航\napp.open__item__行车记录 = 打开行车记录,启动行车记录,开启行车记录,进入行车记录,前往行车记录\napp
+    .open__item__记录仪 = 打开记录仪,启动记录仪,开启记录仪,进入记录仪,前往记录仪\napp.open__item__后视镜 = 打开后视镜,启动后视镜,开启后视镜,
+    进入后视镜,前往后视镜\napp.open__item__视频回放 = 打开视频回放,启动视频回放,开启视频回放,进入视频回放,前往视频回放\n\napp
+    .close__item__电子狗 = 关闭电子狗,停止电子狗,退出电子狗,关掉电子狗\napp.close__item__巡航模式 = 关闭巡航模式,停止巡航模式,退出巡航模式,
+    关掉巡航模式\napp.close__item__地图 = 关闭地图,停止地图,退出地图,关掉地图\napp.close__item__导航 = 关闭导航,停止导航,退出导航,
+    关掉导航\napp.close__item__行车记录 = 关闭行车记录,停止行车记录,退出行车记录,关掉行车记录\napp.close__item__记录仪 = 关闭记录仪,
+    停止记录仪,退出记录仪,关掉记录仪\napp.close__item__后视镜 = 关闭后视镜,停止后视镜,退出后视镜,关掉后视镜\napp.close__item__视频回放 =
+    关闭视频回放,停止视频回放,退出视频回放,关掉视频回放\n\nnavigate_instruction.start_navigate =
+    开始导航\nnavigate_instruction.quit = 结束导航,关闭导航,退出导航,取消导航\nnavigate_instruction.route_home =
+    我要回家,导航回家\nnavigate_instruction.zoom_in = 放大地图\nnavigate_instruction.zoom_out =
+    缩小地图\nnavigate_instruction.open__item__route_condition = 打开路况\nnavigate_instruction
+    .close__item__route_condition = 关闭路况,关掉路况\nnavigate_instruction.switch_mode__item__day =
+    白天模式,日间模式\nnavigate_instruction.switch_mode__item__night = 黑夜模式,夜间模式\nnavigate_instruction
+    .switch_mode__item__full_route = 查看全程,全览模式\nnavigate_instruction
+    .switch_mode__item__continue_navi = 继续导航\nnavigate_instruction
+    .switch_mode__item__head_forward = 跟随模式,车头朝上\nnavigate_instruction
+    .switch_mode__item__north_forward = 正北模式,正北朝上\nnavigate_instruction.location = 我的位置,
+    我在哪里\n\ncodriver.back = 后退,返回\ncodriver.yes = 确定,好的\ncodriver.no = 取消,不用\ncodriver
+    .open__item__help = 打开帮助,查看帮助\ncodriver.back_home = 前往首页,打开首页,返回主界面,回到主界面,返回主页\ncodriver
+    .open__item__system_setting = 打开设置,打开系统设置\ncodriver.dr_take_picture = 我要拍照,拍张照片\ncodriver
+    .dr_carmer__function__front_carmer = 打开前置摄像头\ncodriver.dr_carmer__function__inner_carmer =
+    打开内置摄像头\ncodriver.dr_carmer__function__back_carmer = 打开后置摄像头\ncodriver
+    .dr_record__function__start = 开始录像\ncodriver.dr_record__function__stop = 停止录像\ncodriver.dr_record__function__watch = 查看录像\n\ncodriver.close__item__screen = 关闭屏幕,关掉屏幕\ncodriver.open__item__screen = 打开屏幕,点亮屏幕\ncodriver.light_down_min = 屏幕最暗\ncodriver.light_up_max = 屏幕最亮\ncodriver.light_up = 调高亮度,调亮一点\ncodriver.light_down = 调低亮度,调暗一点\ncodriver.light_up_max = 最大亮度,调到最亮\ncodriver.light_down_min = 最小亮度,调到最暗\ncodriver.volume_up = 增大音量,调高音量,声音大点\ncodriver.volume_down = 降低音量,调低音量,声音小点\ncodriver.open__item__mute = 关闭声音,静音模式\ncodriver.close__item__mute = 打开声音,取消静音\n\ncodriver.open__item__wifi = 打开wifi\ncodriver.close__item__wifi = 关闭wifi\ncodriver.open__item__network_sharing = 打开wifi热点\ncodriver.close__item__network_sharing = 关闭wifi热点\ncodriver.open__item__network = 打开网络\ncodriver.close__item__network = 关闭网络\ncodriver.open__item__bluetooth = 打开蓝牙\ncodriver.close__item__bluetooth = 关闭蓝牙\n\ncodriver.open__item__music_player_bsg = 打开音乐,前往音乐\ncodriver.open__item__video = 打开视频\ncodriver.open__item__calendar = 打开日历\ncodriver.open__item__gallery = 打开图片\ncodriver.open__item__media_player = 打开本地音乐,前往本地音乐\ncodriver.open__item__bt_player = 打开蓝牙音乐\ncodriver.open__item__bt_phone = 打开蓝牙电话\ncodriver.open__item__mobile_link = 打开手机互联\n\ncodriver.select =
+    第一个,第二个,第三个,第四个,第五个,第六个,第七个,第八个,第九个,第十个,第十一个,第十二个,第十三个,第十四个,第十五个,第十六个,第十七个,第十八个,第十九个,第二十个\ncodriver.select = 第1个,第2个,第3个,第4个,第5个,第6个,第7个,第8个,第9个,第10个,第11个,第12个,第13个,第14个,第15个,第16个,第17个,第18个,第19个,第20个\ncodriver.select = 第一项,第二项,第三项,第四项,第五项,第六项,第七项,第八项,第九项,第十项,第十一项,第十二项,第十三项,第十四项,第十五项,第十六项,第十七项,第十八项,第十九项,第二十项\ncodriver.select = 第1项,第2项,第3项,第4项,第5项,第6项,第7项,第8项,第9项,第10项,第11项,第12项,第13项,第14项,第15项,第16项,第17项,第18项,第19项,第20项\ncodriver.select = 第一首,第二首,第三首,第四首,第五首,第六首,第七首,第八首,第九首,第十首,第十一首,第十二首,第十三首,第十四首,第十五首,第十六首,第十七首,第十八首,第十九首,第二十首\ncodriver.select = 第1首,第2首,第3首,第4首,第5首,第6首,第7首,第8首,第9首,第10首,第11首,第12首,第13首,第14首,第15首,第16首,第17首,第18首,第19首,第20首\ncodriver.select__option__10000001 = 最后一个,倒数第一个\ncodriver.select__option__10000002 = 倒数第二个\ncodriver.back = 上一页\ncodriver.next = 下一页\n\nplayer.set__action_type__play = 播放音乐,继续播放\nplayer.set__action_type__exitplayer = 停止播放,停止音乐,退出音乐,关闭音乐\nplayer.set__action_type__pause = 暂停播放,暂停音乐\nplayer.set__action_type__previous = 上一首,上一曲\nplayer.set__action_type__next = 下一首,下一曲\nplayer.set__mode__random = 随机播放\nplayer.set__mode__full_loop = 循环播放\nplayer.set__mode__order = 顺序播放\nplayer.set__mode__single = 单曲播放\nplayer.set__mode__single_loop = 单曲循环\n\ncodriver.open__item__climate = 打开气温系统,开启气温系统\ncodriver.close__item__climate = 关闭气温系统\ncodriver.open__item__air_auto = 打开自动模式,开启自动模式\ncodriver.close__item__air_auto = 关闭自动模式\ncodriver.open__item__air_sync = 打开同步模式,开启同步模式\ncodriver.close__item__air_sync = 关闭同步模式\ncodriver.open__item__air_conditioner = 打开空调,开启空调\ncodriver.close__item__air_conditioner = 关闭空调\ncodriver.open__item__internal_recycle = 打开内循环,开启内循环\ncodriver.close__item__internal_recycle = 关闭内循环\ncodriver.open__item__air_clean = 打开空气清新系统,开启空气清新系统\ncodriver.close__item__air_clean = 关闭空气清新系统\ncodriver.open__item__defrost = 打开挡风除霜,开启挡风除霜\ncodriver.close__item__defrost = 关闭挡风除霜\ncodriver.open__item__auto_defrost = 打开自动除霜系统,开启自动除霜系统\ncodriver.close__item__auto_defrost = 关闭自动除霜系统\ncodriver.open__item__vehicle_door = 解锁车门\ncodriver.close__item__vehicle_door = 上锁车门\ncodriver.open__item__vehicle_light = 打开车灯\ncodriver.close__item__vehicle_light = 关闭车灯\ncodriver.open__item__vehicle_box = 打开车尾箱\ncodriver.close__item__vehicle_box = 关闭车尾箱\ncodriver.open__item__heat = 打开座位加热\ncodriver.close__item__heat = 关闭座位加热\n\ncodriver.set_ac__temp__up = 提高空调温度,提高温度\ncodriver.set_ac__temp__cold = 我有点冷,低温模式\ncodriver.set_ac__temp__down = 降低空调温度,降低温度\ncodriver.set_ac__temp__hot = 我有点热,高温模式\ncodriver.set_ac__temp__max = 温度最高,最高温度\ncodriver.set_ac__temp__min = 温度最低,最低温度\n\nplayer.set__device__usb = 播放usb音乐\nplayer.set__device__cd = 播放cd\nplayer.set__device__aux = 播放aux\nplayer.set__device__ipod = 播放ipod\nplayer.set__device__bt = 播放蓝牙音乐\nplayer.set__device__mymusic = 播放我的音乐\n\nradio.open = 打开电台,打开广播,打开收音机\nradio.close = 关闭电台,关闭广播,关闭收音机,关闭fm,关闭am\nradio.switch__mode__fm = 打开fm\nradio.switch__mode__am = 打开am"
+}

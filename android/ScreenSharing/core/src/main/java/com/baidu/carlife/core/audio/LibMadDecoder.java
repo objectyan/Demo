@@ -6,32 +6,32 @@ import java.util.ArrayList;
 /* renamed from: com.baidu.carlife.core.audio.i */
 public class LibMadDecoder implements AudioDecoderInterface {
     /* renamed from: a */
-    public int mo1445a(String url, ArrayList arrayList) {
+    public int initialization(String url, ArrayList arrayList) {
         return 0;
     }
 
     /* renamed from: a */
-    public int mo1444a(String url) {
+    public int decodeAudio(String url) {
         return 0;
     }
 
     /* renamed from: a */
-    public int mo1443a(Pair p, int pos) {
+    public int changeOutput(Pair p, int pos) {
         return 0;
     }
 
     /* renamed from: a */
-    public int mo1442a() {
+    public int getSampleRate() {
         return 0;
     }
 
     /* renamed from: b */
-    public int mo1446b() {
+    public int getChannelConfig() {
         return 0;
     }
 
     /* renamed from: c */
-    public int mo1447c() {
+    public int getReSampleRate() {
         return 0;
     }
 

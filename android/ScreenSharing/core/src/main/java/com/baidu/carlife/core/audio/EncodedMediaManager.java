@@ -7,18 +7,19 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+
 import com.baidu.carlife.core.MsgBaseHandler;
 import com.baidu.carlife.core.AppContext;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.CommonParams.EnumVehicleChannel;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
-import com.baidu.carlife.core.audio.AudioUtil.C1161d;
+import com.baidu.carlife.core.audio.AudioUtil.EnumAudioState;
 import com.baidu.carlife.core.connect.ConnectClient;
 import com.baidu.carlife.core.connect.config.AESManager;
 import com.baidu.carlife.core.connect.config.EncryptSetupManager;
-import com.baidu.carlife.protobuf.p087l.C1665b;
-import com.baidu.platform.comapi.UIMsg.m_AppUI;
+import com.baidu.carlife.p087l.CarlifeCoreAudio;
+
 import java.util.ArrayList;
 
 /* compiled from: EncodedMediaManager */
@@ -29,7 +30,7 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     /* renamed from: D */
     private static final int f3049D = 3;
     /* renamed from: a */
-    private static final String f3050a = (AudioUtil.f3010n + EncodedMediaManager.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + EncodedMediaManager.class.getSimpleName());
     /* renamed from: y */
     private static final int f3051y = 102400;
     /* renamed from: z */
@@ -39,13 +40,13 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     /* renamed from: B */
     private byte[] f3054B = new byte[20480];
     /* renamed from: E */
-    private AESManager f3055E = new AESManager();
+    private AESManager mAESManager = new AESManager();
     /* renamed from: F */
-    private ArrayAdd f3056F = new ArrayAdd();
+    private ArrayAdd mArrayAdd = new ArrayAdd();
     /* renamed from: G */
-    private Pair f3057G = new Pair();
+    private Pair mPair = new Pair();
     /* renamed from: H */
-    private HandlerThread f3058H = new HandlerThread("MusicController");
+    private HandlerThread mMusicController = new HandlerThread("MusicController");
     /* renamed from: b */
     private int f3059b;
     /* renamed from: c */
@@ -53,17 +54,17 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     /* renamed from: d */
     private int f3061d;
     /* renamed from: e */
-    private AudioTrack f3062e;
+    private AudioTrack mAudioTrack;
     /* renamed from: f */
-    private Thread f3063f;
+    private Thread mThread;
     /* renamed from: g */
     private boolean f3064g;
     /* renamed from: h */
     private int f3065h = 0;
     /* renamed from: i */
-    private PCMPackageHead f3066i = new PCMPackageHead();
+    private PCMPackageHead mPCMPackageHeadOne = new PCMPackageHead();
     /* renamed from: j */
-    private PCMPackageHead f3067j = new PCMPackageHead();
+    private PCMPackageHead mPCMPackageHeadTwo = new PCMPackageHead();
     /* renamed from: k */
     private byte[] f3068k = new byte[120];
     /* renamed from: l */
@@ -71,54 +72,54 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     /* renamed from: m */
     private boolean f3070m = true;
     /* renamed from: n */
-    private C1175a f3071n;
+    private EncodedMediaManagerHandler mEncodedMediaManagerHandler;
     /* renamed from: o */
-    private AudioDecoderInterface f3072o;
+    private AudioDecoderInterface mAudioDecoderInterfaceOne;
     /* renamed from: p */
-    private AudioDecoderInterface f3073p;
+    private AudioDecoderInterface mAudioDecoderInterfaceTwo;
     /* renamed from: q */
-    private AudioDecoderInterface f3074q;
+    private AudioDecoderInterface mAudioDecoderInterfaceThree;
     /* renamed from: r */
     private final int f3075r = 3;
     /* renamed from: s */
     private int f3076s;
     /* renamed from: t */
-    private Pair f3077t = new Pair();
+    private Pair mPair1 = new Pair();
     /* renamed from: u */
-    private final Object f3078u = new Object();
+    private final Object mObject = new Object();
     /* renamed from: v */
     private byte[] f3079v;
     /* renamed from: w */
     private int f3080w;
     /* renamed from: x */
-    private CarLifeSRC f3081x = new CarLifeSRC();
+    private CarLifeSRC mCarLifeSRC = new CarLifeSRC();
 
     /* compiled from: EncodedMediaManager */
     /* renamed from: com.baidu.carlife.core.audio.h$a */
-    private class C1175a extends MsgBaseHandler {
+    private class EncodedMediaManagerHandler extends MsgBaseHandler {
         /* renamed from: a */
-        final /* synthetic */ EncodedMediaManager f3046a;
+        final /* synthetic */ EncodedMediaManager mEncodedMediaManager;
 
-        public C1175a(EncodedMediaManager encodedMediaManager, Looper looper) {
-            this.f3046a = encodedMediaManager;
+        public EncodedMediaManagerHandler(EncodedMediaManager encodedMediaManager, Looper looper) {
             super(looper);
+            this.mEncodedMediaManager = encodedMediaManager;
         }
 
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case CommonParams.ev /*425*/:
-                    LogUtil.d(EncodedMediaManager.f3050a, "output format changed, init audio track again");
-                    this.f3046a.mo1434a();
-                    this.f3046a.m3966l();
+                case 425:
+                    LogUtil.d(EncodedMediaManager.Tag, "output format changed, init audio track again");
+                    this.mEncodedMediaManager.send();
+                    this.mEncodedMediaManager.playMusic();
                     return;
-                case CommonParams.ew /*426*/:
-                    this.f3046a.m3981h();
+                case 426:
+                    this.mEncodedMediaManager.notifyToAwake();
                     return;
                 case 1002:
-                    this.f3046a.f3070m = true;
+                    this.mEncodedMediaManager.f3070m = true;
                     return;
                 case 1004:
-                    C1665b.m6061a().m6065a(AppContext.m3876a());
+                    CarlifeCoreAudio.newInstance().setMI3MediaVolume(AppContext.getAppContext());
                     return;
                 default:
                     return;
@@ -135,141 +136,141 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
 
     /* compiled from: EncodedMediaManager */
     /* renamed from: com.baidu.carlife.core.audio.h$b */
-    private class C1176b extends Thread {
+    private class EncodedMediaManagerThread extends Thread {
         /* renamed from: a */
-        final /* synthetic */ EncodedMediaManager f3047a;
+        final /* synthetic */ EncodedMediaManager mEncodedMediaManager;
 
-        private C1176b(EncodedMediaManager encodedMediaManager) {
-            this.f3047a = encodedMediaManager;
+        private EncodedMediaManagerThread(EncodedMediaManager encodedMediaManager) {
+            this.mEncodedMediaManager = encodedMediaManager;
         }
 
         public void run() {
-            this.f3047a.f3064g = true;
-            while (this.f3047a.f3064g) {
-                this.f3047a.m3972p();
-                if (this.f3047a.f3072o != null) {
-                    this.f3047a.f3065h = this.f3047a.f3072o.mo1443a(this.f3047a.f3077t, this.f3047a.f3076s);
+            this.mEncodedMediaManager.f3064g = true;
+            while (this.mEncodedMediaManager.f3064g) {
+                this.mEncodedMediaManager.m3972p();
+                if (this.mEncodedMediaManager.mAudioDecoderInterfaceOne != null) {
+                    this.mEncodedMediaManager.f3065h = this.mEncodedMediaManager.mAudioDecoderInterfaceOne.changeOutput(this.mEncodedMediaManager.mPair1, this.mEncodedMediaManager.f3076s);
                 }
-                if (this.f3047a.f3065h > 102400) {
-                    this.f3047a.f3065h = 102400;
-                    this.f3047a.f3077t.m4055a(102400);
+                if (this.mEncodedMediaManager.f3065h > 102400) {
+                    this.mEncodedMediaManager.f3065h = 102400;
+                    this.mEncodedMediaManager.mPair1.setSize(102400);
                 }
-                if (-1 == this.f3047a.f3065h) {
+                if (-1 == this.mEncodedMediaManager.f3065h) {
                     try {
-                        synchronized (this.f3047a.f3078u) {
-                            this.f3047a.f3078u.wait();
+                        synchronized (this.mEncodedMediaManager.mObject) {
+                            this.mEncodedMediaManager.mObject.wait();
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    LogUtil.d(EncodedMediaManager.f3050a, "MediaCodec Error happen!");
+                    LogUtil.d(EncodedMediaManager.Tag, "MediaCodec Error happen!");
                 } else {
-                    if (AudioUtil.m3883h() && ConnectClient.m4207a().m4225c()) {
-                        if (this.f3047a.f3070m) {
-                            if (C1665b.m6061a().m6092t()) {
-                                this.f3047a.m3951b(EncodedMediaManager.f3048C, this.f3047a.f3060c, this.f3047a.f3061d);
+                    if (AudioUtil.getIs() && ConnectClient.newInstance().m4225c()) {
+                        if (this.mEncodedMediaManager.f3070m) {
+                            if (CarlifeCoreAudio.newInstance().isSR()) {
+                                this.mEncodedMediaManager.m3951b(EncodedMediaManager.f3048C, this.mEncodedMediaManager.f3060c, this.mEncodedMediaManager.f3061d);
                             } else {
-                                this.f3047a.m3951b(this.f3047a.f3059b, this.f3047a.f3060c, this.f3047a.f3061d);
+                                this.mEncodedMediaManager.m3951b(this.mEncodedMediaManager.f3059b, this.mEncodedMediaManager.f3060c, this.mEncodedMediaManager.f3061d);
                             }
-                            this.f3047a.f3070m = false;
+                            this.mEncodedMediaManager.f3070m = false;
                         }
-                        this.f3047a.m3953b(this.f3047a.f3077t.m4057a(), this.f3047a.f3077t.m4058b());
+                        this.mEncodedMediaManager.encrypt(this.mEncodedMediaManager.mPair1.getData(), this.mEncodedMediaManager.mPair1.getSize());
                     }
-                    this.f3047a.m3971o();
+                    this.mEncodedMediaManager.m3971o();
                 }
             }
         }
     }
 
     public EncodedMediaManager() {
-        this.f3058H.start();
-        this.f3071n = new C1175a(this, this.f3058H.getLooper());
-        this.f3073p = new M3u8Decoder();
-        this.f3074q = new MediaCodecDecoder();
-        AudioUtil.m3882a();
+        this.mMusicController.start();
+        this.mEncodedMediaManagerHandler = new EncodedMediaManagerHandler(this, this.mMusicController.getLooper());
+        this.mAudioDecoderInterfaceTwo = new M3u8Decoder();
+        this.mAudioDecoderInterfaceThree = new MediaCodecDecoder();
+        AudioUtil.newInstance();
         this.f3076s = 12;
-        MsgHandlerCenter.m4460a(this.f3071n);
-        m3965k();
+        MsgHandlerCenter.registerMessageHandler(this.mEncodedMediaManagerHandler);
+        startThread();
     }
 
     /* renamed from: k */
-    private void m3965k() {
-        this.f3063f = new C1176b();
-        this.f3063f.start();
+    private void startThread() {
+        this.mThread = new EncodedMediaManagerThread(this);
+        this.mThread.start();
     }
 
     /* renamed from: a */
-    public void mo1435a(String filePath, ArrayList<String> fileList) {
-        synchronized (this.f3078u) {
+    public void init(String filePath, ArrayList<String> fileList) {
+        synchronized (this.mObject) {
             int ret;
-            LogUtil.d(f3050a, "init() is called");
-            mo1434a();
+            LogUtil.d(Tag, "init() is called");
+            send();
             if (fileList == null) {
-                this.f3072o = this.f3074q;
-                ret = this.f3072o.mo1444a(filePath);
+                this.mAudioDecoderInterfaceOne = this.mAudioDecoderInterfaceThree;
+                ret = this.mAudioDecoderInterfaceOne.decodeAudio(filePath);
             } else {
-                this.f3072o = this.f3073p;
-                ret = this.f3072o.mo1445a(filePath, (ArrayList) fileList);
+                this.mAudioDecoderInterfaceOne = this.mAudioDecoderInterfaceTwo;
+                ret = this.mAudioDecoderInterfaceOne.initialization(filePath, (ArrayList) fileList);
             }
             if (ret == -1) {
-                Log.i(f3050a, "MediaCodec initialization is failed!");
+                Log.i(Tag, "MediaCodec initialization is failed!");
             } else {
-                m3966l();
+                playMusic();
             }
         }
     }
 
     /* renamed from: l */
-    private void m3966l() {
-        if (m3969m()) {
-            ArbitrationModule.m3896a().m3907b();
-            m3970n();
+    private void playMusic() {
+        if (createAudioTrack()) {
+            ArbitrationModule.newInstance().musicAudioFocus();
+            triggeredPlay();
         }
     }
 
     /* JADX WARNING: inconsistent code. */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     /* renamed from: a */
-    public void mo1434a() {
+    public void send() {
         /*
         r6 = this;
-        r2 = r6.f3078u;
+        r2 = r6.mObject;
         monitor-enter(r2);
-        r1 = f3050a;	 Catch:{ all -> 0x0050 }
+        r1 = Tag;	 Catch:{ all -> 0x0050 }
         r3 = "stop() is called";
         com.baidu.carlife.core.LogUtil.d(r1, r3);	 Catch:{ all -> 0x0050 }
-        r1 = r6.f3062e;	 Catch:{ all -> 0x0050 }
+        r1 = r6.mAudioTrack;	 Catch:{ all -> 0x0050 }
         if (r1 != 0) goto L_0x0011;
     L_0x000f:
         monitor-exit(r2);	 Catch:{ all -> 0x0050 }
     L_0x0010:
         return;
     L_0x0011:
-        r1 = r6.f3062e;	 Catch:{ IllegalStateException -> 0x0053 }
+        r1 = r6.mAudioTrack;	 Catch:{ IllegalStateException -> 0x0053 }
         r1.stop();	 Catch:{ IllegalStateException -> 0x0053 }
     L_0x0016:
-        r1 = r6.f3062e;	 Catch:{ all -> 0x0050 }
+        r1 = r6.mAudioTrack;	 Catch:{ all -> 0x0050 }
         r1.release();	 Catch:{ all -> 0x0050 }
         r1 = 0;
-        r6.f3062e = r1;	 Catch:{ all -> 0x0050 }
-        r1 = com.baidu.carlife.core.audio.ArbitrationModule.m3896a();	 Catch:{ all -> 0x0050 }
+        r6.mAudioTrack = r1;	 Catch:{ all -> 0x0050 }
+        r1 = com.baidu.carlife.core.audio.ArbitrationModule.newInstance();	 Catch:{ all -> 0x0050 }
         r1.m3908c();	 Catch:{ all -> 0x0050 }
-        r1 = com.baidu.carlife.core.audio.AudioUtil.m3883h();	 Catch:{ all -> 0x0050 }
+        r1 = com.baidu.carlife.core.audio.AudioUtil.getIs();	 Catch:{ all -> 0x0050 }
         if (r1 == 0) goto L_0x004e;
     L_0x002b:
-        r1 = r6.f3066i;	 Catch:{ all -> 0x0050 }
+        r1 = r6.mPCMPackageHeadOne;	 Catch:{ all -> 0x0050 }
         r3 = 196610; // 0x30002 float:2.75509E-40 double:9.7138E-319;
         r1.m4053c(r3);	 Catch:{ all -> 0x0050 }
-        r1 = r6.f3066i;	 Catch:{ all -> 0x0050 }
+        r1 = r6.mPCMPackageHeadOne;	 Catch:{ all -> 0x0050 }
         r3 = 0;
         r1.m4047a(r3);	 Catch:{ all -> 0x0050 }
-        r1 = com.baidu.carlife.core.audio.MediaChannelSend.m4030a();	 Catch:{ all -> 0x0050 }
-        r3 = r6.f3066i;	 Catch:{ all -> 0x0050 }
+        r1 = com.baidu.carlife.core.audio.MediaChannelSend.newInstance();	 Catch:{ all -> 0x0050 }
+        r3 = r6.mPCMPackageHeadOne;	 Catch:{ all -> 0x0050 }
         r3 = r3.m4048a();	 Catch:{ all -> 0x0050 }
-        r4 = r6.f3066i;	 Catch:{ all -> 0x0050 }
+        r4 = r6.mPCMPackageHeadOne;	 Catch:{ all -> 0x0050 }
         r4 = r4.m4049b();	 Catch:{ all -> 0x0050 }
-        r5 = com.baidu.carlife.core.audio.AudioUtil.C1161d.STOP;	 Catch:{ all -> 0x0050 }
-        r1.m4033a(r3, r4, r5);	 Catch:{ all -> 0x0050 }
+        r5 = com.baidu.carlife.core.audio.AudioUtil.EnumAudioState.STOP;	 Catch:{ all -> 0x0050 }
+        r1.send(r3, r4, r5);	 Catch:{ all -> 0x0050 }
     L_0x004e:
         monitor-exit(r2);	 Catch:{ all -> 0x0050 }
         goto L_0x0010;
@@ -280,7 +281,7 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     L_0x0053:
         r0 = move-exception;
         r1 = 415; // 0x19f float:5.82E-43 double:2.05E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r1);	 Catch:{ all -> 0x0050 }
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r1);	 Catch:{ all -> 0x0050 }
         r0.printStackTrace();	 Catch:{ all -> 0x0050 }
         goto L_0x0016;
         */
@@ -288,138 +289,141 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
     }
 
     /* renamed from: b */
-    public void mo1436b() {
-        synchronized (this.f3078u) {
-            LogUtil.d(f3050a, "pause() is called");
-            if (this.f3062e == null || this.f3062e.getPlayState() != 3) {
-                LogUtil.d(f3050a, "pause music has been triggered");
+    public void pause() {
+        synchronized (this.mObject) {
+            LogUtil.d(Tag, "pause() is called");
+            if (this.mAudioTrack == null || this.mAudioTrack.getPlayState() != 3) {
+                LogUtil.d(Tag, "pause music has been triggered");
             } else {
                 try {
-                    this.f3062e.pause();
+                    this.mAudioTrack.pause();
                 } catch (IllegalStateException e) {
-                    MsgHandlerCenter.m4461b(415);
+                    MsgHandlerCenter.dispatchMessage(415);
                     e.printStackTrace();
                 }
-                ArbitrationModule.m3896a().m3908c();
-                if (AudioUtil.m3883h()) {
-                    this.f3066i.m4053c(CommonParams.br);
-                    this.f3066i.m4047a(0);
-                    MediaChannelSend.m4030a().m4033a(this.f3066i.m4048a(), this.f3066i.m4049b(), C1161d.PAUSE);
+                ArbitrationModule.newInstance().m3908c();
+                if (AudioUtil.getIs()) {
+                    this.mPCMPackageHeadOne.m4053c(196611);
+                    this.mPCMPackageHeadOne.m4047a(0);
+                    MediaChannelSend.newInstance().send(this.mPCMPackageHeadOne.m4048a(),
+                            this.mPCMPackageHeadOne.m4049b(), EnumAudioState.PAUSE);
                 }
             }
         }
     }
 
     /* renamed from: c */
-    public void mo1437c() {
-        synchronized (this.f3078u) {
-            ArbitrationModule.m3896a().m3907b();
-            LogUtil.d(f3050a, "play() is called");
-            if (this.f3062e == null || this.f3062e.getPlayState() == 3) {
-                LogUtil.d(f3050a, "play music has been triggered");
+    public void play() {
+        synchronized (this.mObject) {
+            ArbitrationModule.newInstance().musicAudioFocus();
+            LogUtil.d(Tag, "play() is called");
+            if (this.mAudioTrack == null || this.mAudioTrack.getPlayState() == 3) {
+                LogUtil.d(Tag, "play music has been triggered");
             } else {
-                m3970n();
-                if (AudioUtil.m3883h() && !this.f3070m) {
-                    this.f3066i.m4053c(CommonParams.bs);
-                    this.f3066i.m4047a(0);
-                    MediaChannelSend.m4030a().m4033a(this.f3066i.m4048a(), this.f3066i.m4049b(), C1161d.RESUME);
+                triggeredPlay();
+                if (AudioUtil.getIs() && !this.f3070m) {
+                    this.mPCMPackageHeadOne.m4053c(196612);
+                    this.mPCMPackageHeadOne.m4047a(0);
+                    MediaChannelSend.newInstance().send(this.mPCMPackageHeadOne.m4048a(),
+                            this.mPCMPackageHeadOne.m4049b(), EnumAudioState.RESUME);
                 }
             }
         }
     }
 
     /* renamed from: d */
-    public void mo1438d() {
-        synchronized (this.f3078u) {
-            LogUtil.d(f3050a, "seek() is called");
-            if (this.f3062e == null) {
+    public void seek() {
+        synchronized (this.mObject) {
+            LogUtil.d(Tag, "seek() is called");
+            if (this.mAudioTrack == null) {
                 return;
             }
             try {
-                this.f3062e.pause();
+                this.mAudioTrack.pause();
             } catch (IllegalStateException e) {
-                MsgHandlerCenter.m4461b(415);
+                MsgHandlerCenter.dispatchMessage(415);
                 e.printStackTrace();
             }
-            if (AudioUtil.m3883h()) {
-                this.f3066i.m4053c(CommonParams.bt);
-                this.f3066i.m4047a(0);
-                MediaChannelSend.m4030a().m4033a(this.f3066i.m4048a(), this.f3066i.m4049b(), C1161d.SEEK);
+            if (AudioUtil.getIs()) {
+                this.mPCMPackageHeadOne.m4053c(196613);
+                this.mPCMPackageHeadOne.m4047a(0);
+                MediaChannelSend.newInstance().send(this.mPCMPackageHeadOne.m4048a(),
+                        this.mPCMPackageHeadOne.m4049b(), EnumAudioState.SEEK);
             }
-            m3970n();
+            triggeredPlay();
         }
     }
 
     /* renamed from: f */
-    public void mo1440f() {
-        synchronized (this.f3078u) {
-            if (this.f3062e != null) {
+    public void setMinVolume() {
+        synchronized (this.mObject) {
+            if (this.mAudioTrack != null) {
                 if (Build.MODEL.equals("MI 3")) {
-                    m3946a(0.001f);
+                    setVolume(0.001f);
                 } else {
-                    AudioTrack audioTrack = this.f3062e;
-                    m3946a(AudioTrack.getMinVolume());
+                    AudioTrack audioTrack = this.mAudioTrack;
+                    setVolume(AudioTrack.getMinVolume());
                 }
             }
         }
     }
 
     /* renamed from: e */
-    public void mo1439e() {
-        synchronized (this.f3078u) {
-            if (this.f3062e != null) {
-                AudioTrack audioTrack = this.f3062e;
-                m3946a(AudioTrack.getMaxVolume() / 3.0f);
+    public void setMiddleVolume() {
+        synchronized (this.mObject) {
+            if (this.mAudioTrack != null) {
+                AudioTrack audioTrack = this.mAudioTrack;
+                setVolume(AudioTrack.getMaxVolume() / 3.0f);
             }
         }
     }
 
     /* renamed from: g */
-    public void mo1441g() {
-        synchronized (this.f3078u) {
-            if (this.f3062e != null) {
-                AudioTrack audioTrack = this.f3062e;
-                m3946a(AudioTrack.getMaxVolume());
+    public void setMaxVolume() {
+        synchronized (this.mObject) {
+            if (this.mAudioTrack != null) {
+                AudioTrack audioTrack = this.mAudioTrack;
+                setVolume(AudioTrack.getMaxVolume());
             }
         }
     }
 
     /* renamed from: a */
-    private void m3946a(float vol) {
+    private void setVolume(float vol) {
         if (VERSION.SDK_INT >= 21) {
-            this.f3062e.setVolume(vol);
+            this.mAudioTrack.setVolume(vol);
         } else {
-            this.f3062e.setStereoVolume(vol, vol);
+            this.mAudioTrack.setStereoVolume(vol, vol);
         }
     }
 
     /* renamed from: m */
-    private boolean m3969m() {
+    private boolean createAudioTrack() {
         int channelConfig;
-        this.f3059b = this.f3072o.mo1442a();
-        this.f3060c = this.f3072o.mo1446b();
-        this.f3061d = this.f3072o.mo1447c();
-        this.f3081x.m3878a(this.f3059b, (int) f3048C, this.f3060c, 3);
-        if (this.f3062e != null) {
-            this.f3062e.flush();
+        this.f3059b = this.mAudioDecoderInterfaceOne.getSampleRate();
+        this.f3060c = this.mAudioDecoderInterfaceOne.getChannelConfig();
+        this.f3061d = this.mAudioDecoderInterfaceOne.getReSampleRate();
+        this.mCarLifeSRC.initSampleRate(this.f3059b, (int) f3048C, this.f3060c, 3);
+        if (this.mAudioTrack != null) {
+            this.mAudioTrack.flush();
         }
-        LogUtil.d(f3050a, "audio track channel config is " + this.f3060c);
+        LogUtil.d(Tag, "audio track channel config is " + this.f3060c);
         if (this.f3060c == 1) {
             channelConfig = 4;
         } else {
             channelConfig = 12;
         }
-        LogUtil.d(f3050a, "audio track  sample rate = " + this.f3059b);
-        if (this.f3059b < m_AppUI.MSG_APP_SAVESCREEN || this.f3059b > f3048C) {
-            this.f3062e = null;
-            LogUtil.d(f3050a, "4000>sample rate || sample rate>48000: " + this.f3059b);
+        LogUtil.d(Tag, "audio track  sample rate = " + this.f3059b);
+        if (this.f3059b < 4000 || this.f3059b > f3048C) {
+            this.mAudioTrack = null;
+            LogUtil.d(Tag, "4000>sample rate || sample rate>48000: " + this.f3059b);
             return false;
         }
         int audioMinBufSizeLocal = AudioTrack.getMinBufferSize(this.f3059b, channelConfig, 2);
-        LogUtil.d(f3050a, "audio track audioMinBufSizeLocal= " + audioMinBufSizeLocal);
+        LogUtil.d(Tag, "audio track audioMinBufSizeLocal= " + audioMinBufSizeLocal);
         try {
-            this.f3062e = new AudioTrack(3, this.f3059b, channelConfig, 2, audioMinBufSizeLocal * 2, 1);
-            if (C1665b.m6061a().m6092t()) {
+            this.mAudioTrack = new AudioTrack(3, this.f3059b, channelConfig, 2, audioMinBufSizeLocal * 2, 1);
+            if (CarlifeCoreAudio.newInstance().isSR()) {
                 m3951b(f3048C, this.f3060c, this.f3061d);
             } else {
                 m3951b(this.f3059b, this.f3060c, this.f3061d);
@@ -427,82 +431,82 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            this.f3062e = null;
-            LogUtil.d(f3050a, "IllegalArgumentException: mAudioTrack =new AudioTrack");
+            this.mAudioTrack = null;
+            LogUtil.d(Tag, "IllegalArgumentException: mAudioTrack =new AudioTrack");
             return false;
         }
     }
 
     /* renamed from: n */
-    private void m3970n() {
-        if (this.f3062e != null) {
-            if (this.f3062e.getPlayState() != 3) {
+    private void triggeredPlay() {
+        if (this.mAudioTrack != null) {
+            if (this.mAudioTrack.getPlayState() != 3) {
                 try {
-                    this.f3062e.play();
+                    this.mAudioTrack.play();
                 } catch (IllegalStateException e) {
-                    MsgHandlerCenter.m4461b(415);
+                    MsgHandlerCenter.dispatchMessage(415);
                     e.printStackTrace();
                 }
-                synchronized (this.f3078u) {
-                    this.f3078u.notify();
+                synchronized (this.mObject) {
+                    this.mObject.notify();
                 }
                 return;
             }
-            LogUtil.d(f3050a, "play music has been triggered");
+            LogUtil.d(Tag, "triggeredPlay music has been triggered");
         }
     }
 
     /* renamed from: b */
-    private void m3953b(byte[] data, int size) {
-        if (AudioUtil.m3883h() && size > 0) {
+    private void encrypt(byte[] data, int size) {
+        if (AudioUtil.getIs() && size > 0) {
             byte[] sendData = data;
             int sendSize = size;
-            if (!EncryptSetupManager.m4120a().m4135c() || size <= 0) {
-                if (C1665b.m6061a().m6092t()) {
-                    int byteDataSize = this.f3081x.m3879a(data, size, this.f3053A, this.f3076s);
+            if (!EncryptSetupManager.newInstance().getFlag() || size <= 0) {
+                if (CarlifeCoreAudio.newInstance().isSR()) {
+                    int byteDataSize = this.mCarLifeSRC.m3879a(data, size, this.f3053A, this.f3076s);
                     for (int i = 0; i < byteDataSize; i++) {
                         this.f3054B[this.f3076s + i] = this.f3053A[i];
                     }
                     sendData = this.f3054B;
                     sendSize = byteDataSize;
                 }
-                this.f3067j.m4053c(CommonParams.bu);
-                this.f3067j.m4047a(sendSize);
-                this.f3067j.m4052c();
-                System.arraycopy(this.f3067j.m4048a(), 0, sendData, 0, this.f3076s);
-                MediaChannelSend.m4030a().m4033a(sendData, this.f3076s + sendSize, C1161d.NORMAL);
+                this.mPCMPackageHeadTwo.m4053c(196614);
+                this.mPCMPackageHeadTwo.m4047a(sendSize);
+                this.mPCMPackageHeadTwo.m4052c();
+                System.arraycopy(this.mPCMPackageHeadTwo.m4048a(), 0, sendData, 0, this.f3076s);
+                MediaChannelSend.newInstance().send(sendData, this.f3076s + sendSize, EnumAudioState.NORMAL);
                 return;
             }
             byte[] rawData = new byte[size];
             System.arraycopy(sendData, this.f3076s, rawData, 0, sendSize);
-            sendData = this.f3055E.m4112a(rawData, size);
+            sendData = this.mAESManager.m4112a(rawData, size);
             if (sendData == null) {
-                LogUtil.m4445e(f3050a, "encrypt failed!");
+                LogUtil.e(Tag, "encrypt failed!");
                 return;
             }
             sendSize = sendData.length;
-            this.f3067j.m4053c(CommonParams.bu);
-            this.f3067j.m4047a(sendSize);
-            this.f3067j.m4052c();
-            this.f3056F.m3909a(this.f3067j.m4048a(), this.f3076s, sendData, sendSize, this.f3057G);
-            MediaChannelSend.m4030a().m4033a(this.f3057G.m4057a(), this.f3057G.m4058b(), C1161d.NORMAL);
+            this.mPCMPackageHeadTwo.m4053c(CommonParams.bu);
+            this.mPCMPackageHeadTwo.m4047a(sendSize);
+            this.mPCMPackageHeadTwo.m4052c();
+            this.mArrayAdd.merge(this.mPCMPackageHeadTwo.m4048a(), this.f3076s, sendData, sendSize, this.mPair);
+            MediaChannelSend.newInstance().send(this.mPair.getData(), this.mPair.getSize(), EnumAudioState.NORMAL);
         }
     }
 
     /* renamed from: o */
     private void m3971o() {
-        int size = this.f3077t.m4058b();
+        int size = this.mPair1.getSize();
         if (size > 0) {
-            synchronized (this.f3078u) {
-                if (this.f3062e != null && this.f3062e.getPlayState() == 3) {
+            synchronized (this.mObject) {
+                if (this.mAudioTrack != null && this.mAudioTrack.getPlayState() == 3) {
                     if (this.f3080w < size) {
                         this.f3080w = size;
                         this.f3079v = new byte[this.f3080w];
                     }
-                    if (!AudioUtil.m3883h() || AudioUtil.m3882a().m3895g()) {
-                        this.f3062e.write(this.f3077t.m4057a(), this.f3076s, size);
+                    if (!AudioUtil.getIs() || AudioUtil.newInstance().isBlueToothMode()) {
+                        this.mAudioTrack.write(this.mPair1.getData(), this.f3076s, size);
                     } else {
-                        this.f3062e.write(this.f3079v, 0, size);
+                        this.mAudioTrack.write(this.f3079v, 0, size);
                     }
                 }
             }
@@ -511,10 +515,10 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
 
     /* renamed from: p */
     private void m3972p() {
-        synchronized (this.f3078u) {
-            if (this.f3062e == null || this.f3062e.getPlayState() != 3) {
+        synchronized (this.mObject) {
+            if (this.mAudioTrack == null || this.mAudioTrack.getPlayState() != 3) {
                 try {
-                    this.f3078u.wait();
+                    this.mObject.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -524,20 +528,20 @@ public class EncodedMediaManager extends AudioSourceManagerBase {
 
     /* renamed from: b */
     private void m3951b(int sampleRate, int channelConfig, int formatConfig) {
-        if (AudioUtil.m3883h()) {
-            this.f3066i.m4053c(CommonParams.bp);
-            this.f3069l = this.f3066i.m4046a(sampleRate, channelConfig, formatConfig, this.f3068k);
-            this.f3066i.m4047a(this.f3069l);
-            System.arraycopy(this.f3066i.m4048a(), 0, this.f3068k, 0, this.f3076s);
-            MediaChannelSend.m4030a().m4033a(this.f3068k, this.f3069l + this.f3076s, C1161d.INIT);
+        if (AudioUtil.getIs()) {
+            this.mPCMPackageHeadOne.m4053c(CommonParams.bp);
+            this.f3069l = this.mPCMPackageHeadOne.m4046a(sampleRate, channelConfig, formatConfig, this.f3068k);
+            this.mPCMPackageHeadOne.m4047a(this.f3069l);
+            System.arraycopy(this.mPCMPackageHeadOne.m4048a(), 0, this.f3068k, 0, this.f3076s);
+            MediaChannelSend.newInstance().send(this.f3068k, this.f3069l + this.f3076s, EnumAudioState.INIT);
         }
     }
 
     /* renamed from: h */
-    protected void m3981h() {
-        synchronized (this.f3078u) {
-            LogUtil.m4445e(f3050a, "notify to awake");
-            this.f3078u.notify();
+    protected void notifyToAwake() {
+        synchronized (this.mObject) {
+            LogUtil.e(Tag, "notify to awake");
+            this.mObject.notify();
         }
     }
 

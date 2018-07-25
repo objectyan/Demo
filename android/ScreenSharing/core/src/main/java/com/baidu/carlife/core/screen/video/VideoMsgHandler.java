@@ -17,7 +17,7 @@ import com.baidu.carlife.core.screen.OnStatusChangeListener;
 import com.baidu.carlife.core.screen.operation.CarlifeTouchManager;
 import com.baidu.carlife.core.screen.presentation.AbsCarlifeActivityService;
 import com.baidu.carlife.core.screen.presentation.view.CarLifePresentationController;
-import com.baidu.carlife.protobuf.p087l.C1663a;
+import com.baidu.carlife.protobuf.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.p087l.C1667d;
 import com.baidu.carlife.protobuf.CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo;
 import com.baidu.carlife.protobuf.CarlifeVideoEncoderInfoProto.CarlifeVideoEncoderInfo.Builder;
@@ -50,7 +50,7 @@ public class VideoMsgHandler {
                 case 1002:
                     if (CarlifeConfig.m4065a()) {
                         CarLifePresentationController.m4626b().mo1355p();
-                        LogUtil.m4445e(VideoMsgHandler.f3913a, "---------end internal screen capture.---------");
+                        LogUtil.e(VideoMsgHandler.f3913a, "---------end internal screen capture.---------");
                     }
                     Recorder.m4826b().m4864b(false);
                     return;
@@ -60,14 +60,14 @@ public class VideoMsgHandler {
                     return;
                 case CommonParams.f3549P /*98311*/:
                     CarlifeScreenUtil.m4331a().m4338a(msg);
-                    MsgHandlerCenter.m4459a((int) CommonParams.fm, msg.obj);
+                    MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fm, msg.obj);
                     this.f3912a.m4899a(msg);
                     if (this.f3912a.f3914b != null) {
                         this.f3912a.f3914b.mo1346a(Recorder.m4828c(), Recorder.m4830d());
                     }
-                    MsgHandlerCenter.m4453a((int) CommonParams.gM, 2000);
-                    if (ConnectManager.m4228a().m4240b() == 2 && VERSION.SDK_INT < 21) {
-                        ConnectClient.m4207a().m4222a(false);
+                    MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.gM, 2000);
+                    if (ConnectManager.newInstance().getType() == 2 && VERSION.SDK_INT < 21) {
+                        ConnectClient.newInstance().m4222a(false);
                         return;
                     } else if (C1667d.m6102a().m6115h()) {
                         this.f3912a.m4903a(CarLifeSettings.m4069a().m4095m());
@@ -110,7 +110,7 @@ public class VideoMsgHandler {
     }
 
     public VideoMsgHandler() {
-        MsgHandlerCenter.m4460a(this.f3915c);
+        MsgHandlerCenter.registerMessageHandler(this.f3915c);
     }
 
     /* renamed from: a */
@@ -129,13 +129,13 @@ public class VideoMsgHandler {
                 LogUtil.d(f3913a, "send background message");
                 command.setServiceType(CommonParams.ap);
             }
-            C1663a.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
     /* renamed from: a */
     private void m4896a() {
-        C1663a.m5979a().m6026c((int) CommonParams.bd);
+        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.bd);
     }
 
     /* renamed from: a */
@@ -150,13 +150,13 @@ public class VideoMsgHandler {
         CarlifeVideoEncoderInfo videoInfo = builder.build();
         command.setData(videoInfo.toByteArray());
         command.setLength(videoInfo.getSerializedSize());
-        ConnectClient.m4207a().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+        ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: a */
     private void m4899a(Message msg) {
         if (this.f3914b == null) {
-            LogUtil.m4445e(f3913a, "mOnStatusChangeListener == null");
+            LogUtil.e(f3913a, "mOnStatusChangeListener == null");
             return;
         }
         try {
@@ -188,7 +188,7 @@ public class VideoMsgHandler {
                     Recorder.m4826b().m4878i(true);
                     CarlifeCmdMessage command = new CarlifeCmdMessage(true);
                     command.setServiceType(CommonParams.ap);
-                    ConnectClient.m4207a().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+                    ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
                 } else {
                     Recorder.m4826b().m4849P();
                 }
@@ -201,7 +201,7 @@ public class VideoMsgHandler {
                 Recorder.m4826b().m4855a(1);
             }
         } catch (InvalidProtocolBufferException e) {
-            LogUtil.m4445e(f3913a, "Get VIDEO_ENCODER_INIT_INFO Error");
+            LogUtil.e(f3913a, "Get VIDEO_ENCODER_INIT_INFO Error");
             e.printStackTrace();
         }
     }
@@ -225,7 +225,7 @@ public class VideoMsgHandler {
                 m4897a(changeFrameRate);
             }
         } catch (InvalidProtocolBufferException e) {
-            LogUtil.m4445e(f3913a, "Get VIDEO_ENCODER_FRAME_RATE_CHANGE Error");
+            LogUtil.e(f3913a, "Get VIDEO_ENCODER_FRAME_RATE_CHANGE Error");
             e.printStackTrace();
         }
     }
@@ -239,6 +239,6 @@ public class VideoMsgHandler {
         CarlifeVideoFrameRate videoInfo = builder.build();
         command.setData(videoInfo.toByteArray());
         command.setLength(videoInfo.getSerializedSize());
-        ConnectClient.m4207a().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+        ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 }

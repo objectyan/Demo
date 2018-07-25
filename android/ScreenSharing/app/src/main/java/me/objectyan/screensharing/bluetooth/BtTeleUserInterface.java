@@ -24,7 +24,7 @@ import com.baidu.carlife.logic.C1868q.C1060g;
 import com.baidu.carlife.p078f.C1436a;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.processes.C2028a;
 import com.baidu.carlife.util.C2171b;
 import java.util.Locale;
@@ -157,7 +157,7 @@ public class BtTeleUserInterface {
             LogUtil.d(BtTeleUserInterface.f2795a, "on PhoneStateOffhook");
             if (BtTeleUserInterface.f2803l == -1) {
                 LogUtil.d(BtTeleUserInterface.f2795a, "From Initial State to Call Offhook State");
-                if (!C1663a.m5979a().m6035e()) {
+                if (!CarlifeCoreSDK.m5979a().m6035e()) {
                     BtHfpProtocolHelper.m3441a(true);
                 }
             } else if (BtTeleUserInterface.f2803l == 0) {
@@ -307,7 +307,7 @@ public class BtTeleUserInterface {
         /* renamed from: d */
         public void mo1398d() {
             LogUtil.d(BtTeleUserInterface.f2795a, "onResume: ");
-            C1663a.m5979a().m6039g();
+            CarlifeCoreSDK.m5979a().m6039g();
             BtHfpProtocolHelper.m3441a(true);
         }
 
@@ -469,7 +469,7 @@ public class BtTeleUserInterface {
     /* renamed from: o */
     private void m3583o() {
         this.f2809j = 30;
-        MsgHandlerCenter.m4461b((int) CommonParams.fQ);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.fQ);
     }
 
     /* renamed from: p */

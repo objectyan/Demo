@@ -383,17 +383,17 @@ public class PushWebNoticeDialog extends BaseDialog {
     private boolean m8585c(String url) {
         Uri uri = Uri.parse(url);
         String authority = uri.getAuthority();
-        LogUtil.m4445e(f7387e, "dispatchJsMethod: authority=" + authority);
+        LogUtil.e(f7387e, "dispatchJsMethod: authority=" + authority);
         if (!TextUtils.isEmpty(authority)) {
             String product = uri.getQueryParameter(f7382B);
-            LogUtil.m4445e(f7387e, "dispatchJsMethod: product=" + product);
+            LogUtil.e(f7387e, "dispatchJsMethod: product=" + product);
             if (TextUtils.isEmpty(product)) {
-                LogUtil.m4445e(f7387e, "Js invoke parameter product should not be empty.");
+                LogUtil.e(f7387e, "Js invoke parameter product should not be empty.");
             } else if ("exit".equalsIgnoreCase(authority)) {
-                LogUtil.m4445e(f7387e, "Js method: exit");
+                LogUtil.e(f7387e, "Js method: exit");
                 m8590m();
             } else if (f7397y.equalsIgnoreCase(authority)) {
-                LogUtil.m4445e(f7387e, "Js method: mtj");
+                LogUtil.e(f7387e, "Js method: mtj");
                 String eventID = uri.getQueryParameter(f7385E);
                 LogUtil.d(f7387e, "mtj eventID=" + eventID + " label=" + uri.getQueryParameter("label"));
             }

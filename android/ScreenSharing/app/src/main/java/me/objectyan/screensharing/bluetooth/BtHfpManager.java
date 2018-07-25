@@ -14,7 +14,7 @@ import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.logic.C1868q;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeBTHfpConnectionProto.CarlifeBTHfpConnection;
 import com.baidu.carlife.protobuf.CarlifeBTHfpIndicationProto.CarlifeBTHfpIndication;
 import com.baidu.carlife.protobuf.CarlifeBTHfpResponseProto.CarlifeBTHfpResponse;
@@ -158,7 +158,7 @@ public class BtHfpManager {
                         this.f2699a.m3409o();
                         return;
                     } catch (Exception ex) {
-                        LogUtil.m4445e(BtHfpManager.f2700B, "get hu info error");
+                        LogUtil.e(BtHfpManager.f2700B, "get hu info error");
                         ex.printStackTrace();
                         return;
                     }
@@ -507,10 +507,10 @@ public class BtHfpManager {
     /* renamed from: l */
     public void m3430l() {
         LogUtil.d(f2700B, "Try to bring Carlife to foreground via adb command");
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.aF);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 

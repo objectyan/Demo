@@ -413,7 +413,7 @@ public class BtDeviceManager extends StateMachine {
                         LogUtil.d(BtDeviceManager.f2661C, "HU INFO: Old HU without BtAddress");
                         return;
                     } catch (Exception ex) {
-                        LogUtil.m4445e(BtDeviceManager.f2661C, "get hu info error");
+                        LogUtil.e(BtDeviceManager.f2661C, "get hu info error");
                         ex.printStackTrace();
                         return;
                     }

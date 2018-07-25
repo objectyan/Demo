@@ -6,7 +6,7 @@ import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.p085i.C1609a;
 import com.baidu.carlife.p086j.C1612a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeSubscribeMobileCarLifeInfoListProto.CarlifeSubscribeMobileCarLifeInfoList;
 import com.baidu.carlife.protobuf.CarlifeSubscribeMobileCarLifeInfoProto.CarlifeSubscribeMobileCarLifeInfo;
 import com.baidu.carlife.protobuf.CarlifeVehicleInfoListProto.CarlifeVehicleInfoList;
@@ -64,7 +64,7 @@ public class C1029a {
         LogUtil.d(f2632a, "carDataSubscribe");
         CarlifeCmdMessage carDataSubscribeCommand = new CarlifeCmdMessage(true);
         carDataSubscribeCommand.m4201c(CommonParams.f3557X);
-        C1663a.m5979a().m6017a(Message.obtain(null, carDataSubscribeCommand.m4202d(), 1001, 0, carDataSubscribeCommand));
+        CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, carDataSubscribeCommand.getServiceType(), 1001, 0, carDataSubscribeCommand));
         LogUtil.d(f2632a, "sendMsgToService MSG_CMD_CAR_DATA_SUBSCRIBE_REQ");
     }
 
@@ -103,7 +103,7 @@ public class C1029a {
             } else {
                 carDataControlCommand.m4201c(CommonParams.aa);
             }
-            C1663a.m5979a().m6017a(Message.obtain(null, carDataControlCommand.m4202d(), 1001, 0, carDataControlCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, carDataControlCommand.getServiceType(), 1001, 0, carDataControlCommand));
             LogUtil.d(f2632a, carlifeVehicleInfo.toString());
         }
     }
@@ -114,7 +114,7 @@ public class C1029a {
             CarlifeSubscribeMobileCarLifeInfoList infoListSource = CarlifeSubscribeMobileCarLifeInfoList.parseFrom(((CarlifeCmdMessage) obj).m4205f());
             int listSize = infoListSource.getSubscribemobileCarLifeInfoList().size();
             if (listSize != infoListSource.getCnt()) {
-                LogUtil.m4445e(f2632a, "SubscribemobileCarLifeInfoList().size() != Cnt");
+                LogUtil.e(f2632a, "SubscribemobileCarLifeInfoList().size() != Cnt");
             }
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.aL);
@@ -140,7 +140,7 @@ public class C1029a {
             CarlifeSubscribeMobileCarLifeInfoList infoList = builderList.build();
             command.m4199b(infoList.toByteArray());
             command.m4203d(infoList.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,7 +152,7 @@ public class C1029a {
             CarlifeSubscribeMobileCarLifeInfoList infoListSource = CarlifeSubscribeMobileCarLifeInfoList.parseFrom(((CarlifeCmdMessage) obj).m4205f());
             int listSize = infoListSource.getSubscribemobileCarLifeInfoList().size();
             if (listSize != infoListSource.getCnt()) {
-                LogUtil.m4445e(f2632a, "start SubscribemobileCarLifeInfoList().size() != Cnt");
+                LogUtil.e(f2632a, "start SubscribemobileCarLifeInfoList().size() != Cnt");
             }
             for (int i = 0; i < listSize; i++) {
                 switch (infoListSource.getSubscribemobileCarLifeInfo(i).getModuleID()) {

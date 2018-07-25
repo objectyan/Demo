@@ -99,6 +99,6 @@ public class C1856o {
             C2186p.m8304a().m8323c(f5733e, true);
             this.f5736g = true;
         }
-        MsgHandlerCenter.m4461b((int) CommonParams.gi);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gi);
     }
 }

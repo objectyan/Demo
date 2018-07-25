@@ -26,7 +26,7 @@ import com.baidu.carlife.logic.C1877u;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
 import com.baidu.carlife.p078f.C1444h;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.view.UserGuideViewPager;
 import com.baidu.carlife.view.p104a.C2251b;
 import com.baidu.navi.fragment.BaseFragment;
@@ -393,7 +393,7 @@ public class NewUserGuideFragment extends ContentFragment implements OnClickList
     private void m5719d() {
         LogUtil.d("Framework", "onEnterCarlife");
         CarLifeSettings.m4069a().m4074a(false);
-        if (CarlifeUtil.m4358a().m4402x() || C1663a.m5979a().m5993N()) {
+        if (CarlifeUtil.m4358a().m4402x() || CarlifeCoreSDK.m5979a().m5993N()) {
             showFragment(515, null);
         } else {
             showFragment(513, null);

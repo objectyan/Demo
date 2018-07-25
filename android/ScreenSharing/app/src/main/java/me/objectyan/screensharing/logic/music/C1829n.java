@@ -336,7 +336,7 @@ public class C1829n {
         r5 = r5.append(r6);
         r5 = r5.append(r2);
         r5 = r5.toString();
-        com.baidu.carlife.core.LogUtil.m4445e(r4, r5);
+        com.baidu.carlife.core.LogUtil.e(r4, r5);
         r4 = -8;
         if (r2 != r4) goto L_0x0078;
     L_0x006b:

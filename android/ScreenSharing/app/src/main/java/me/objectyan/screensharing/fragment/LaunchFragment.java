@@ -306,8 +306,8 @@ public class LaunchFragment extends ContentFragment {
         C1868q.m7089f().m7121g();
         PhoneStateService.m8212a(mActivity);
         CarlifeUtil.m4385w();
-        PackageUtil.strChannel = CommonParams.jt;
-        StatisticManager.setAppChannel(CommonParams.jt);
+        PackageUtil.strChannel = CommonParams.sChannel;
+        StatisticManager.setAppChannel(CommonParams.sChannel);
         LightnessControlManager.m4481b().m4484a();
         BtDeviceManager.m3360a().m3375a(mActivity);
         push(createFragment(NaviFragmentManager.TYPE_HOME));

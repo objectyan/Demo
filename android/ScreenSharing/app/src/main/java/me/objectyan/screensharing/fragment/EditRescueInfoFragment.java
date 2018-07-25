@@ -99,7 +99,7 @@ public class EditRescueInfoFragment extends ContentFragment implements OnClickLi
         public void onClick() {
             this.f4268a.m5317b();
             this.f4268a.back();
-            MsgHandlerCenter.m4461b(3011);
+            MsgHandlerCenter.dispatchMessage(3011);
         }
     }
 
@@ -227,7 +227,7 @@ public class EditRescueInfoFragment extends ContentFragment implements OnClickLi
                 if (!TextUtils.isEmpty(this.f4273d.getText().toString()) || !TextUtils.isEmpty(this.f4274e.getText().toString()) || !TextUtils.isEmpty(this.f4275f.getText().toString()) || !TextUtils.isEmpty(this.f4276g.getText().toString()) || !TextUtils.isEmpty(this.f4277h.getText().toString()) || !TextUtils.isEmpty(this.f4278i.getText().toString())) {
                     m5317b();
                     back();
-                    MsgHandlerCenter.m4461b(3011);
+                    MsgHandlerCenter.dispatchMessage(3011);
                     return;
                 }
                 return;

@@ -61,7 +61,7 @@ public class C2173d {
             }
             return rootDir;
         } catch (Exception e) {
-            LogUtil.m4445e(f6924a, "Get SD Path Failed");
+            LogUtil.e(f6924a, "Get SD Path Failed");
             return null;
         }
     }

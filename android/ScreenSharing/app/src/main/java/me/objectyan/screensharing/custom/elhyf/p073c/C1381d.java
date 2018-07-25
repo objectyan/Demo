@@ -7,7 +7,7 @@ import com.baidu.carlife.core.MsgBaseHandler;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeTransferDataFinishProto.CarlifeTransferDataFinish;
 import com.baidu.carlife.protobuf.CarlifeTransferDataSendProto.CarlifeTransferDataSend;
 import com.baidu.carlife.protobuf.CarlifeTransferDataStartProto.CarlifeTransferDataStart;
@@ -336,7 +336,7 @@ public class C1381d {
 
     /* renamed from: a */
     public void m5094a(byte[] totalBuffer, String name, DataType type, C1359a transferDataListener) {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             InputStream inputStream = new ByteArrayInputStream(totalBuffer);
             C1377c transferData = new C1377c();
             transferData.m5064a(name);
@@ -353,7 +353,7 @@ public class C1381d {
 
     /* renamed from: a */
     public void m5093a(String filePath, DataType type, C1359a transferDataListener) {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             try {
                 File file = new File(filePath);
                 if (file.exists()) {
@@ -376,7 +376,7 @@ public class C1381d {
     /* renamed from: a */
     private synchronized int m5069a(int id, DataType type, int len, String fileName) {
         int a;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             Builder builder = CarlifeTransferDataStart.newBuilder();
             builder.setDataType(type);
             builder.setDataLen(len);
@@ -387,7 +387,7 @@ public class C1381d {
             msg.m4199b(proto.toByteArray());
             msg.m4203d(proto.getSerializedSize());
             msg.m4201c(CommonParams.f3544K);
-            a = C1663a.m5979a().m6003a(msg);
+            a = CarlifeCoreSDK.m5979a().m6003a(msg);
         } else {
             a = -1;
         }
@@ -397,7 +397,7 @@ public class C1381d {
     /* renamed from: a */
     private synchronized int m5068a(int id) {
         int a;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeTransferDataFinish.Builder builder = CarlifeTransferDataFinish.newBuilder();
             builder.setFileId(id);
             CarlifeTransferDataFinish proto = builder.build();
@@ -405,7 +405,7 @@ public class C1381d {
             msg.m4199b(proto.toByteArray());
             msg.m4203d(proto.getSerializedSize());
             msg.m4201c(CommonParams.f3546M);
-            a = C1663a.m5979a().m6003a(msg);
+            a = CarlifeCoreSDK.m5979a().m6003a(msg);
         } else {
             a = -1;
         }
@@ -415,7 +415,7 @@ public class C1381d {
     /* renamed from: a */
     public synchronized int m5091a(int id, byte[] data, int dataLen) {
         int a;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeTransferDataSend.Builder builder = CarlifeTransferDataSend.newBuilder();
             builder.setFileId(id);
             builder.setLen(dataLen);
@@ -425,7 +425,7 @@ public class C1381d {
             msg.m4199b(proto.toByteArray());
             msg.m4203d(proto.getSerializedSize());
             msg.m4201c(CommonParams.f3545L);
-            a = C1663a.m5979a().m6003a(msg);
+            a = CarlifeCoreSDK.m5979a().m6003a(msg);
         } else {
             a = -1;
         }
@@ -435,7 +435,7 @@ public class C1381d {
     /* renamed from: b */
     private synchronized int m5082b(int id) {
         int a;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeTransferDataStop.Builder builder = CarlifeTransferDataStop.newBuilder();
             builder.setFileId(id);
             CarlifeTransferDataStop proto = builder.build();
@@ -443,7 +443,7 @@ public class C1381d {
             msg.m4199b(proto.toByteArray());
             msg.m4203d(proto.getSerializedSize());
             msg.m4201c(CommonParams.f3547N);
-            a = C1663a.m5979a().m6003a(msg);
+            a = CarlifeCoreSDK.m5979a().m6003a(msg);
         } else {
             a = -1;
         }

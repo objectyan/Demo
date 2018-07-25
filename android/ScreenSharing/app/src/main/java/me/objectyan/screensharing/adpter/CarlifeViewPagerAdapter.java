@@ -46,7 +46,7 @@ public class CarlifeViewPagerAdapter extends PagerAdapter {
     }
 
     public Object instantiateItem(ViewGroup container, int position) {
-        LogUtil.m4445e(f2444a, "-----------instantiateItem----------POS5:" + position);
+        LogUtil.e(f2444a, "-----------instantiateItem----------POS5:" + position);
         ((ViewPager) container).addView((View) this.f2446b.get(position));
         return this.f2446b.get(position);
     }

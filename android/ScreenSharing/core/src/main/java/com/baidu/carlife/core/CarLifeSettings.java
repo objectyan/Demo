@@ -37,11 +37,11 @@ public class CarLifeSettings implements KeepClass {
 
     static {
         StringBuilder append = new StringBuilder().append("hadGuide_v");
-        CarlifeUtil.m4358a();
-        f3165a = append.append(CarlifeUtil.m4375h()).toString();
+        CarlifeUtil.newInstance();
+        f3165a = append.append(CarlifeUtil.getVersionCode()).toString();
         append = new StringBuilder().append("hadAgreeDisclaimer");
-        CarlifeUtil.m4358a();
-        f3166b = append.append(CarlifeUtil.m4375h()).toString();
+        CarlifeUtil.newInstance();
+        f3166b = append.append(CarlifeUtil.getVersionCode()).toString();
     }
 
     /* renamed from: a */
@@ -59,7 +59,7 @@ public class CarLifeSettings implements KeepClass {
         this.f3176k = false;
         this.f3177l = false;
         this.f3178m = null;
-        this.f3178m = AppContext.m3876a().getSharedPreferences(CommonParams.ia, 0);
+        this.f3178m = AppContext.getAppContext().getSharedPreferences(CommonParams.CAR_LIFE_TEMP, 0);
         m4072n();
     }
 

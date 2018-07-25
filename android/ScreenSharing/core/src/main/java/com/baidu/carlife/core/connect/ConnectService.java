@@ -57,10 +57,10 @@ public class ConnectService extends Service {
                 Message oldMsg = (Message) this.f3179a.f3188i.remove(0);
                 Message replayMsg = Message.obtain(null, -1, oldMsg);
                 try {
-                    LogUtil.m4445e(ConnectService.f3181b, "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(oldMsg.what));
+                    LogUtil.e(ConnectService.f3181b, "Send MSG_SEND_DISCARD, oldMsg what = " + Integer.toString(oldMsg.what));
                     oldMsg.replyTo.send(replayMsg);
                 } catch (Throwable t) {
-                    LogUtil.m4445e(ConnectService.f3181b, "Send MSG_SEND_DISCARD Error");
+                    LogUtil.e(ConnectService.f3181b, "Send MSG_SEND_DISCARD Error");
                     t.printStackTrace();
                 }
             }
@@ -79,9 +79,9 @@ public class ConnectService extends Service {
             if (this.f3188i.size() > 0) {
                 this.f3184e.sendMessage((Message) this.f3188i.remove(0));
             }
-            this.f3189j = ConnectManager.m4228a();
-            this.f3189j.m4244c();
-            this.f3189j.m4254h();
+            this.f3189j = ConnectManager.newInstance();
+            this.f3189j.startAcceptThread();
+            this.f3189j.startUDP();
         } catch (Throwable t) {
             this.f3186g = null;
             this.f3187h = null;
@@ -125,7 +125,7 @@ public class ConnectService extends Service {
     public void onDestroy() {
         LogUtil.d(f3181b, "ConnectService onDestroy()");
         if (this.f3189j != null) {
-            this.f3189j.m4246d();
+            this.f3189j.stopAcceptThread();
             this.f3189j = null;
         }
         super.onDestroy();

@@ -39,7 +39,7 @@ public class C2135y extends C2110a {
     /* renamed from: a */
     public void mo1775a(C2124l parameters) {
         if (TextUtils.isEmpty(parameters.m8011c()) || TextUtils.equals(parameters.m8011c(), f6800c)) {
-            LogUtil.m4445e("radio_request", "channel_id is empty OR this channel_id is loading");
+            LogUtil.e("radio_request", "channel_id is empty OR this channel_id is loading");
             return;
         }
         mo1780a(parameters.m8011c());
@@ -50,7 +50,7 @@ public class C2135y extends C2110a {
 
     /* renamed from: a */
     public void mo1771a(int statusCode, String response) {
-        LogUtil.m4445e("radio_request", "statusCode = " + statusCode);
+        LogUtil.e("radio_request", "statusCode = " + statusCode);
         f6800c = null;
         if (statusCode == 200) {
             m8058b(response);
@@ -65,7 +65,7 @@ public class C2135y extends C2110a {
 
     /* renamed from: a */
     public void mo1772a(String url, String error) {
-        LogUtil.m4445e("radio_request", "error = " + error);
+        LogUtil.e("radio_request", "error = " + error);
         f6800c = null;
         if (this.f6801d != null) {
             this.f6801d.mo1693a(error);

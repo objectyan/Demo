@@ -41,7 +41,7 @@ public class ConnectServiceReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if (this.f3194e == null) {
-            LogUtil.m4445e(f3190a, "mHandler is null");
+            LogUtil.e(f3190a, "mHandler is null");
             return;
         }
         String action = intent.getAction();

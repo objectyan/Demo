@@ -1,0 +1,18 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:q0="http://service.position/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+    <soapenv:Body>
+
+        <q0:ecallFull>
+
+            <arg0>CARLIFE_USERNAME</arg0>
+
+            <arg1>CARLIFE_PASSWORD</arg1>
+
+            <arg2>CARLIFE_FSD</arg2>
+        </q0:ecallFull>
+    </soapenv:Body>
+
+</soapenv:Envelope>

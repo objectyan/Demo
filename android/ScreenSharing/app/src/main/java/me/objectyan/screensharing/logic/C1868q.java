@@ -32,7 +32,7 @@ import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.logic.voice.C1903m;
 import com.baidu.carlife.model.C1935m;
 import com.baidu.carlife.model.C1936n;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2201w;
 import com.baidu.carlife.util.C2204x;
 import com.baidu.che.codriver.vr.C2848p;
@@ -413,7 +413,7 @@ public class C1868q {
             switch (state) {
                 case 0:
                     LogUtil.d(C1868q.f5757b, "CALL_STATE_IDLE:" + incomingNumber);
-                    MsgHandlerCenter.m4461b(2009);
+                    MsgHandlerCenter.dispatchMessage(2009);
                     this.f5756a.m7098p();
                     BtHfpProtocolHelper.m3431a();
                     this.f5756a.f5782q = false;
@@ -423,7 +423,7 @@ public class C1868q {
                 case 1:
                     LogUtil.d(C1868q.f5757b, "CALL_STATE_RINGING:" + incomingNumber);
                     C1903m.m7252a().m7255b();
-                    MsgHandlerCenter.m4461b(2004);
+                    MsgHandlerCenter.dispatchMessage(2004);
                     this.f5756a.m7119d(incomingNumber);
                     if (!TextUtils.isEmpty(incomingNumber)) {
                         this.f5756a.f5790y = this.f5756a.m7117c(incomingNumber);
@@ -435,7 +435,7 @@ public class C1868q {
                     if (!TextUtils.isEmpty(incomingNumber)) {
                         this.f5756a.f5790y = this.f5756a.m7117c(incomingNumber);
                     }
-                    MsgHandlerCenter.m4461b(2002);
+                    MsgHandlerCenter.dispatchMessage(2002);
                     if (!this.f5756a.f5776F) {
                         this.f5756a.m7125k();
                         break;
@@ -566,7 +566,7 @@ public class C1868q {
                 phoneNum = phoneNum.substring(0, 40);
             }
             final String temp = phoneNum;
-            if (C1663a.m5979a().m5993N() && !m7115b() && BtDeviceManager.m3360a().f2697w) {
+            if (CarlifeCoreSDK.m5979a().m5993N() && !m7115b() && BtDeviceManager.m3360a().f2697w) {
                 C2201w.m8371a((int) R.string.phone_bt_tip, 0);
                 new Thread(this) {
                     /* renamed from: c */
@@ -576,7 +576,7 @@ public class C1868q {
                         MsgHandlerCenter.m4453a((int) CommonParams.gV, 400);
                         this.f5746c.m7079b(context, temp);
                         MsgHandlerCenter.m4452a((int) CommonParams.gV);
-                        MsgHandlerCenter.m4461b((int) CommonParams.gW);
+                        MsgHandlerCenter.dispatchMessage((int) CommonParams.gW);
                     }
                 }.start();
                 return;
@@ -589,7 +589,7 @@ public class C1868q {
                     MsgHandlerCenter.m4453a((int) CommonParams.gV, 400);
                     this.f5749c.m7079b(context, temp);
                     MsgHandlerCenter.m4452a((int) CommonParams.gV);
-                    MsgHandlerCenter.m4461b((int) CommonParams.gW);
+                    MsgHandlerCenter.dispatchMessage((int) CommonParams.gW);
                 }
             }.start();
         }
@@ -711,34 +711,34 @@ public class C1868q {
     /* renamed from: k */
     public void m7125k() {
         C1772k.m6480a().m6485a(1, 2);
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.ai);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
     /* renamed from: d */
     public void m7119d(String incomingNumber) {
         C1772k.m6480a().m6485a(1, 1);
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.ah);
             if (!TextUtils.isEmpty(incomingNumber)) {
                 command.m4199b(incomingNumber.getBytes());
                 command.m4203d(incomingNumber.length());
             }
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
     /* renamed from: p */
     private void m7098p() {
         C1772k.m6480a().m6485a(1, 0);
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.aj);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -755,10 +755,10 @@ public class C1868q {
         try {
             phoneCursor = resolver.query(Phone.CONTENT_URI, f5761f, null, null, null);
         } catch (Exception e) {
-            LogUtil.m4445e(f5757b, "queryPhoneContacts Exception:" + e.toString());
+            LogUtil.e(f5757b, "queryPhoneContacts Exception:" + e.toString());
         }
         MsgHandlerCenter.m4452a((int) CommonParams.gV);
-        MsgHandlerCenter.m4461b((int) CommonParams.gW);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gW);
         if (phoneCursor == null) {
             return null;
         }
@@ -880,7 +880,7 @@ public class C1868q {
         } catch (Exception e) {
         }
         MsgHandlerCenter.m4452a((int) CommonParams.gV);
-        MsgHandlerCenter.m4461b((int) CommonParams.gW);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gW);
         if (callLogCursor != null && callLogCursor.getCount() < 1) {
             try {
                 callLogCursor = resolver.query(Calls.CONTENT_URI, f5765j, null, null, "date DESC limit 100");

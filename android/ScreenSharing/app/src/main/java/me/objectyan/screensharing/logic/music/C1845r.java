@@ -404,7 +404,7 @@ public class C1845r extends C1790b {
                 }
                 this.f5714b.m6995a(songList, recvListId, 0, 0, 0);
                 if (recvListId.equals(this.f5714b.m6644n())) {
-                    MsgHandlerCenter.m4461b(230);
+                    MsgHandlerCenter.dispatchMessage(230);
                 }
             }
 

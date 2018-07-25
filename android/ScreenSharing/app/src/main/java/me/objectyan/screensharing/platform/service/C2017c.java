@@ -120,7 +120,7 @@ public class C2017c implements C1999c, C2015a, C2016h {
         r3 = r3.tag;	 Catch:{ all -> 0x0044 }
         r2 = r2.append(r3);	 Catch:{ all -> 0x0044 }
         r2 = r2.toString();	 Catch:{ all -> 0x0044 }
-        com.baidu.carlife.core.LogUtil.m4445e(r0, r2);	 Catch:{ all -> 0x0044 }
+        com.baidu.carlife.core.LogUtil.e(r0, r2);	 Catch:{ all -> 0x0044 }
     L_0x0042:
         monitor-exit(r1);	 Catch:{ all -> 0x0044 }
         goto L_0x001c;

@@ -406,10 +406,10 @@ public class PhoneFragment extends ContentFragment implements OnClickListener, O
                         return;
                 }
             } catch (Exception ex) {
-                LogUtil.m4445e(PhoneFragment.f4685a, "handler in phonefragment get exception");
+                LogUtil.e(PhoneFragment.f4685a, "handler in phonefragment get exception");
                 ex.printStackTrace();
             }
-            LogUtil.m4445e(PhoneFragment.f4685a, "handler in phonefragment get exception");
+            LogUtil.e(PhoneFragment.f4685a, "handler in phonefragment get exception");
             ex.printStackTrace();
         }
     }

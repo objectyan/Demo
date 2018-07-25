@@ -211,7 +211,7 @@ public class VideoOutputThread extends Thread {
             }
         } catch (Throwable t) {
             t.printStackTrace();
-            LogUtil.m4445e(f3916a, "outputSpsPpsAndFirstFrame" + t.toString());
+            LogUtil.e(f3916a, "outputSpsPpsAndFirstFrame" + t.toString());
         }
         LogUtil.d(f3916a, "VideoOutputThread  outputSpsPpsAndFirstFrame outDataLength=" + outDataLength);
         if (outDataLength == 0 || f3925j == null) {
@@ -486,7 +486,7 @@ public class VideoOutputThread extends Thread {
         if (r7 != 0) goto L_0x009e;
     L_0x0099:
         r7 = 1038; // 0x40e float:1.455E-42 double:5.13E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r7);	 Catch:{ all -> 0x00ea }
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r7);	 Catch:{ all -> 0x00ea }
     L_0x009e:
         r7 = com.baidu.carlife.core.screen.video.VideoOutputThread.m4914a(r1);	 Catch:{ all -> 0x00ea }
         if (r7 == 0) goto L_0x00d8;
@@ -544,7 +544,7 @@ public class VideoOutputThread extends Thread {
         r9 = r5.toString();
         r8 = r8.append(r9);
         r8 = r8.toString();
-        com.baidu.carlife.core.LogUtil.m4445e(r7, r8);
+        com.baidu.carlife.core.LogUtil.e(r7, r8);
         r4 = r6;
         goto L_0x0011;
     L_0x0112:
@@ -556,7 +556,7 @@ public class VideoOutputThread extends Thread {
         if (r7 <= r9) goto L_0x012e;
     L_0x011d:
         r7 = 1038; // 0x40e float:1.455E-42 double:5.13E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r7);	 Catch:{ all -> 0x00ea }
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r7);	 Catch:{ all -> 0x00ea }
         r7 = 0;
         r12.f3930o = r7;	 Catch:{ all -> 0x00ea }
         r7 = f3919d;	 Catch:{ all -> 0x00ea }
@@ -582,7 +582,7 @@ public class VideoOutputThread extends Thread {
             LogUtil.m4440c(f3916a, "input buffer is null");
             return 0;
         }
-        LogUtil.m4445e(f3916a, "Into firstSendEncodeFrame(byte[] input) input=" + input.length);
+        LogUtil.e(f3916a, "Into firstSendEncodeFrame(byte[] input) input=" + input.length);
         if (f3920e == null) {
             LogUtil.m4443d(f3916a, "还没完成初始化, 或已经被释放");
             return 0;
@@ -603,9 +603,9 @@ public class VideoOutputThread extends Thread {
                         inputBuffer.clear();
                         inputBuffer.put(input);
                         f3920e.queueInputBuffer(inputBufferIndex, 0, input.length, f3919d.m4895z(), 0);
-                        LogUtil.m4445e(f3916a, "firstSendEncodeFrame_inputBufferIndex >= 0");
+                        LogUtil.e(f3916a, "firstSendEncodeFrame_inputBufferIndex >= 0");
                     } else {
-                        LogUtil.m4445e(f3916a, "firstSendEncodeFrame_inputBufferIndex < 0");
+                        LogUtil.e(f3916a, "firstSendEncodeFrame_inputBufferIndex < 0");
                     }
                     bufferInfo = new BufferInfo();
                     outputBufferIndex = f3920e.dequeueOutputBuffer(bufferInfo, f3917b);
@@ -617,13 +617,13 @@ public class VideoOutputThread extends Thread {
                         outDataLength = 0;
                         outputBuffer.clear();
                         f3920e.releaseOutputBuffer(outputBufferIndex, false);
-                        LogUtil.m4445e(f3916a, "firstSendEncodeFrame_outputBufferIndex >= 0");
+                        LogUtil.e(f3916a, "firstSendEncodeFrame_outputBufferIndex >= 0");
                     } else {
-                        LogUtil.m4445e(f3916a, "firstSendEncodeFrame_outputBufferIndex < 0");
+                        LogUtil.e(f3916a, "firstSendEncodeFrame_outputBufferIndex < 0");
                     }
                 }
             } catch (IllegalStateException e) {
-                LogUtil.m4445e(f3916a, "firstSendEncodeFrame_IllegalStateException");
+                LogUtil.e(f3916a, "firstSendEncodeFrame_IllegalStateException");
                 e.printStackTrace();
                 if (!(f3920e == null || VideoOutputThread.m4922i())) {
                     f3919d.m4855a(1);
@@ -647,9 +647,9 @@ public class VideoOutputThread extends Thread {
             f3919d.m4845L();
             return 0;
         }
-        LogUtil.m4445e(f3916a, "firstSendEncodeFrame(byte[] input) data=" + f3925j + ", outDataLength=" + outDataLength);
+        LogUtil.e(f3916a, "firstSendEncodeFrame(byte[] input) data=" + f3925j + ", outDataLength=" + outDataLength);
         f3919d.m4853a(f3925j, outDataLength);
-        LogUtil.m4445e(f3916a, "End firstSendEncodeFrame(byte[] input)");
+        LogUtil.e(f3916a, "End firstSendEncodeFrame(byte[] input)");
         return outDataLength;
     }
 
@@ -697,7 +697,7 @@ public class VideoOutputThread extends Thread {
         r11 = r11.append(r12);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         r11 = r11.append(r4);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         r11 = r11.toString();	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
-        com.baidu.carlife.core.LogUtil.m4445e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
+        com.baidu.carlife.core.LogUtil.e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         if (r4 < 0) goto L_0x00f3;
     L_0x0051:
         r3 = r5[r4];	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
@@ -758,7 +758,7 @@ public class VideoOutputThread extends Thread {
         r9 = r9.append(r10);
         r9 = r9.append(r2);
         r9 = r9.toString();
-        com.baidu.carlife.core.LogUtil.m4445e(r8, r9);
+        com.baidu.carlife.core.LogUtil.e(r8, r9);
         if (r2 == 0) goto L_0x00ce;
     L_0x00ca:
         r8 = f3925j;
@@ -777,7 +777,7 @@ public class VideoOutputThread extends Thread {
     L_0x00e6:
         r10 = "Recorder";
         r11 = "firstSendEncodeFrame() sendEmptyPacketForeground failed";
-        com.baidu.carlife.core.LogUtil.m4445e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
+        com.baidu.carlife.core.LogUtil.e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         monitor-exit(r9);	 Catch:{ all -> 0x0149 }
         r7 = r8;
         goto L_0x0015;
@@ -792,14 +792,14 @@ public class VideoOutputThread extends Thread {
     L_0x0100:
         r10 = "Recorder";
         r11 = "firstSendEncodeFrame() sendEmptyPacketForeground failed";
-        com.baidu.carlife.core.LogUtil.m4445e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
+        com.baidu.carlife.core.LogUtil.e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         monitor-exit(r9);	 Catch:{ all -> 0x0149 }
         r7 = r8;
         goto L_0x0015;
     L_0x010d:
         r1 = 0;
         r10 = 1038; // 0x40e float:1.455E-42 double:5.13E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r10);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r10);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
     L_0x0113:
         r10 = "Recorder";
         r11 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
@@ -808,7 +808,7 @@ public class VideoOutputThread extends Thread {
         r11 = r11.append(r12);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         r11 = r11.append(r1);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         r11 = r11.toString();	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
-        com.baidu.carlife.core.LogUtil.m4445e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
+        com.baidu.carlife.core.LogUtil.e(r10, r11);	 Catch:{ IllegalStateException -> 0x012f, Throwable -> 0x014c }
         goto L_0x0020;
     L_0x012f:
         r0 = move-exception;
@@ -906,7 +906,7 @@ public class VideoOutputThread extends Thread {
         if (r7 == 0) goto L_0x0067;
     L_0x0062:
         r7 = 1038; // 0x40e float:1.455E-42 double:5.13E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r7);
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r7);
     L_0x0067:
         r12.f3930o = r6;
         r6 = f3919d;
@@ -935,7 +935,7 @@ public class VideoOutputThread extends Thread {
         r8 = r5.toString();
         r7 = r7.append(r8);
         r7 = r7.toString();
-        com.baidu.carlife.core.LogUtil.m4445e(r6, r7);
+        com.baidu.carlife.core.LogUtil.e(r6, r7);
         r6 = -1;
         goto L_0x006f;
     L_0x00a2:
@@ -974,7 +974,7 @@ public class VideoOutputThread extends Thread {
                     t.printStackTrace();
                 }
             }
-            MsgHandlerCenter.m4459a((int) CommonParams.fj, (Object) "缓冲区已清空");
+            MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fj, (Object) "缓冲区已清空");
         }
     }
 

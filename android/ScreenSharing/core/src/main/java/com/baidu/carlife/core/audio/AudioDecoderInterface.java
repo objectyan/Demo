@@ -6,20 +6,20 @@ import java.util.ArrayList;
 /* renamed from: com.baidu.carlife.core.audio.d */
 public interface AudioDecoderInterface {
     /* renamed from: a */
-    int mo1442a();
+    int getSampleRate();
 
     /* renamed from: a */
-    int mo1443a(Pair pair, int i);
+    int changeOutput(Pair pair, int i);
 
     /* renamed from: a */
-    int mo1444a(String str);
+    int decodeAudio(String str);
 
     /* renamed from: a */
-    int mo1445a(String str, ArrayList arrayList);
+    int initialization(String str, ArrayList arrayList);
 
     /* renamed from: b */
-    int mo1446b();
+    int getChannelConfig();
 
     /* renamed from: c */
-    int mo1447c();
+    int getReSampleRate();
 }

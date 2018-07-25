@@ -48,7 +48,7 @@ public class DebugLogUtil {
     }
 
     private DebugLogUtil() {
-        MsgHandlerCenter.m4460a(this.f3240f);
+        MsgHandlerCenter.registerMessageHandler(this.f3240f);
     }
 
     /* renamed from: a */

@@ -128,7 +128,7 @@ public class C1823k implements C1821a, C1822a {
     private void m6860h() {
         FragmentManagerCallbackProxy fragmentManagerCallbackProxy = FragmentManagerCallbackProxy.m4757a();
         if (fragmentManagerCallbackProxy.m4768d() != 4004) {
-            MsgHandlerCenter.m4461b(4004);
+            MsgHandlerCenter.dispatchMessage(4004);
         }
         if (C1818h.m6730b().m6830r().m6652v() == 0) {
             fragmentManagerCallbackProxy.showFragment(NaviFragmentManager.TYPE_MUSIC_PLAYER, null);

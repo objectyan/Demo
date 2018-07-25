@@ -12,7 +12,7 @@ import java.util.Arrays;
 /* renamed from: com.baidu.carlife.core.audio.o */
 public class PCMPackageHead {
     /* renamed from: a */
-    private static final String f3138a = (AudioUtil.f3010n + PCMPackageHead.class.getSimpleName());
+    private static final String f3138a = (AudioUtil.AUDIO + PCMPackageHead.class.getSimpleName());
     /* renamed from: b */
     private byte[] f3139b;
     /* renamed from: c */
@@ -23,9 +23,9 @@ public class PCMPackageHead {
     private AESManager f3142e = new AESManager();
 
     public PCMPackageHead() {
-        AudioUtil.m3882a();
+        AudioUtil.newInstance();
         this.f3140c = 12;
-        AudioUtil.m3882a();
+        AudioUtil.newInstance();
         this.f3141d = 12;
         this.f3139b = new byte[this.f3140c];
     }
@@ -81,10 +81,10 @@ public class PCMPackageHead {
         builder.setSampleFormat(sampleFormat);
         byte[] initParameter = builder.build().toByteArray();
         byte[] encryptData = initParameter;
-        if (EncryptSetupManager.m4120a().m4135c() && initParameter.length > 0) {
+        if (EncryptSetupManager.newInstance().getFlag() && initParameter.length > 0) {
             encryptData = this.f3142e.m4112a(initParameter, initParameter.length);
             if (encryptData == null) {
-                LogUtil.m4445e(f3138a, "encrypt failed!");
+                LogUtil.e(f3138a, "encrypt failed!");
                 return -1;
             }
         }
@@ -104,10 +104,10 @@ public class PCMPackageHead {
         builder.setSampleFormat(sampleFormat);
         byte[] initParamter = builder.build().toByteArray();
         byte[] encryptData = initParamter;
-        if (EncryptSetupManager.m4120a().m4135c() && initParamter.length > 0) {
+        if (EncryptSetupManager.newInstance().getFlag() && initParamter.length > 0) {
             encryptData = this.f3142e.m4112a(initParamter, initParamter.length);
             if (encryptData == null) {
-                LogUtil.m4445e(f3138a, "encrypt failed!");
+                LogUtil.e(f3138a, "encrypt failed!");
                 return -1;
             }
         }

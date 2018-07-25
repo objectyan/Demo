@@ -1,7 +1,7 @@
 package com.baidu.carlife.logic.codriver.adapter;
 
 import com.baidu.carlife.core.LogUtil;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.che.codriver.sdk.p081a.C1750o;
 import com.baidu.che.codriver.sdk.p081a.C1750o.C2610a;
 import com.baidu.che.codriver.vr.record.aec.C2858a;
@@ -26,7 +26,7 @@ public class C1751a implements C1750o {
 
     public C1751a(boolean isMicInLeftChannel) {
         this.f5299h = isMicInLeftChannel;
-        if (C1663a.m5979a().m6001V()) {
+        if (CarlifeCoreSDK.m5979a().m6001V()) {
             this.f5300i = new byte[f5298g];
         } else {
             this.f5300i = new byte[5120];
@@ -42,9 +42,9 @@ public class C1751a implements C1750o {
             C2858a.m10817b();
             return;
         }
-        int flag = C1663a.m5979a().m6033e(this.f5300i, 12);
+        int flag = CarlifeCoreSDK.m5979a().m6033e(this.f5300i, 12);
         if (flag == -1 || flag != 12) {
-            LogUtil.m4445e(f5294c, "-- get data length failed");
+            LogUtil.e(f5294c, "-- get data length failed");
             in.f8633a = null;
             in.f8634b = -1;
             C2858a.m10817b();
@@ -52,20 +52,20 @@ public class C1751a implements C1750o {
         }
         int dataLength = ((((this.f5300i[0] << 24) & -16777216) + ((this.f5300i[1] << 16) & 16711680)) + ((this.f5300i[2] << 8) & 65280)) + ((this.f5300i[3] << 0) & 255);
         if (dataLength != this.f5300i.length) {
-            LogUtil.m4445e(f5294c, "---- get data error!!!-len:" + dataLength);
+            LogUtil.e(f5294c, "---- get data error!!!-len:" + dataLength);
             in.f8633a = null;
             in.f8634b = -1;
             C2858a.m10817b();
-        } else if (C1663a.m5979a().m6033e(this.f5300i, dataLength) < 0) {
-            LogUtil.m4445e(f5294c, "-- get data failed---");
+        } else if (CarlifeCoreSDK.m5979a().m6033e(this.f5300i, dataLength) < 0) {
+            LogUtil.e(f5294c, "-- get data failed---");
             in.f8633a = null;
             in.f8634b = -1;
             C2858a.m10817b();
         } else {
             LogUtil.d(f5294c, "- get data OK!!-dataLength:" + dataLength);
-            if (C1663a.m5979a().m6001V()) {
-                if (C1663a.m5979a().m6040g(this.f5300i, dataLength) == null) {
-                    LogUtil.m4445e(f5294c, "decrypt failed!");
+            if (CarlifeCoreSDK.m5979a().m6001V()) {
+                if (CarlifeCoreSDK.m5979a().m6040g(this.f5300i, dataLength) == null) {
+                    LogUtil.e(f5294c, "decrypt failed!");
                     in.f8633a = null;
                     in.f8634b = -1;
                     C2858a.m10817b();

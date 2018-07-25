@@ -567,7 +567,7 @@ public class MusicPlayerFragment extends ContentFragment {
         if (this.f4637y != null && this.f4637y.f5920l) {
             m5665l();
         }
-        MsgHandlerCenter.m4461b((int) CommonParams.gS);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gS);
         super.onResume();
         onInitFocusAreas();
         LogUtil.m4434b(C1818h.f5590a);

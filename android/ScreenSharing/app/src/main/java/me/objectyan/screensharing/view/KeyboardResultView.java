@@ -230,7 +230,7 @@ public class KeyboardResultView extends ViewGroup {
                     try {
                         addView(view);
                     } catch (Exception e) {
-                        LogUtil.m4445e("KeyboardResultView", e.toString());
+                        LogUtil.e("KeyboardResultView", e.toString());
                     }
                 }
             }

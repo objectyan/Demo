@@ -8,7 +8,7 @@ import com.baidu.carlife.core.MsgBaseHandler;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.logic.voice.C1912n;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.che.codriver.p122h.C2537a;
 import com.baidu.navisdk.util.common.AudioUtils;
 
@@ -49,7 +49,7 @@ public class C1746b {
                     switch (msg.arg1) {
                         case -3:
                             LogUtil.d("CarLifeMusic", "---AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK-----");
-                            if (!C1765g.m6424a().m6445f() || C1663a.m5979a().m5989J()) {
+                            if (!C1765g.m6424a().m6445f() || CarlifeCoreSDK.m5979a().m5989J()) {
                                 this.f5231a.f5283g.mo1664b();
                                 return;
                             }
@@ -76,7 +76,7 @@ public class C1746b {
                                 }
                             }
                             this.f5231a.f5283g.mo1663a(false);
-                            if (!C1765g.m6424a().m6445f() || C1663a.m5979a().m5989J()) {
+                            if (!C1765g.m6424a().m6445f() || CarlifeCoreSDK.m5979a().m5989J()) {
                                 this.f5231a.f5283g.mo1662a();
                                 return;
                             }

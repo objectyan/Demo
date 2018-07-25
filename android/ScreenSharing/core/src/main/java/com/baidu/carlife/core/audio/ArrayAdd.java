@@ -4,18 +4,18 @@ package com.baidu.carlife.core.audio;
 /* renamed from: com.baidu.carlife.core.audio.c */
 public class ArrayAdd {
     /* renamed from: a */
-    private static final int f3029a = 20480;
+    private static final int len = 20480;
     /* renamed from: b */
-    private byte[] f3030b = new byte[20480];
+    private byte[] mBytes = new byte[len];
 
     /* renamed from: a */
-    public void m3909a(byte[] array1, int len1, byte[] array2, int len2, Pair p) {
-        if (this.f3030b.length < len1 + len2) {
-            this.f3030b = new byte[(len1 + len2)];
+    public void merge(byte[] array1, int len1, byte[] array2, int len2, Pair p) {
+        if (this.mBytes.length < len1 + len2) {
+            this.mBytes = new byte[(len1 + len2)];
         }
-        System.arraycopy(array1, 0, this.f3030b, 0, len1);
-        System.arraycopy(array2, 0, this.f3030b, len1, len2);
-        p.m4056a(this.f3030b);
-        p.m4055a(len1 + len2);
+        System.arraycopy(array1, 0, this.mBytes, 0, len1);
+        System.arraycopy(array2, 0, this.mBytes, len1, len2);
+        p.setData(this.mBytes);
+        p.setSize(len1 + len2);
     }
 }

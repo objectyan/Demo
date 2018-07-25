@@ -24,6 +24,6 @@ public class C2117g extends C2108a {
 
     /* renamed from: a */
     public void mo1772a(String url, String error) {
-        LogUtil.m4445e("radio_request", "error = " + error);
+        LogUtil.e("radio_request", "error = " + error);
     }
 }

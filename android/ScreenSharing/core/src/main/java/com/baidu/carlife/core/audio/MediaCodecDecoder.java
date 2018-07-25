@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /* renamed from: com.baidu.carlife.core.audio.l */
 public class MediaCodecDecoder implements AudioDecoderInterface {
     /* renamed from: a */
-    private static final String f3082a = (AudioUtil.f3010n + MediaCodecDecoder.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + MediaCodecDecoder.class.getSimpleName());
     /* renamed from: b */
     private static final int f3083b = 1;
     /* renamed from: c */
@@ -45,34 +45,34 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     /* renamed from: l */
     private static final int f3093l = 10;
     /* renamed from: m */
-    private MediaCodec f3094m;
+    private MediaCodec mMediaCodec;
     /* renamed from: n */
-    private MediaExtractor f3095n;
+    private MediaExtractor mMediaExtractor;
     /* renamed from: o */
-    private MediaFormat f3096o;
+    private MediaFormat mMediaFormat;
     /* renamed from: p */
-    private BufferInfo f3097p;
+    private BufferInfo mBufferInfo;
     /* renamed from: q */
-    private boolean f3098q = false;
+    private boolean mSawOutputEOS = false;
     /* renamed from: r */
-    private boolean f3099r = false;
+    private boolean mSawInputEOS = false;
     /* renamed from: s */
-    private ByteBuffer[] f3100s;
+    private ByteBuffer[] mCodecInputBuffers;
     /* renamed from: t */
-    private ByteBuffer[] f3101t;
+    private ByteBuffer[] mCodecOutputBuffers;
     /* renamed from: u */
-    private int f3102u = -1;
+    private int mSampleRate = -1;
     /* renamed from: v */
-    private int f3103v = -1;
+    private int mChannelConfig = -1;
     /* renamed from: w */
-    private int f3104w = -1;
+    private int mReSampleRate = -1;
     /* renamed from: x */
-    private byte[] f3105x;
+    private byte[] mChunk;
     /* renamed from: y */
     private String f3106y;
 
     MediaCodecDecoder() {
-        m4000a(new byte[AudioUtil.f3005i]);
+        setChunk(new byte[AudioUtil.M_CHUNK_LENGTH]);
     }
 
     /* renamed from: d */
@@ -81,49 +81,49 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     }
 
     /* renamed from: a */
-    public synchronized int mo1444a(String url) {
+    public synchronized int decodeAudio(String url) {
         int i = -1;
         synchronized (this) {
             try {
-                if (this.f3095n != null) {
-                    this.f3095n.release();
+                if (this.mMediaExtractor != null) {
+                    this.mMediaExtractor.release();
                 }
                 m3993o();
-                this.f3095n = new MediaExtractor();
-                LogUtil.d(f3082a, "the decode file path is " + url);
-                this.f3095n.setDataSource(url);
-                this.f3096o = this.f3095n.getTrackFormat(0);
-                this.f3106y = m4009f().getString("mime");
-                LogUtil.d(f3082a, "mMine= " + this.f3106y);
+                this.mMediaExtractor = new MediaExtractor();
+                LogUtil.d(Tag, "the decode file path is " + url);
+                this.mMediaExtractor.setDataSource(url);
+                this.mMediaFormat = this.mMediaExtractor.getTrackFormat(0);
+                this.f3106y = getMediaFormat().getString("mime");
+                LogUtil.d(Tag, "mMine= " + this.f3106y);
                 if (m3990b(this.f3106y)) {
-                    m4007c(m4009f().getInteger("channel-count"));
-                    LogUtil.d(f3082a, "mChannelConfig= " + mo1446b());
-                    if (Build.MODEL.equals("GT-N7100") && mo1446b() == 1) {
-                        m4007c(2);
+                    setChannelConfig(getMediaFormat().getInteger("channel-count"));
+                    LogUtil.d(Tag, "mChannelConfig= " + getChannelConfig());
+                    if (Build.MODEL.equals("GT-N7100") && getChannelConfig() == 1) {
+                        setChannelConfig(2);
                     }
-                    m4003b(m4009f().getInteger("sample-rate"));
-                    LogUtil.d(f3082a, "samplerate = " + mo1442a());
-                    if (mo1442a() < 4000 || mo1442a() > 48000) {
-                        LogUtil.d(f3082a, "4000>sample rate || sample rate>48000: " + mo1442a());
+                    setSampleRate(getMediaFormat().getInteger("sample-rate"));
+                    LogUtil.d(Tag, "samplerate = " + getSampleRate());
+                    if (getSampleRate() < 4000 || getSampleRate() > 48000) {
+                        LogUtil.d(Tag, "4000>sample rate || sample rate>48000: " + getSampleRate());
                         m3995a(404);
                     } else {
-                        this.f3104w = 16;
-                        this.f3094m = MediaCodec.createDecoderByType(this.f3106y);
-                        m3999a(false);
-                        m4004b(false);
-                        m4008e().configure(m4009f(), null, null, 0);
-                        m4008e().start();
+                        this.mReSampleRate = 16;
+                        this.mMediaCodec = MediaCodec.createDecoderByType(this.f3106y);
+                        setSawOutputEOS(false);
+                        setSawInputEOS(false);
+                        getMediaCodec().configure(getMediaFormat(), null, null, 0);
+                        getMediaCodec().start();
                         if (VERSION.SDK_INT < 21) {
-                            m4001a(m4008e().getInputBuffers());
-                            m4005b(m4008e().getOutputBuffers());
+                            setCodecInputBuffers(getMediaCodec().getInputBuffers());
+                            setCodecOutputBuffers(getMediaCodec().getOutputBuffers());
                         }
-                        this.f3097p = new BufferInfo();
-                        this.f3095n.selectTrack(0);
+                        this.mBufferInfo = new BufferInfo();
+                        this.mMediaExtractor.selectTrack(0);
                         int retVal = m3992n();
                         if (retVal >= 0) {
-                            LogUtil.d(f3082a, "Reconfigure sample rate in success,retVal = " + retVal);
+                            LogUtil.d(Tag, "Reconfigure sample rate in success,retVal = " + retVal);
                         } else {
-                            LogUtil.d(f3082a, "Reconfigure sample rate in failure,retVal = " + retVal);
+                            LogUtil.d(Tag, "Reconfigure sample rate in failure,retVal = " + retVal);
                         }
                         i = 0;
                     }
@@ -132,23 +132,23 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
                 }
             } catch (IOException e1) {
                 e1.printStackTrace();
-                LogUtil.d(f3082a, "IOException happen!-decoder");
+                LogUtil.d(Tag, "IOException happen!-decoder");
                 m3995a(404);
             } catch (IllegalStateException e2) {
                 e2.printStackTrace();
-                LogUtil.d(f3082a, "IllegalStateException happen!-decoder");
+                LogUtil.d(Tag, "IllegalStateException happen!-decoder");
                 m3995a(404);
             } catch (IllegalArgumentException e4) {
                 e4.printStackTrace();
-                LogUtil.d(f3082a, "IllegalArgumentException happen!-decoder");
+                LogUtil.d(Tag, "IllegalArgumentException happen!-decoder");
                 m3995a(404);
             } catch (CryptoException e6) {
                 e6.printStackTrace();
-                LogUtil.d(f3082a, "MediaCodec.CryptoException happen!-decoder");
+                LogUtil.d(Tag, "MediaCodec.CryptoException happen!-decoder");
                 m3995a(404);
             } catch (NullPointerException e7) {
                 e7.printStackTrace();
-                LogUtil.d(f3082a, "NullPointerException happen!-decoder");
+                LogUtil.d(Tag, "NullPointerException happen!-decoder");
                 m3995a(404);
             }
         }
@@ -156,23 +156,23 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     }
 
     /* renamed from: a */
-    public int mo1445a(String url, ArrayList arrayList) {
+    public int initialization(String url, ArrayList arrayList) {
         return 0;
     }
 
     /* renamed from: a */
-    public int mo1442a() {
-        return this.f3102u;
+    public int getSampleRate() {
+        return this.mSampleRate;
     }
 
     /* renamed from: b */
-    public int mo1446b() {
-        return this.f3103v;
+    public int getChannelConfig() {
+        return this.mChannelConfig;
     }
 
     /* renamed from: c */
-    public int mo1447c() {
-        return m4015l();
+    public int getReSampleRate() {
+        return this.mReSampleRate;
     }
 
     /* JADX WARNING: inconsistent code. */
@@ -183,7 +183,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r19 = this;
         r9 = 0;
         r14 = 0;
-        r2 = r19.m4008e();
+        r2 = r19.getMediaCodec();
         if (r2 != 0) goto L_0x01ba;
     L_0x0008:
         r2 = -1;
@@ -198,10 +198,10 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r0 = r17;
         if (r0 != r2) goto L_0x0022;
     L_0x0015:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r2 = r2.getOutputBuffers();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r0 = r19;
-        r0.m4005b(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r0.setCodecOutputBuffers (r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
     L_0x0022:
         r10 = r9;
     L_0x0023:
@@ -209,11 +209,11 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r2 = 10;
         if (r10 >= r2) goto L_0x010e;
     L_0x0029:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = com.baidu.carlife.core.audio.MediaCodecDecoder.m3991d();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = (long) r4;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r3 = r2.dequeueInputBuffer(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = f3082a;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = Tag;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4.<init>();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = "inputBuffIndex = ";
@@ -227,14 +227,14 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r4 = 21;
         if (r2 < r4) goto L_0x0115;
     L_0x0057:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r15 = r2.getInputBuffer(r3);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
     L_0x005f:
         r0 = r19;
-        r2 = r0.f3095n;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r0.mMediaExtractor;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = 0;
         r5 = r2.readSampleData(r15, r4);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = f3082a;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = Tag;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4.<init>();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = "inputBuffIndex = ";
@@ -251,7 +251,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r16 = 1;
         r5 = 0;
     L_0x0093:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = 0;
         r6 = 0;
         if (r16 == 0) goto L_0x0121;
@@ -262,15 +262,15 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         if (r16 != 0) goto L_0x0124;
     L_0x00a2:
         r0 = r19;
-        r2 = r0.f3095n;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r0.mMediaExtractor;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r2.advance();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
     L_0x00a9:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r4 = r19.m4010g();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r4 = r19.getBufferInfo();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = com.baidu.carlife.core.audio.MediaCodecDecoder.m3991d();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = (long) r6;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r17 = r2.dequeueOutputBuffer(r4, r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = f3082a;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = Tag;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4.<init>();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = "outputBuffIndex = ";
@@ -281,10 +281,10 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         com.baidu.carlife.core.LogUtil.d(r2, r4);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         if (r17 < 0) goto L_0x012b;
     L_0x00d7:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r0 = r17;
         r18 = r2.getOutputFormat(r0);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = f3082a;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = Tag;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4.<init>();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = "output format no change, sample rate = ";
@@ -295,7 +295,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r4 = r4.append(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = r4.toString();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         com.baidu.carlife.core.LogUtil.d(r2, r4);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = 0;
         r0 = r17;
         r2.releaseOutputBuffer(r0, r4);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
@@ -307,7 +307,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r2 = -4;
         goto L_0x0009;
     L_0x0115:
-        r2 = r19.m4013j();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getCodecInputBuffers();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r15 = r2[r3];	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         goto L_0x005f;
     L_0x011d:
@@ -330,39 +330,39 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         r0 = r17;
         if (r0 != r2) goto L_0x000a;
     L_0x0130:
-        r2 = r19.m4008e();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = r19.getMediaCodec();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r18 = r2.getOutputFormat();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r2 = "sample-rate";
         r0 = r18;
         r2 = r0.getInteger(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r0 = r19;
-        r0.m4003b(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r0.setSampleRate(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r2 = "channel-count";
         r0 = r18;
         r2 = r0.getInteger(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r0 = r19;
-        r0.m4007c(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r2 = f3082a;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r0.setChannelConfig(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r2 = Tag;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = new java.lang.StringBuilder;	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4.<init>();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = "output format changed, sample rate = ";
         r4 = r4.append(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r6 = r19.mo1442a();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r6 = r19.getSampleRate();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = r4.append(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r6 = ",channel count = ";
         r4 = r4.append(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
-        r6 = r19.mo1446b();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        r6 = r19.getChannelConfig();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = r4.append(r6);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r4 = r4.toString();	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         com.baidu.carlife.core.LogUtil.d(r2, r4);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r2 = 425; // 0x1a9 float:5.96E-43 double:2.1E-321;
-        com.baidu.carlife.core.MsgHandlerCenter.m4461b(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
+        com.baidu.carlife.core.MsgHandlerCenter.dispatchMessage(r2);	 Catch:{ IllegalStateException -> 0x0187, IllegalArgumentException -> 0x0197, CryptoException -> 0x01a7 }
         r14 = 1;
         goto L_0x010e;
     L_0x0187:
         r11 = move-exception;
         r11.printStackTrace();
-        r2 = f3082a;
+        r2 = Tag;
         r4 = "IllegalStateException happen!-getDecodedAudioData";
         com.baidu.carlife.core.LogUtil.d(r2, r4);
         r14 = -10;
@@ -370,7 +370,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     L_0x0197:
         r12 = move-exception;
         r12.printStackTrace();
-        r2 = f3082a;
+        r2 = Tag;
         r4 = "IllegalArgumentException happen!-getDecodedAudioData";
         com.baidu.carlife.core.LogUtil.d(r2, r4);
         r14 = -11;
@@ -378,7 +378,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     L_0x01a7:
         r13 = move-exception;
         r13.printStackTrace();
-        r2 = f3082a;
+        r2 = Tag;
         r4 = "MediaCodec.CryptoException happen!-getDecodedAudioData";
         com.baidu.carlife.core.LogUtil.d(r2, r4);
         r14 = -12;
@@ -394,86 +394,86 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     }
 
     /* renamed from: a */
-    public synchronized int mo1443a(Pair p, int pos) {
+    public synchronized int changeOutput(Pair p, int pos) {
         int i;
-        if (m4008e() == null || this.f3095n == null) {
+        if (getMediaCodec() == null || this.mMediaExtractor == null) {
             i = -1;
         } else {
             i = 0;
-            p.m4056a(m4016m());
-            p.m4055a(0);
+            p.setData(getChunk());
+            p.setSize(0);
             try {
-                int inputBufIndex = m4008e().dequeueInputBuffer((long) MediaCodecDecoder.m3991d());
-                if (inputBufIndex >= 0 && !m4012i()) {
+                int inputBufIndex = getMediaCodec().dequeueInputBuffer((long) MediaCodecDecoder.m3991d());
+                if (inputBufIndex >= 0 && !getSawInputEOS()) {
                     ByteBuffer dstBuf;
                     if (VERSION.SDK_INT >= 21) {
-                        dstBuf = m4008e().getInputBuffer(inputBufIndex);
+                        dstBuf = getMediaCodec().getInputBuffer(inputBufIndex);
                     } else {
-                        dstBuf = m4013j()[inputBufIndex];
+                        dstBuf = getCodecInputBuffers()[inputBufIndex];
                     }
-                    int sampleSize = this.f3095n.readSampleData(dstBuf, 0);
+                    int sampleSize = this.mMediaExtractor.readSampleData(dstBuf, 0);
                     if (sampleSize < 0) {
-                        m4004b(true);
+                        setSawInputEOS(true);
                         sampleSize = 0;
                     } else {
-                        long presentationTimeUs = this.f3095n.getSampleTime();
-                        m4004b(false);
+                        long presentationTimeUs = this.mMediaExtractor.getSampleTime();
+                        setSawInputEOS(false);
                     }
-                    m4008e().queueInputBuffer(inputBufIndex, 0, sampleSize, 0, m4012i() ? 4 : 0);
-                    if (m4012i()) {
+                    getMediaCodec().queueInputBuffer(inputBufIndex, 0, sampleSize, 0, getSawInputEOS() ? 4 : 0);
+                    if (getSawInputEOS()) {
                         m3995a(417);
                     } else {
-                        this.f3095n.advance();
+                        this.mMediaExtractor.advance();
                     }
                 }
-                int res = m4008e().dequeueOutputBuffer(m4010g(), (long) MediaCodecDecoder.m3991d());
+                int res = getMediaCodec().dequeueOutputBuffer(getBufferInfo(), (long) MediaCodecDecoder.m3991d());
                 if (res >= 0) {
                     ByteBuffer buf;
                     int outputBufIndex = res;
                     if (VERSION.SDK_INT >= 21) {
-                        buf = m4008e().getOutputBuffer(outputBufIndex);
+                        buf = getMediaCodec().getOutputBuffer(outputBufIndex);
                     } else {
-                        buf = m4014k()[outputBufIndex];
+                        buf = getCodecOutputBuffers()[outputBufIndex];
                     }
-                    int chunkLen = m4010g().size;
-                    if (m4016m().length < chunkLen + pos) {
-                        m4000a(new byte[(chunkLen + pos)]);
-                        p.m4056a(m4016m());
+                    int chunkLen = getBufferInfo().size;
+                    if (getChunk().length < chunkLen + pos) {
+                        setChunk(new byte[(chunkLen + pos)]);
+                        p.setData(getChunk());
                     }
-                    buf.get(m4016m(), pos, chunkLen);
+                    buf.get(getChunk(), pos, chunkLen);
                     buf.clear();
                     if (chunkLen > 0) {
-                        p.m4055a(chunkLen);
+                        p.setSize(chunkLen);
                         i = chunkLen;
                     }
-                    m4008e().releaseOutputBuffer(outputBufIndex, false);
-                    if ((m4010g().flags & 4) != 0) {
-                        m3999a(true);
+                    getMediaCodec().releaseOutputBuffer(outputBufIndex, false);
+                    if ((getBufferInfo().flags & 4) != 0) {
+                        setSawOutputEOS(true);
                     } else {
-                        m3999a(false);
+                        setSawOutputEOS(false);
                     }
                 } else if (VERSION.SDK_INT < 21) {
                     if (res == -3) {
-                        m4005b(m4008e().getOutputBuffers());
-                        LogUtil.d(f3082a, "res = MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED");
+                        setCodecOutputBuffers(getMediaCodec().getOutputBuffers());
+                        LogUtil.d(Tag, "res = MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED");
                     }
                 } else if (res == -2) {
-                    int newSamplerate = m4008e().getOutputFormat().getInteger("sample-rate");
-                    LogUtil.d(f3082a, "res = MediaCodec.INFO_OUTPUT_FORMAT_CHANGED");
+                    int newSamplerate = getMediaCodec().getOutputFormat().getInteger("sample-rate");
+                    LogUtil.d(Tag, "res = MediaCodec.INFO_OUTPUT_FORMAT_CHANGED");
                 }
             } catch (IllegalStateException e2) {
                 e2.printStackTrace();
-                LogUtil.d(f3082a, "IllegalStateException happen!-getDecodedAudioData");
+                LogUtil.d(Tag, "IllegalStateException happen!-getDecodedAudioData");
                 m3995a(404);
                 i = -1;
             } catch (IllegalArgumentException e4) {
                 e4.printStackTrace();
-                LogUtil.d(f3082a, "IllegalArgumentException happen!-getDecodedAudioData");
+                LogUtil.d(Tag, "IllegalArgumentException happen!-getDecodedAudioData");
                 m3995a(404);
                 i = -1;
             } catch (CryptoException e6) {
                 e6.printStackTrace();
-                LogUtil.d(f3082a, "MediaCodec.CryptoException happen!-getDecodedAudioData");
+                LogUtil.d(Tag, "MediaCodec.CryptoException happen!-getDecodedAudioData");
                 m3995a(404);
                 i = -1;
             }
@@ -483,7 +483,7 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
 
     /* renamed from: a */
     protected int m3995a(int type) {
-        MsgHandlerCenter.m4461b(type);
+        MsgHandlerCenter.dispatchMessage(type);
         if (type == 404) {
             m3993o();
         }
@@ -492,15 +492,15 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
 
     /* renamed from: o */
     private void m3993o() {
-        if (m4008e() != null) {
+        if (getMediaCodec() != null) {
             try {
-                m4008e().flush();
-                m4008e().stop();
+                getMediaCodec().flush();
+                getMediaCodec().stop();
             } catch (IllegalStateException e1) {
                 e1.printStackTrace();
             } finally {
-                m4008e().release();
-                this.f3094m = null;
+                getMediaCodec().release();
+                this.mMediaCodec = null;
             }
         }
     }
@@ -510,11 +510,11 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
         int numCodecs = MediaCodecList.getCodecCount();
         for (int i = 0; i < numCodecs; i++) {
             MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
-            LogUtil.d(f3082a, "codecInfo = " + codecInfo.getName());
+            LogUtil.d(Tag, "codecInfo = " + codecInfo.getName());
             if (!codecInfo.isEncoder()) {
                 String[] types = codecInfo.getSupportedTypes();
                 for (int j = 0; j < types.length; j++) {
-                    LogUtil.d(f3082a, "support type = " + types[j]);
+                    LogUtil.d(Tag, "support type = " + types[j]);
                     if (types[j].equalsIgnoreCase(mimeType)) {
                         return true;
                     }
@@ -526,82 +526,77 @@ public class MediaCodecDecoder implements AudioDecoderInterface {
     }
 
     /* renamed from: e */
-    public MediaCodec m4008e() {
-        return this.f3094m;
+    public MediaCodec getMediaCodec() {
+        return this.mMediaCodec;
     }
 
     /* renamed from: f */
-    public MediaFormat m4009f() {
-        return this.f3096o;
+    public MediaFormat getMediaFormat() {
+        return this.mMediaFormat;
     }
 
     /* renamed from: g */
-    public BufferInfo m4010g() {
-        return this.f3097p;
+    public BufferInfo getBufferInfo() {
+        return this.mBufferInfo;
     }
 
     /* renamed from: h */
-    public boolean m4011h() {
-        return this.f3098q;
+    public boolean getSawOutputEOS() {
+        return this.mSawOutputEOS;
     }
 
     /* renamed from: i */
-    public boolean m4012i() {
-        return this.f3099r;
+    public boolean getSawInputEOS() {
+        return this.mSawInputEOS;
     }
 
     /* renamed from: j */
-    public ByteBuffer[] m4013j() {
-        return this.f3100s;
+    public ByteBuffer[] getCodecInputBuffers() {
+        return this.mCodecInputBuffers;
     }
 
     /* renamed from: k */
-    public ByteBuffer[] m4014k() {
-        return this.f3101t;
-    }
-
-    /* renamed from: l */
-    public int m4015l() {
-        return this.f3104w;
+    public ByteBuffer[] getCodecOutputBuffers() {
+        return this.mCodecOutputBuffers;
     }
 
     /* renamed from: m */
-    public byte[] m4016m() {
-        return this.f3105x;
+    public byte[] getChunk() {
+        return this.mChunk;
     }
 
     /* renamed from: a */
-    public void m3999a(boolean sawOutputEOS) {
-        this.f3098q = sawOutputEOS;
+    public void setSawOutputEOS(boolean sawOutputEOS) {
+        this.mSawOutputEOS = sawOutputEOS;
     }
 
     /* renamed from: b */
-    public void m4004b(boolean sawInputEOS) {
-        this.f3099r = sawInputEOS;
+    public void setSawInputEOS(boolean sawInputEOS) {
+        this.mSawInputEOS = sawInputEOS;
     }
 
     /* renamed from: a */
-    public void m4001a(ByteBuffer[] codecInputBuffers) {
-        this.f3100s = codecInputBuffers;
+    public void setCodecInputBuffers(ByteBuffer[] codecInputBuffers) {
+        this.mCodecInputBuffers = codecInputBuffers;
     }
 
     /* renamed from: b */
-    public void m4005b(ByteBuffer[] codecOutputBuffers) {
-        this.f3101t = codecOutputBuffers;
+    public void setCodecOutputBuffers(ByteBuffer[] codecOutputBuffers) {
+        this.mCodecOutputBuffers = codecOutputBuffers;
     }
 
     /* renamed from: b */
-    public void m4003b(int mSampleRate) {
-        this.f3102u = mSampleRate;
+    public void setSampleRate(int mSampleRate) {
+        this.mSampleRate = mSampleRate;
     }
 
     /* renamed from: c */
-    public void m4007c(int mChannelConfig) {
-        this.f3103v = mChannelConfig;
+    public void setChannelConfig(int mChannelConfig) {
+        this.mChannelConfig = mChannelConfig;
     }
 
     /* renamed from: a */
-    public void m4000a(byte[] mChunk) {
-        this.f3105x = mChunk;
+    public void setChunk(byte[] mChunk) {
+        this.mChunk = mChunk;
     }
 }

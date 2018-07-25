@@ -125,9 +125,9 @@ public class C1838q extends C1790b {
                     }
                     int status = 1;
                     if (msg.arg1 == 1) {
-                        LogUtil.m4445e(C1818h.f5590a, "QQMusic:与手机连接失败!");
+                        LogUtil.e(C1818h.f5590a, "QQMusic:与手机连接失败!");
                     } else if (msg.arg1 == 2) {
-                        LogUtil.m4445e(C1818h.f5590a, "QQMusic:与手机连接中断!");
+                        LogUtil.e(C1818h.f5590a, "QQMusic:与手机连接中断!");
                         status = 7;
                     }
                     if (this.f5688a.m6652v() == 1) {
@@ -546,7 +546,7 @@ public class C1838q extends C1790b {
         QPlayAutoJNI.SetHandler(this.an);
         if (QPlayAutoJNI.startConnect() < 0) {
             QPlayAutoJNI.stopConnect();
-            LogUtil.m4445e(C1818h.f5590a, "QQ音乐发现线程启动失败!");
+            LogUtil.e(C1818h.f5590a, "QQ音乐发现线程启动失败!");
         } else if (!C1838q.m6956k(ad)) {
             m6618c(ad);
         }
@@ -685,7 +685,7 @@ public class C1838q extends C1790b {
                     this.ai = null;
                     this.aj = -1;
                     QPlayAutoJNI.stopConnect();
-                    LogUtil.m4445e(C1818h.f5590a, "QQ音乐协议版本过低!");
+                    LogUtil.e(C1818h.f5590a, "QQ音乐协议版本过低!");
                     StatisticManager.onEvent(StatisticConstants.MUSIC_QQ_0014, "版本不支持");
                     m6620d();
                     m6638j(0);

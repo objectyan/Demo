@@ -108,7 +108,7 @@ public class APPVoiceFuncCallbackImpl implements APPVoiceFuncCallback {
 
     public APPVoiceFuncCallbackImpl(CarlifePresenter presenter, OnDialogListener listener) {
         this.f3732a = presenter;
-        this.f3733b = AppContext.m3876a();
+        this.f3733b = AppContext.getAppContext();
         this.f3734c = listener;
     }
 
@@ -210,7 +210,7 @@ public class APPVoiceFuncCallbackImpl implements APPVoiceFuncCallback {
         } else {
             this.f3736e.showSetHomeAddrDialog();
         }
-        MsgHandlerCenter.m4462b(4160, CommonParams.io);
+        MsgHandlerCenter.dispatchMessage(4160, CommonParams.io);
         return true;
     }
 
@@ -232,7 +232,7 @@ public class APPVoiceFuncCallbackImpl implements APPVoiceFuncCallback {
         } else {
             this.f3736e.showSetCompAddrDialog();
         }
-        MsgHandlerCenter.m4462b(4160, CommonParams.io);
+        MsgHandlerCenter.dispatchMessage(4160, CommonParams.io);
         return true;
     }
 

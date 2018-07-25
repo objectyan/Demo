@@ -204,7 +204,7 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
         if (this.f3722f == null) {
             this.f3722f = DisplayUtils.m4466a().m4468a(spec, "CarlifeFakePresentation");
             if (this.f3722f == null) {
-                LogUtil.m4445e(f3718b, "Can not make FakeVD");
+                LogUtil.e(f3718b, "Can not make FakeVD");
                 mo1462a("FakeVD创建失败");
                 return;
             }
@@ -217,7 +217,7 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
                 this.f3722f.release();
                 this.f3722f = null;
                 mo1462a("第一层复用时异常：InvalidDisplayException");
-                LogUtil.m4445e(f3718b, ex.getMessage());
+                LogUtil.e(f3718b, ex.getMessage());
                 return;
             }
         }
@@ -235,7 +235,7 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
                 this.f3722f.release();
                 this.f3722f = null;
                 mo1462a("第一层异常：InvalidDisplayException");
-                LogUtil.m4445e(f3718b, ex2.getMessage());
+                LogUtil.e(f3718b, ex2.getMessage());
             }
         }
     }
@@ -287,7 +287,7 @@ public class AbsCarlifeActivityService extends Service implements KeepClass, OnS
             if (this.f3723g != null) {
                 this.f3723g.release();
             }
-            LogUtil.m4445e(f3718b, ex.getMessage());
+            LogUtil.e(f3718b, ex.getMessage());
         }
     }
 

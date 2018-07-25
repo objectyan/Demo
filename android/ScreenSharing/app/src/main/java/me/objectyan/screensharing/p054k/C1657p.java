@@ -60,7 +60,7 @@ public class C1657p extends C1626e {
     }
 
     protected int responseSuccessCallBack(String data) {
-        C2186p.m8304a().m8322c(CommonParams.ik);
+        C2186p.m8304a().m8322c(CommonParams.SOCKET_AUDIO_VR_WIFI_PORT);
         return 0;
     }
 }

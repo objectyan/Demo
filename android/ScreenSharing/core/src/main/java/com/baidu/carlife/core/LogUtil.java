@@ -336,7 +336,7 @@ public class LogUtil implements KeepClass {
     }
 
     /* renamed from: e */
-    public static void m4445e(String tag, String format) {
+    public static void e(String tag, String format) {
         if (CommonParams.jp <= 6) {
             Log.e(Tag + tag, format);
         }

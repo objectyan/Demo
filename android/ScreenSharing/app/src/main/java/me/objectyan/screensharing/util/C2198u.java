@@ -9,7 +9,7 @@ import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.logic.voice.C1912n;
 import com.baidu.carlife.p052m.C1915a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 
 /* compiled from: TTSPCMUtil */
 /* renamed from: com.baidu.carlife.util.u */
@@ -25,7 +25,7 @@ public class C2198u {
     /* renamed from: a */
     IBNTTSPlayerPCMListener f7040a = new C21961(this);
     /* renamed from: f */
-    private C1663a f7041f = C1663a.m5979a();
+    private CarlifeCoreSDK f7041f = CarlifeCoreSDK.m5979a();
     /* renamed from: g */
     private boolean f7042g = false;
     /* renamed from: h */
@@ -56,7 +56,7 @@ public class C2198u {
         }
 
         public void notifyTTSStart() {
-            MsgHandlerCenter.m4461b(508);
+            MsgHandlerCenter.dispatchMessage(508);
             LogUtil.d("jason2", "==============notifyTTSStart");
             if (C1915a.m7321a().m7336f()) {
                 if (this.f7034a.f7042g) {
@@ -98,7 +98,7 @@ public class C2198u {
         }
 
         public void notifyTTSEnd() {
-            MsgHandlerCenter.m4461b(509);
+            MsgHandlerCenter.dispatchMessage(509);
             LogUtil.d("jason2", "===============notifyTTSEnd");
             if (this.f7034a.f7043h) {
                 this.f7034a.f7044i.sendEmptyMessageDelayed(110, 2000);

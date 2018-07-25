@@ -3,7 +3,7 @@ package com.baidu.carlife.util;
 import android.content.Context;
 import android.media.AudioTrack;
 import com.baidu.carlife.BaiduNaviApplication;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import java.io.InputStream;
 
 /* compiled from: PCMFilePlayUtil */
@@ -44,7 +44,7 @@ public class C2184n {
         try {
             this.f6984c = this.f6982a.getResources().openRawResource(resId);
             int byteRead;
-            if (!C1663a.m5979a().m5993N() || C1663a.m5979a().m5989J()) {
+            if (!CarlifeCoreSDK.m5979a().m5993N() || CarlifeCoreSDK.m5979a().m5989J()) {
                 AudioTrack pcmPlayer = new AudioTrack(3, 16000, 4, 2, AudioTrack.getMinBufferSize(16000, 4, 2), 1);
                 while (true) {
                     byteRead = this.f6984c.read(this.f6983b);
@@ -59,18 +59,18 @@ public class C2184n {
                 }
                 pcmPlayer.release();
             } else {
-                if (C1663a.m5979a().m5982C()) {
-                    C1663a.m5979a().m5981B();
+                if (CarlifeCoreSDK.m5979a().m5982C()) {
+                    CarlifeCoreSDK.m5979a().m5981B();
                 }
-                C1663a.m5979a().m6027c(16000, 1, 16);
+                CarlifeCoreSDK.m5979a().m6027c(16000, 1, 16);
                 while (true) {
                     byteRead = this.f6984c.read(this.f6983b);
                     if (byteRead == -1) {
                         break;
                     }
-                    C1663a.m5979a().m6029c(this.f6983b, byteRead);
+                    CarlifeCoreSDK.m5979a().m6029c(this.f6983b, byteRead);
                 }
-                C1663a.m5979a().m5984E();
+                CarlifeCoreSDK.m5979a().m5984E();
             }
             this.f6984c.close();
         } catch (Exception e) {

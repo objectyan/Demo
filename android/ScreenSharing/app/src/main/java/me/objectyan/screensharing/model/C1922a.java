@@ -47,9 +47,9 @@ public class C1922a extends C1921b {
                     this.f5930c = true;
                     this.f5928a.mo1723a(3);
                 }
-                LogUtil.m4445e(C1922a.f5933h, "-----download-------progress:" + this.f5928a.f5936c);
+                LogUtil.e(C1922a.f5933h, "-----download-------progress:" + this.f5928a.f5936c);
                 try {
-                    MsgHandlerCenter.m4461b(600);
+                    MsgHandlerCenter.dispatchMessage(600);
                     C1920a.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

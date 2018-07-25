@@ -76,11 +76,11 @@ public class CarlifeMaskView {
 
     public CarlifeMaskView(OnSurfaceListener listener) {
         this.f3807e = listener;
-        FrameLayout frameLayout = new FrameLayout(AppContext.m3876a());
-        this.f3806d = new TextureView(AppContext.m3876a());
-        ImageView imageView = new ImageView(AppContext.m3876a());
+        FrameLayout frameLayout = new FrameLayout(AppContext.getAppContext());
+        this.f3806d = new TextureView(AppContext.getAppContext());
+        ImageView imageView = new ImageView(AppContext.getAppContext());
         imageView.setImageDrawable(CarLifePresentationController.m4626b().m4638f());
-        LinearLayout linearLayout = new LinearLayout(AppContext.m3876a());
+        LinearLayout linearLayout = new LinearLayout(AppContext.getAppContext());
         linearLayout.setBackgroundColor(-16777216);
         imageView.setScaleType(ScaleType.CENTER);
         linearLayout.addView(imageView, new LayoutParams(-1, -1));

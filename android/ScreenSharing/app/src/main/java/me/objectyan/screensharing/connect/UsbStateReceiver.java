@@ -16,7 +16,7 @@ import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.screen.OnBtnClickListener;
 import com.baidu.carlife.core.screen.OnDialogListener;
 import com.baidu.carlife.core.screen.presentation.view.CarlifeViewContainer;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.view.dialog.C1953c;
 import com.baidu.navisdk.module.offscreen.BNOffScreenParams;
 import java.util.Timer;
@@ -169,7 +169,7 @@ public class UsbStateReceiver extends BroadcastReceiver {
                 public void run() {
                     if (this.f2953b.f2962f != null) {
                         this.f2953b.m3865f();
-                        if (C1663a.m5979a().m5998S() != 1 || CarlifeUtil.m4358a().m4402x()) {
+                        if (CarlifeCoreSDK.m5979a().m5998S() != 1 || CarlifeUtil.m4358a().m4402x()) {
                             mHandlerTimer.post(new C11512(this));
                         } else {
                             mHandlerTimer.post(new C11501(this));

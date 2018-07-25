@@ -1,0 +1,51 @@
+{
+  errno: 0,
+  errmsg: "success",
+  data: {
+    list: [
+      {
+        channel_id: "1",
+        name: "每日随心",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_1.png",
+        statistic_id: "CONTENT_REC_0002"
+      },
+      {
+        channel_id: "2",
+        name: "娱乐",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_2.png",
+        statistic_id: "CONTENT_REC_0004"
+      },
+      {
+        channel_id: "3",
+        name: "音乐",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_3.png",
+        statistic_id: "CONTENT_REC_0005"
+      },
+      {
+        channel_id: "5",
+        name: "儿童",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_5.png",
+        statistic_id: "CONTENT_REC_0007"
+      },
+      {
+        channel_id: "6",
+        name: "学习",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_6.png",
+        statistic_id: "CONTENT_REC_0006"
+      },
+      {
+        channel_id: "7",
+        name: "听书",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_7.png",
+        statistic_id: "CONTENT_REC_0008"
+      },
+      {
+        channel_id: "8",
+        name: "情感",
+        picture: "https://privatefm.baidu.com/static/service/resource/channel_8.png",
+        statistic_id: "CONTENT_REC_0009"
+      }
+    ]
+  },
+  timestamp: 1496373933
+}

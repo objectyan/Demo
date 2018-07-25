@@ -82,7 +82,7 @@ public class C1435a {
             this.f4156a.m5239k();
             this.f4156a.m5240l();
             CarlifeConfig.m4064a(this.f4156a.f4171n);
-            MsgHandlerCenter.m4461b(6001);
+            MsgHandlerCenter.dispatchMessage(6001);
         }
 
         /* renamed from: a */
@@ -193,7 +193,7 @@ public class C1435a {
                     String version = manufacturer.optString(Build.MODEL);
                     if (!TextUtils.isEmpty(version) && version.contains(VERSION.SDK_INT + "")) {
                         this.f4171n = true;
-                        LogUtil.m4445e(f4157a, "manufacturer=" + Build.MANUFACTURER + ", model=" + Build.MODEL + ", version=" + VERSION.SDK_INT + " not support internal screen capture policy.");
+                        LogUtil.e(f4157a, "manufacturer=" + Build.MANUFACTURER + ", model=" + Build.MODEL + ", version=" + VERSION.SDK_INT + " not support internal screen capture policy.");
                     }
                 }
             }

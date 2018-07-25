@@ -17,7 +17,7 @@ import com.baidu.carlife.custom.elhyf.p073c.C1381d;
 import com.baidu.carlife.custom.elhyf.p073c.C1381d.C1359a;
 import com.baidu.carlife.custom.elhyf.p074b.C1370a;
 import com.baidu.carlife.custom.elhyf.p074b.C1370a.C1369a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeASRVersionMatchProto.CarlifeASRVersionMatch;
 import com.baidu.carlife.protobuf.CarlifeConnectTimeSyncProto.CarlifeConnectTimeSync;
 import com.baidu.carlife.protobuf.CarlifeConnectTimeSyncProto.CarlifeConnectTimeSync.Builder;
@@ -222,7 +222,7 @@ public class C1371b implements C1369a {
 
     /* renamed from: b */
     public static void m4999b() {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             int timeStamp = (int) ((System.currentTimeMillis() + ((long) TimeZone.getDefault().getRawOffset())) / 1000);
             Builder builder = CarlifeConnectTimeSync.newBuilder();
             builder.setTimeStamp(timeStamp);
@@ -231,13 +231,13 @@ public class C1371b implements C1369a {
             command.m4199b(proto.toByteArray());
             command.m4203d(proto.getSerializedSize());
             command.m4201c(CommonParams.f3541H);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
     /* renamed from: c */
     public static void m5002c() {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeASRVersionMatch.Builder builder = CarlifeASRVersionMatch.newBuilder();
             builder.setAsrName("UscAsr");
             builder.setVersionCode(1);
@@ -246,7 +246,7 @@ public class C1371b implements C1369a {
             command.m4199b(proto.toByteArray());
             command.m4203d(proto.getSerializedSize());
             command.m4201c(CommonParams.f3542I);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -270,7 +270,7 @@ public class C1371b implements C1369a {
 
     /* renamed from: e */
     public void m5015e() {
-        if (C1663a.m5979a().m5993N() && (this.f3996b == null || "".equals(this.f3996b))) {
+        if (CarlifeCoreSDK.m5979a().m5993N() && (this.f3996b == null || "".equals(this.f3996b))) {
             C2201w.m8371a((int) R.string.ota_low_version, 0);
         } else {
             this.f3997c.m4989a();
@@ -349,7 +349,7 @@ public class C1371b implements C1369a {
 
     /* renamed from: c */
     private void m5003c(String filePath, String newBoardName, String newVersionCode) {
-        if (!C1663a.m5979a().m5993N()) {
+        if (!CarlifeCoreSDK.m5979a().m5993N()) {
             C2201w.m8371a((int) R.string.usb_disconnected, 1);
         } else if (this.f3996b == null || this.f3996b.isEmpty()) {
             C2201w.m8371a((int) R.string.ota_low_version, 1);

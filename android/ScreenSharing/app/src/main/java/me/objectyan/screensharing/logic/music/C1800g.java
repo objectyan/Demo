@@ -11,7 +11,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.CommonParams.EnumVehicleChannel;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.model.MusicSongModel;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeMediaInfoProto.CarlifeMediaInfo;
 import com.baidu.carlife.protobuf.CarlifeMediaInfoProto.CarlifeMediaInfo.Builder;
 import com.baidu.carlife.protobuf.CarlifeMediaProgressBarProto.CarlifeMediaProgressBar;
@@ -41,7 +41,7 @@ public class C1800g {
 
     /* renamed from: a */
     protected void m6688a(MusicSongModel song, byte[] cover, int listLen, int strategy) {
-        if (song != null && C1663a.m5979a().m5993N()) {
+        if (song != null && CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.aC);
             Builder builder = CarlifeMediaInfo.newBuilder();
@@ -66,7 +66,7 @@ public class C1800g {
             }
             if (song.f5910b == null) {
                 builder.setSong("");
-            } else if (C1663a.m5979a().m5990K()) {
+            } else if (CarlifeCoreSDK.m5979a().m5990K()) {
                 byte[] tmp = song.f5910b.getBytes();
                 int length = tmp.length;
                 String subStr = song.f5910b;
@@ -115,14 +115,14 @@ public class C1800g {
             CarlifeMediaInfo mediaInfo = builder.build();
             command.m4199b(mediaInfo.toByteArray());
             command.m4203d(mediaInfo.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
             this.f5563a = true;
         }
     }
 
     /* renamed from: a */
     protected void m6687a(int curTime) {
-        if (C1663a.m5979a().m5993N() || !this.f5563a) {
+        if (CarlifeCoreSDK.m5979a().m5993N() || !this.f5563a) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.aD);
             CarlifeMediaProgressBar.Builder builder = CarlifeMediaProgressBar.newBuilder();
@@ -134,7 +134,7 @@ public class C1800g {
             CarlifeMediaProgressBar timeStampInfo = builder.build();
             command.m4199b(timeStampInfo.toByteArray());
             command.m4203d(timeStampInfo.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 

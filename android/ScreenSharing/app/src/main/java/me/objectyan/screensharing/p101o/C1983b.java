@@ -14,7 +14,7 @@ import com.baidu.carlife.logic.music.C1818h;
 import com.baidu.carlife.logic.music.C1834p;
 import com.baidu.carlife.model.C1942q;
 import com.baidu.carlife.p052m.C1915a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeVoiceControlRequestProto.CarlifeVoiceControlRequest;
 import com.baidu.carlife.protobuf.CarlifeVoiceControlRequestProto.CarlifeVoiceControlRequest.Builder;
 import com.baidu.che.codriver.sdk.p081a.C2575a.C1979b;
@@ -141,7 +141,7 @@ public class C1983b {
             } else if (feature.equals("记录仪")) {
                 C1983b.m7577a(0);
             } else if (feature.equals("随心听")) {
-                if (!C1663a.m5979a().m5993N()) {
+                if (!CarlifeCoreSDK.m5979a().m5993N()) {
                     LogUtil.d("#######", "VoiceControlManager VOICE_PHONE_0004,VOICE_0006");
                     StatisticManager.onEvent(StatisticConstants.VOICE_PHONE_0004);
                     StatisticManager.onEvent(StatisticConstants.VOICE_0006);
@@ -266,19 +266,19 @@ public class C1983b {
         switch (type) {
             case 4001:
                 C1983b.m7577a(18);
-                MsgHandlerCenter.m4461b(type);
+                MsgHandlerCenter.dispatchMessage(type);
                 return;
             case 4002:
                 C1983b.m7577a(1);
-                MsgHandlerCenter.m4461b(type);
+                MsgHandlerCenter.dispatchMessage(type);
                 return;
             case 4003:
                 C1983b.m7577a(1);
-                MsgHandlerCenter.m4461b(type);
+                MsgHandlerCenter.dispatchMessage(type);
                 return;
             case 4004:
                 C1983b.m7577a(1);
-                MsgHandlerCenter.m4461b(type);
+                MsgHandlerCenter.dispatchMessage(type);
                 return;
             default:
                 return;
@@ -300,7 +300,7 @@ public class C1983b {
         if (!C1983b.m7586f()) {
             return;
         }
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeVoiceControlRequest voiceRequest = C1983b.m7583c(cmd);
             if (voiceRequest != null) {
                 C1983b.m7579a(voiceRequest);
@@ -325,12 +325,12 @@ public class C1983b {
     /* renamed from: a */
     public static void m7579a(CarlifeVoiceControlRequest voiceReq) {
         LogUtil.d(f6376a, "MD--->HU : send voice control cmd to HU");
-        if (voiceReq != null && C1663a.m5979a().m5993N()) {
+        if (voiceReq != null && CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage btCommand = new CarlifeCmdMessage(true);
             btCommand.m4201c(CommonParams.bh);
             btCommand.m4199b(voiceReq.toByteArray());
             btCommand.m4203d(voiceReq.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 

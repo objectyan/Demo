@@ -211,10 +211,10 @@ public class CircularImageView extends ImageView {
         try {
             roundBitmap = m8392a(bitmap, roundPixels, srcRect, destRect, width, height);
         } catch (OutOfMemoryError e) {
-            LogUtil.m4445e("CircularImageView", e.toString());
+            LogUtil.e("CircularImageView", e.toString());
             roundBitmap = bitmap;
         } catch (Exception e2) {
-            LogUtil.m4445e("CircularImageView", e2.toString());
+            LogUtil.e("CircularImageView", e2.toString());
             roundBitmap = bitmap;
         }
         return roundBitmap;

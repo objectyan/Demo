@@ -109,7 +109,7 @@ public class LightnessControlManager implements KeepClass {
         this.f3658n = false;
         this.f3659o = -10;
         this.f3653i = new C1267a();
-        MsgHandlerCenter.m4460a(this.f3653i);
+        MsgHandlerCenter.registerMessageHandler(this.f3653i);
     }
 
     /* renamed from: a */

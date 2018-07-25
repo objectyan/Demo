@@ -153,7 +153,7 @@ public class CarlifeScreenUtil implements KeepClass {
             this.f3464o = C1248a.W_16_H_9;
             LogUtil.d(f3453d, "####### W_16_H_9 : " + this.f3464o);
         } catch (InvalidProtocolBufferException e) {
-            LogUtil.m4445e(f3453d, "Get VIDEO_ENCODER_INIT_INFO Error");
+            LogUtil.e(f3453d, "Get VIDEO_ENCODER_INIT_INFO Error");
             e.printStackTrace();
         }
     }

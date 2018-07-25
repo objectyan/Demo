@@ -48,7 +48,7 @@ import com.baidu.carlife.p054k.p055a.C1635h.C1634b;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
 import com.baidu.carlife.p083g.C1605a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.p100n.C1977e;
 import com.baidu.carlife.radio.p079c.C2139a;
 import com.baidu.carlife.radio.p079c.C2139a.C1491a;
@@ -197,7 +197,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
                     public void mo1561a(C1634b state, C1633a errorCode) {
                         if (C1634b.SUCESS == state) {
                             C2186p.m8304a().m8319b(channel + "TimeStamp", timeStamp);
-                            if (vehicleLogoDownload.m5922b() != null && C1663a.m5979a().m5993N()) {
+                            if (vehicleLogoDownload.m5922b() != null && CarlifeCoreSDK.m5979a().m5993N()) {
                                 this.f4430d.f4431a.f4475u = Drawable.createFromPath(vehicleLogoDownload.m5922b().getAbsolutePath());
                                 this.f4430d.f4431a.m5458a(this.f4430d.f4431a.f4475u, this.f4430d.f4431a.f4476v);
                             }
@@ -452,7 +452,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
                     return;
                 case 1002:
                 case 3007:
-                    if (C1663a.m5979a().m5993N()) {
+                    if (CarlifeCoreSDK.m5979a().m5993N()) {
                         this.f4451a.m5488l();
                     } else {
                         this.f4451a.m5458a(null, null);
@@ -528,7 +528,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
         m5465b();
         m5471c();
         m5480h();
-        MsgHandlerCenter.m4461b(3007);
+        MsgHandlerCenter.dispatchMessage(3007);
         try {
             NaviAccountUtils.getInstance().initAccount(BaiduNaviApplication.getInstance());
             NaviAccountUtils.getInstance().asyncGetUserInfo();
@@ -812,7 +812,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
         if (this.f4461g != null) {
             if (C1977e.m7498a().m7557b()) {
                 this.f4461g.m8436d(0);
-            } else if (C1663a.m5979a().m5993N() || !C1856o.m7042a().m7045b()) {
+            } else if (CarlifeCoreSDK.m5979a().m5993N() || !C1856o.m7042a().m7045b()) {
                 this.f4461g.m8436d(8);
             } else {
                 this.f4461g.m8436d(0);
@@ -871,7 +871,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
 
     public void onResume() {
         super.onResume();
-        MsgHandlerCenter.m4461b(3007);
+        MsgHandlerCenter.dispatchMessage(3007);
         m5478g();
         m5482i();
         m5490m();
@@ -992,7 +992,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
     /* renamed from: m */
     private void m5490m() {
         MainTopBarView topbarview = (MainTopBarView) this.mContentView.findViewById(R.id.main_comm_top_bar);
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             topbarview.m8463b(true);
             return;
         }
@@ -1177,7 +1177,7 @@ public class HomeFragment extends ContentFragment implements OnClickListener, On
     private void m5501r() {
         CarlifeCmdMessage command = new CarlifeCmdMessage(true);
         command.m4201c(CommonParams.au);
-        C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+        CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: s */

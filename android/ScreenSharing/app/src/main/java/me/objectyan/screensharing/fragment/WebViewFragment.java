@@ -33,7 +33,7 @@ import com.baidu.carlife.custom.C1342a;
 import com.baidu.carlife.custom.C1343b;
 import com.baidu.carlife.logic.C1856o;
 import com.baidu.carlife.logic.C1868q;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2173d;
 import com.baidu.carlife.util.C2183m;
 import com.baidu.carlife.util.C2183m.C2182a;
@@ -473,7 +473,7 @@ public class WebViewFragment extends ContentFragment {
             setBottomBarStatus(false);
         }
         super.onHiddenChanged(hidden);
-        if (!hidden && C1663a.m5979a().m5993N()) {
+        if (!hidden && CarlifeCoreSDK.m5979a().m5993N()) {
             m5852g();
         }
     }
@@ -526,7 +526,7 @@ public class WebViewFragment extends ContentFragment {
     /* renamed from: a */
     private void m5831a(WebView view, SslErrorHandler handler, SslError error) {
         final SslErrorHandler handlerFinal = handler;
-        LogUtil.m4445e("Framework", "onReceivedSslError：error" + error);
+        LogUtil.e("Framework", "onReceivedSslError：error" + error);
         Builder builder = new Builder(getContext());
         error.getPrimaryError();
         builder.setMessage(R.string.web_view_ssl_error);
@@ -599,23 +599,23 @@ public class WebViewFragment extends ContentFragment {
     private boolean m5847d(String url) {
         Uri uri = Uri.parse(url);
         String authority = uri.getAuthority();
-        LogUtil.m4445e("Framework", "dispatchJsMethod: authority=" + authority);
+        LogUtil.e("Framework", "dispatchJsMethod: authority=" + authority);
         if (!TextUtils.isEmpty(authority)) {
             String product = uri.getQueryParameter(f4884x);
-            LogUtil.m4445e("Framework", "dispatchJsMethod: product=" + product);
+            LogUtil.e("Framework", "dispatchJsMethod: product=" + product);
             if (TextUtils.isEmpty(product)) {
-                LogUtil.m4445e("Framework", "Js invoke parameter product should not be empty.");
+                LogUtil.e("Framework", "Js invoke parameter product should not be empty.");
             } else if ("exit".equalsIgnoreCase(authority)) {
-                LogUtil.m4445e("Framework", "Js method: exit");
+                LogUtil.e("Framework", "Js method: exit");
                 m5852g();
             } else if ("navi".equalsIgnoreCase(authority)) {
-                LogUtil.m4445e("Framework", "Js method: navi");
+                LogUtil.e("Framework", "Js method: navi");
                 String longitude = uri.getQueryParameter("longitude");
                 String latitude = uri.getQueryParameter("latitude");
                 LogUtil.d("Framework", "navi longitude=" + longitude + ", latitude=" + latitude);
                 m5830a(Double.valueOf(longitude).doubleValue(), Double.valueOf(latitude).doubleValue());
             } else if (f4882v.equalsIgnoreCase(authority)) {
-                LogUtil.m4445e("Framework", "Js method: registerJSFunction");
+                LogUtil.e("Framework", "Js method: registerJSFunction");
                 String path = uri.getPath();
                 LogUtil.d("Framework", "path=" + path);
                 if (f4883w.equalsIgnoreCase(path)) {
@@ -628,7 +628,7 @@ public class WebViewFragment extends ContentFragment {
                     this.f4889F.loadUrl(jsFun);
                 }
             } else if (f4881u.equalsIgnoreCase(authority)) {
-                LogUtil.m4445e("Framework", "Js method: mtj");
+                LogUtil.e("Framework", "Js method: mtj");
                 String eventID = uri.getQueryParameter(f4858A);
                 String label = uri.getQueryParameter("label");
                 LogUtil.d("Framework", "mtj eventID=" + eventID + " label=" + label);

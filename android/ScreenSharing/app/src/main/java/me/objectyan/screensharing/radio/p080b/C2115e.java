@@ -37,7 +37,7 @@ public class C2115e extends C2110a {
     /* renamed from: a */
     public void mo1775a(C2124l parameters) {
         if (TextUtils.isEmpty(parameters.m8010b()) || TextUtils.equals(parameters.m8010b(), f6713c)) {
-            LogUtil.m4445e("radio_request", "query is empty OR this query is loading");
+            LogUtil.e("radio_request", "query is empty OR this query is loading");
             return;
         }
         f_();
@@ -49,7 +49,7 @@ public class C2115e extends C2110a {
 
     /* renamed from: a */
     public void mo1771a(int statusCode, String response) {
-        LogUtil.m4445e("radio_request", "statusCode = " + statusCode);
+        LogUtil.e("radio_request", "statusCode = " + statusCode);
         f6713c = null;
         if (statusCode == 200) {
             List<MusicSongModel> songList = this.f6716f.m7991a(response);
@@ -71,7 +71,7 @@ public class C2115e extends C2110a {
 
     /* renamed from: a */
     public void mo1772a(String url, String error) {
-        LogUtil.m4445e("radio_request", "error = " + error);
+        LogUtil.e("radio_request", "error = " + error);
         f6713c = null;
         if (this.f6714d != null) {
             this.f6714d.mo1693a(error);

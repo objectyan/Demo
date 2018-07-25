@@ -40,7 +40,7 @@ public class UsbConnectStateReceiver extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         if (this.f3198d == null) {
-            LogUtil.m4445e(f3195a, "mHandler is null");
+            LogUtil.e(f3195a, "mHandler is null");
             return;
         }
         String action = intent.getAction();

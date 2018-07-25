@@ -25,6 +25,6 @@ public abstract class C2323e implements C2322f {
             mo1823b(nameString);
             return;
         }
-        LogUtil.m4445e(f7607a, "you click too fast, need to throw away, key=" + nameString);
+        LogUtil.e(f7607a, "you click too fast, need to throw away, key=" + nameString);
     }
 }

@@ -10,42 +10,42 @@ public class AudioSourceManagerBase {
     }
 
     /* renamed from: a */
-    public void mo1435a(String filePath, ArrayList<String> arrayList) {
+    public void init(String filePath, ArrayList<String> arrayList) {
     }
 
     /* renamed from: a */
-    public void mo1448a(int sampleRate, int channelConfig, int sampleFormat) {
+    public void send(int sampleRate, int channelConfig, int sampleFormat) {
     }
 
     /* renamed from: a */
-    public void mo1434a() {
+    public void send() {
     }
 
     /* renamed from: b */
-    public void mo1436b() {
+    public void pause() {
     }
 
     /* renamed from: c */
-    public void mo1437c() {
+    public void play() {
     }
 
     /* renamed from: d */
-    public void mo1438d() {
+    public void seek() {
     }
 
     /* renamed from: a */
-    public void mo1449a(byte[] buffer, int size) {
+    public void send(byte[] buffer, int size) {
     }
 
     /* renamed from: e */
-    public void mo1439e() {
+    public void setMiddleVolume() {
     }
 
     /* renamed from: f */
-    public void mo1440f() {
+    public void setMinVolume() {
     }
 
     /* renamed from: g */
-    public void mo1441g() {
+    public void setMaxVolume() {
     }
 }

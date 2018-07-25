@@ -46,7 +46,7 @@ public class C1796d {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         int[] pix = new int[(w * h)];
-        LogUtil.m4445e("pix", w + " " + h + " " + pix.length);
+        LogUtil.e("pix", w + " " + h + " " + pix.length);
         bitmap.getPixels(pix, 0, w, 0, 0, w, h);
         int wm = w - 1;
         int hm = h - 1;
@@ -203,7 +203,7 @@ public class C1796d {
                 yi += w;
             }
         }
-        LogUtil.m4445e("pix", w + " " + h + " " + pix.length);
+        LogUtil.e("pix", w + " " + h + " " + pix.length);
         bitmap.setPixels(pix, 0, w, 0, 0, w, h);
         return bitmap;
     }

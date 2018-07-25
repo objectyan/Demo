@@ -54,19 +54,19 @@ public class C1655o extends C1626e {
                 try {
                     fout.close();
                 } catch (IOException e) {
-                    LogUtil.m4445e(this.tag, e.toString());
+                    LogUtil.e(this.tag, e.toString());
                 }
             }
             if (foutgz != null) {
                 foutgz.close();
             }
         } catch (Exception e2) {
-            LogUtil.m4445e(this.tag, e2.toString());
+            LogUtil.e(this.tag, e2.toString());
             if (fout != null) {
                 try {
                     fout.close();
                 } catch (IOException e3) {
-                    LogUtil.m4445e(this.tag, e3.toString());
+                    LogUtil.e(this.tag, e3.toString());
                 }
             }
             if (foutgz != null) {
@@ -77,7 +77,7 @@ public class C1655o extends C1626e {
                 try {
                     fout.close();
                 } catch (IOException e32) {
-                    LogUtil.m4445e(this.tag, e32.toString());
+                    LogUtil.e(this.tag, e32.toString());
                 }
             }
             if (foutgz != null) {

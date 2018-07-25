@@ -81,13 +81,13 @@ public final class C1416e {
         for (C0297e call : C1416e.m5214d().f4146b.m1313u().m1085f()) {
             if (TextUtils.equals(call.mo1118a().m850a().toString(), url)) {
                 call.mo1121c();
-                LogUtil.m4445e(f4145a, "cancel running reuqest, url=" + url);
+                LogUtil.e(f4145a, "cancel running reuqest, url=" + url);
             }
         }
         for (C0297e call2 : C1416e.m5214d().f4146b.m1313u().m1084e()) {
             if (TextUtils.equals(call2.mo1118a().m850a().toString(), url)) {
                 call2.mo1121c();
-                LogUtil.m4445e(f4145a, "cancel queued reuqest, url=" + url);
+                LogUtil.e(f4145a, "cancel queued reuqest, url=" + url);
             }
         }
     }

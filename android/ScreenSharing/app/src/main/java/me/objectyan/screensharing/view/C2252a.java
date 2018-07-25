@@ -21,7 +21,7 @@ import com.baidu.carlife.core.CarlifeUtil;
 import com.baidu.carlife.core.screen.BaseDialog.C1265a;
 import com.baidu.carlife.core.screen.OnDialogListener;
 import com.baidu.carlife.logic.C1765g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.view.KeyboardResultView.C2227c;
 import com.baidu.carlife.view.dialog.C2298l;
 import com.baidu.navi.util.StatisticConstants;
@@ -514,7 +514,7 @@ public class C2252a implements C2227c {
     /* renamed from: a */
     public void m8562a(KeyboardEditText et) {
         this.f7352q = et;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             this.f7352q.setShowSoftInputOnFocus(false);
             this.f7338b.getWindow().setSoftInputMode(2);
             return;
@@ -525,7 +525,7 @@ public class C2252a implements C2227c {
 
     /* renamed from: b */
     public boolean m8565b(KeyboardEditText et) {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             f7336a = true;
             if (C1765g.m6424a().m6442c()) {
                 m8566c();

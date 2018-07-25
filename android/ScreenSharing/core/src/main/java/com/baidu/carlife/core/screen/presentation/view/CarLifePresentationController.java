@@ -127,7 +127,7 @@ public class CarLifePresentationController implements OnStatusChangeListener, On
             } else if (isConnect) {
                 this.f3740d = ((ViewGroup) activity.getWindow().getDecorView()).getChildAt(0);
                 if (this.f3740d == null) {
-                    LogUtil.m4445e(f3737a, "getDecorView.getChildAt(0) is null");
+                    LogUtil.e(f3737a, "getDecorView.getChildAt(0) is null");
                     return;
                 }
                 if (this.f3739c == null) {

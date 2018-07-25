@@ -22,7 +22,7 @@ public class EncryptSetupManager {
     /* renamed from: a */
     private boolean f3253a = false;
     /* renamed from: b */
-    private boolean f3254b = false;
+    private boolean mFlag = false;
     /* renamed from: c */
     private C1207a f3255c = new C1207a();
     /* renamed from: d */
@@ -87,7 +87,7 @@ public class EncryptSetupManager {
                 case 98413:
                     DebugLogUtil.m4115a().m4117a("[receive] MSG_CMD_HU_AES_REC_RESPONSE");
                     this.f3251a.m4128h();
-                    EncryptSetupManager.m4120a().m4133b(this.f3251a.m4134b());
+                    EncryptSetupManager.newInstance().setFlag(this.f3251a.m4134b());
                     this.f3251a.f3256d = true;
                     synchronized (this.f3251a.f3257e) {
                         this.f3251a.f3257e.notifyAll();
@@ -113,7 +113,7 @@ public class EncryptSetupManager {
     }
 
     private EncryptSetupManager() {
-        MsgHandlerCenter.m4460a(this.f3255c);
+        MsgHandlerCenter.registerMessageHandler(this.f3255c);
     }
 
     /* renamed from: a */
@@ -145,13 +145,13 @@ public class EncryptSetupManager {
     }
 
     /* renamed from: b */
-    public void m4133b(boolean flag) {
-        this.f3254b = flag;
+    public void setFlag(boolean flag) {
+        this.mFlag = flag;
     }
 
     /* renamed from: c */
-    public boolean m4135c() {
-        return this.f3254b;
+    public boolean getFlag() {
+        return this.mFlag;
     }
 
     /* renamed from: a */
@@ -167,14 +167,14 @@ public class EncryptSetupManager {
     /* renamed from: e */
     public void m4137e() {
         m4132a(false);
-        m4133b(false);
+        setFlag(false);
     }
 
     /* renamed from: f */
     private boolean m4126f() {
         m4127g();
         DebugLogUtil.m4115a().m4117a("[send] MSG_CMD_MD_RSA_PUBLIC_KEY_REQUEST");
-//        C1663a.m5979a().m6026c((int) CommonParams.bi);
+//        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.bi);
         synchronized (this.f3257e) {
             try {
                 this.f3257e.wait();
@@ -200,7 +200,7 @@ public class EncryptSetupManager {
 
     /* renamed from: i */
     private int m4129i() {
-        PublicKey publicKey = this.mRSAManager.m4139a(EncryptSetupManager.m4120a().m4136d());
+        PublicKey publicKey = this.mRSAManager.m4139a(EncryptSetupManager.newInstance().m4136d());
         if (publicKey == null) {
             return -1;
         }
@@ -212,7 +212,7 @@ public class EncryptSetupManager {
         msg.setServiceType(CommonParams.bk);
         msg.setData(aesKeyRequest.toByteArray());
         msg.setLength(aesKeyRequest.getSerializedSize());
-        ConnectClient.m4207a().m4223a(Message.obtain(null, msg.getServiceType(), 1001, 0, msg));
+        ConnectClient.newInstance().m4223a(Message.obtain(null, msg.getServiceType(), 1001, 0, msg));
         return 0;
     }
 }

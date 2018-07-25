@@ -8,7 +8,7 @@ import com.baidu.carlife.core.CommonParams.EnumVehicleChannel;
 import com.baidu.carlife.core.screen.OnBtnClickListener;
 import com.baidu.carlife.core.screen.OnDialogCancelListener;
 import com.baidu.carlife.core.screen.OnDialogListener;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.view.dialog.C1953c;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class C2204x {
         }
 
         public void onClick() {
-            C1663a.m5979a().m5994O();
+            CarlifeCoreSDK.m5979a().m5994O();
             C2204x.f7053b = null;
         }
     }
@@ -42,7 +42,7 @@ public class C2204x {
         }
 
         public void onCancel() {
-            C1663a.m5979a().m5994O();
+            CarlifeCoreSDK.m5979a().m5994O();
             C2204x.f7053b = null;
         }
     }

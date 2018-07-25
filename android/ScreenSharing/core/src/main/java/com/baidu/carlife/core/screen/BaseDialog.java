@@ -129,7 +129,7 @@ public abstract class BaseDialog extends FrameLayout implements KeepClass {
     public void mo1525a(OnDialogListener listener) {
         this.f3640d = false;
         this.f3641e = listener;
-        MsgHandlerCenter.m4460a(this.f3638b);
+        MsgHandlerCenter.registerMessageHandler(this.f3638b);
     }
 
     /* renamed from: c */
@@ -149,7 +149,7 @@ public abstract class BaseDialog extends FrameLayout implements KeepClass {
             if (this.f3641e != null) {
                 this.f3641e.dismissDialog(this);
             }
-            MsgHandlerCenter.m4464b(this.f3638b);
+            MsgHandlerCenter.unRegisterMessageHandler(this.f3638b);
             mo1527g();
         }
     }

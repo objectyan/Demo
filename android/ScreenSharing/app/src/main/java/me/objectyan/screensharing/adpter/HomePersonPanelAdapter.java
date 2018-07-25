@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.baidu.carlife.R;
 import com.baidu.carlife.logic.p082b.C1502b;
 import com.baidu.carlife.p083g.C1605a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2186p;
 import com.baidu.navi.style.StyleManager;
 import com.baidu.navi.util.NaviAccountUtils;
@@ -119,7 +119,7 @@ public class HomePersonPanelAdapter extends BaseAdapter {
 
     /* renamed from: a */
     public boolean m3193a() {
-        if (!C1663a.m5979a().m5993N() || NaviAccountUtils.getInstance().isLogin()) {
+        if (!CarlifeCoreSDK.m5979a().m5993N() || NaviAccountUtils.getInstance().isLogin()) {
             return true;
         }
         return false;

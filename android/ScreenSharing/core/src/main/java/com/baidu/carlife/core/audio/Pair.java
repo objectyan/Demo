@@ -4,39 +4,36 @@ package com.baidu.carlife.core.audio;
 /* renamed from: com.baidu.carlife.core.audio.p */
 public class Pair {
     /* renamed from: a */
-    private byte[] f3143a;
+    private byte[] mData;
     /* renamed from: b */
-    private int f3144b;
+    private int mSize;
 
     Pair() {
     }
 
     Pair(byte[] data, int size) {
-        this.f3143a = data;
-        this.f3144b = size;
+        this.mData = data;
+        this.mSize = size;
     }
 
     /* renamed from: a */
-    public void m4056a(byte[] data) {
-        this.f3143a = data;
+    public void setData(byte[] data) {
+        this.mData = data;
     }
 
     /* renamed from: a */
-    public byte[] m4057a() {
-        return this.f3143a;
+    public byte[] getData() {
+        return this.mData;
     }
 
     /* renamed from: a */
-    public void m4055a(int size) {
-        this.f3144b = size;
+    public void setSize(int size) {
+        this.mSize = size;
     }
 
     /* renamed from: b */
-    public int m4058b() {
-        return this.f3144b;
+    public int getSize() {
+        return this.mSize;
     }
 
-    /* renamed from: a */
-    public static void m4054a(String[] args) {
-    }
 }

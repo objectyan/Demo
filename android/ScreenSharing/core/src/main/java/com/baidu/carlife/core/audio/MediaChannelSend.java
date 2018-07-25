@@ -1,39 +1,39 @@
 package com.baidu.carlife.core.audio;
 
-import com.baidu.carlife.core.audio.AudioUtil.C1161d;
+import com.baidu.carlife.core.audio.AudioUtil.EnumAudioState;
 import com.baidu.carlife.core.connect.ConnectManager;
 
 /* compiled from: MediaChannelSend */
 /* renamed from: com.baidu.carlife.core.audio.k */
 public class MediaChannelSend {
     /* renamed from: a */
-    private static MediaChannelSend f3112a;
+    private static MediaChannelSend sMediaChannelSend;
     /* renamed from: b */
-    private boolean f3113b = false;
+    private boolean mStatus = false;
 
     private MediaChannelSend() {
     }
 
     /* renamed from: a */
-    public static MediaChannelSend m4030a() {
-        if (f3112a == null) {
-            f3112a = new MediaChannelSend();
+    public static MediaChannelSend newInstance() {
+        if (sMediaChannelSend == null) {
+            sMediaChannelSend = new MediaChannelSend();
         }
-        return f3112a;
+        return sMediaChannelSend;
     }
 
     /* renamed from: a */
-    public synchronized int m4033a(byte[] data, int len, C1161d type) {
+    public synchronized int send(byte[] data, int len, EnumAudioState type) {
         int i = -1;
         synchronized (this) {
-            if (!AudioUtil.m3882a().m3895g()) {
-                if (type == C1161d.INIT || type == C1161d.RESUME) {
-                    m4031a(true);
-                } else if (type == C1161d.PAUSE || type == C1161d.STOP) {
-                    m4031a(false);
+            if (!AudioUtil.newInstance().isBlueToothMode()) {
+                if (type == EnumAudioState.INIT || type == EnumAudioState.RESUME) {
+                    setStatus(true);
+                } else if (type == EnumAudioState.PAUSE || type == EnumAudioState.STOP) {
+                    setStatus(false);
                 }
-                if ((type != C1161d.NORMAL || m4032b()) && AudioUtil.m3883h() && len >= 0) {
-                    i = ConnectManager.m4228a().m4243c(data, len);
+                if ((type != EnumAudioState.NORMAL || getStatus()) && AudioUtil.getIs() && len >= 0) {
+                    i = ConnectManager.newInstance().writeAudio(data, len);
                 }
             }
         }
@@ -41,12 +41,12 @@ public class MediaChannelSend {
     }
 
     /* renamed from: a */
-    private void m4031a(boolean status) {
-        this.f3113b = status;
+    private void setStatus(boolean status) {
+        this.mStatus = status;
     }
 
     /* renamed from: b */
-    private boolean m4032b() {
-        return this.f3113b;
+    private boolean getStatus() {
+        return this.mStatus;
     }
 }

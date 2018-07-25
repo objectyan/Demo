@@ -180,7 +180,7 @@ public class C2291j extends BaseDialog implements OnClickListener {
     /* renamed from: k */
     private void m8711k() {
         this.b.removeCallbacks(this.f7513o);
-        C2186p.m8304a().m8323c(CommonParams.ih, false);
+        C2186p.m8304a().m8323c(CommonParams.SOCKET_VIDEO_WIFI_PORT, false);
         mo1526d();
     }
 }

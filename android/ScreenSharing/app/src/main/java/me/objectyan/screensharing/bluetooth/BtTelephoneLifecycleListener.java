@@ -7,7 +7,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.logic.C1868q;
 import com.baidu.carlife.logic.C1868q.C1060g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 
 /* compiled from: BtTelephoneLifecycleListener */
 /* renamed from: com.baidu.carlife.bluetooth.h */
@@ -79,7 +79,7 @@ public class BtTelephoneLifecycleListener extends LifecycleListener {
         }
 
         public void run() {
-            C1663a.m5979a().m6039g();
+            CarlifeCoreSDK.m5979a().m6039g();
         }
     }
 
@@ -204,7 +204,7 @@ public class BtTelephoneLifecycleListener extends LifecycleListener {
             return;
         }
         LogUtil.d(f2823e, "Resume video at once");
-        C1663a.m5979a().m6039g();
+        CarlifeCoreSDK.m5979a().m6039g();
         BtHfpManager.m3397a().m3414a(true);
     }
 

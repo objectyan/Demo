@@ -222,7 +222,7 @@ public class C2028a {
         try {
             field = RunningAppProcessInfo.class.getDeclaredField("processState");
         } catch (Exception ignored) {
-            LogUtil.m4445e(f6555a, ignored.getMessage());
+            LogUtil.e(f6555a, ignored.getMessage());
         }
         for (RunningAppProcessInfo app : ((ActivityManager) ctx.getSystemService(BusinessActivityManager.AUDIO_DIR)).getRunningAppProcesses()) {
             if (app.importance == 100 && app.importanceReasonCode == 0) {
@@ -230,7 +230,7 @@ public class C2028a {
                 try {
                     state = Integer.valueOf(field.getInt(app));
                 } catch (Exception e) {
-                    LogUtil.m4445e(f6555a, e.getMessage());
+                    LogUtil.e(f6555a, e.getMessage());
                 }
                 if (state != null && (state.intValue() == 2 || state.intValue() == 1)) {
                     currentInfo = app;

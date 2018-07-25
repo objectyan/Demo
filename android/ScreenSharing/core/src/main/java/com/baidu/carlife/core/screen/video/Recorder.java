@@ -258,7 +258,7 @@ public class Recorder {
         this.ag = VERSION.SDK_INT >= 21;
         this.f3901W = new VideoMsgHandler();
         if (!this.ag) {
-            this.f3902X = AppContext.m3876a().getSharedPreferences(CommonParams.ia, 0);
+            this.f3902X = AppContext.getAppContext().getSharedPreferences(CommonParams.CAR_LIFE_TEMP, 0);
             this.f3903Y = this.f3902X.edit();
             switch (this.f3902X.getInt(f3865i, -1)) {
                 case 0:
@@ -401,7 +401,7 @@ public class Recorder {
 
     /* renamed from: k */
     public boolean m4880k() {
-        if (!this.f3894P && ConnectClient.m4207a().m4225c()) {
+        if (!this.f3894P && ConnectClient.newInstance().m4225c()) {
             return this.f3885G;
         }
         return false;
@@ -438,7 +438,7 @@ public class Recorder {
         CarlifeConnectException info = builder.build();
         command.setData(info.toByteArray());
         command.setLength(info.getSerializedSize());
-        ConnectClient.m4207a().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+        ConnectClient.newInstance().m4223a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: m */
@@ -729,7 +729,7 @@ public class Recorder {
                 this.f3881C.start();
                 return 0;
             }
-            LogUtil.m4445e(f3860a, "The RecordThread didnt close last time");
+            LogUtil.e(f3860a, "The RecordThread didnt close last time");
             return -1;
         } else if (CarlifeConfig.m4065a()) {
             LogUtil.d(f3860a, "startThread internal screen capture.");
@@ -875,7 +875,7 @@ public class Recorder {
             f3863d = destFrameRate;
             f3864e = 1000 / destFrameRate;
         }
-        LogUtil.m4445e(f3860a, "mContainerWidth = " + f3861b + ", mContainerHeight = " + f3862c);
+        LogUtil.e(f3860a, "mContainerWidth = " + f3861b + ", mContainerHeight = " + f3862c);
         try {
             this.f3880B = MediaCodec.createEncoderByType("video/avc");
         } catch (Exception e) {
@@ -902,7 +902,7 @@ public class Recorder {
                 e2.printStackTrace();
             }
             if (isConfigSuccess) {
-                LogUtil.m4445e(f3860a, "with level 3.0 mColorFormat=" + this.f3910y);
+                LogUtil.e(f3860a, "with level 3.0 mColorFormat=" + this.f3910y);
                 break;
             }
             try {
@@ -912,7 +912,7 @@ public class Recorder {
                 mediaFormat.setInteger("i-frame-interval", 1);
                 mediaFormat.setInteger("color-format", this.f3910y);
                 this.f3880B.configure(mediaFormat, null, null, 1);
-                LogUtil.m4445e(f3860a, "mColorFormat=" + this.f3910y);
+                LogUtil.e(f3860a, "mColorFormat=" + this.f3910y);
                 break;
             } catch (Exception e22) {
                 e22.printStackTrace();
@@ -949,7 +949,7 @@ public class Recorder {
                 }
             }
             if (this.f3909x != 45 || this.f3909x == 46) {
-                LogUtil.m4445e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
+                LogUtil.e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
                 this.f3880B = null;
                 return false;
             }
@@ -975,7 +975,7 @@ public class Recorder {
         }
         if (this.f3909x != 45) {
         }
-        LogUtil.m4445e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
+        LogUtil.e(f3860a, "没有合适的参数可完成初始化 n = " + this.f3909x);
         this.f3880B = null;
         return false;
     }
@@ -984,7 +984,7 @@ public class Recorder {
     int m4852a(byte[] input) {
         synchronized (this.f3897S) {
             if (this.f3880B == null) {
-                LogUtil.m4445e(f3860a, "还没完成初始化, 或已经被释放");
+                LogUtil.e(f3860a, "还没完成初始化, 或已经被释放");
                 return -2;
             }
             try {
@@ -1024,7 +1024,7 @@ public class Recorder {
             this.f3883E[9] = (byte) 2;
             this.f3883E[10] = (byte) 0;
             this.f3883E[11] = (byte) 1;
-            a = ConnectManager.m4228a().m4236a(this.f3883E, 12);
+            a = ConnectManager.newInstance().m4236a(this.f3883E, 12);
         }
         return a;
     }
@@ -1046,7 +1046,7 @@ public class Recorder {
             this.f3883E[9] = (byte) 2;
             this.f3883E[10] = (byte) 0;
             this.f3883E[11] = (byte) 2;
-            a = ConnectManager.m4228a().m4236a(this.f3883E, 12);
+            a = ConnectManager.newInstance().m4236a(this.f3883E, 12);
         }
         return a;
     }
@@ -1056,10 +1056,10 @@ public class Recorder {
         int a;
         byte[] sendDtata = videoData;
         int sendLen = length;
-        if (EncryptSetupManager.m4120a().m4135c() && length > 0) {
+        if (EncryptSetupManager.newInstance().getFlag() && length > 0) {
             sendDtata = this.f3904Z.m4112a(videoData, length);
             if (sendDtata == null) {
-                LogUtil.m4445e(f3860a, "encrypt failed!");
+                LogUtil.e(f3860a, "encrypt failed!");
                 return -1;
             }
             sendLen = sendDtata.length;
@@ -1085,8 +1085,8 @@ public class Recorder {
             this.f3883E[9] = (byte) 2;
             this.f3883E[10] = (byte) 0;
             this.f3883E[11] = (byte) 1;
-            ConnectManager.m4228a().m4236a(this.f3883E, 12);
-            a = ConnectManager.m4228a().m4236a(sendDtata, sendLen);
+            ConnectManager.newInstance().m4236a(this.f3883E, 12);
+            a = ConnectManager.newInstance().m4236a(sendDtata, sendLen);
         }
         return a;
     }
@@ -1260,7 +1260,7 @@ public class Recorder {
     /* renamed from: c */
     boolean m4867c(int destWidth, int destHeight, int destFrameRate) {
         if (this.f3905f != null) {
-            LogUtil.m4445e(f3860a, "重复调用了initMediaCodec50TextureView");
+            LogUtil.e(f3860a, "重复调用了initMediaCodec50TextureView");
         } else {
             m4861a(destWidth, destHeight, destFrameRate);
             this.f3905f = Bitmap.createBitmap(f3861b, f3862c, Config.ARGB_8888);
@@ -1287,7 +1287,7 @@ public class Recorder {
     public void m4849P() {
         this.f3896R = false;
         if (this.aj == null) {
-            Context context = AppContext.m3876a();
+            Context context = AppContext.getAppContext();
             this.ab = CarlifeScreenUtil.m4331a().m4350g();
             this.aj = (MediaProjectionManager) context.getSystemService("media_projection");
         }

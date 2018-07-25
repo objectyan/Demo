@@ -229,7 +229,7 @@ public class BtUtils {
             }
             return pinBytes;
         } catch (UnsupportedEncodingException e) {
-            LogUtil.m4445e(f2836i, "UTF-8 not supported?!?");
+            LogUtil.e(f2836i, "UTF-8 not supported?!?");
             return null;
         }
     }

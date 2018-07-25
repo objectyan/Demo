@@ -73,7 +73,7 @@ public class CarlifeServiceConnection implements ServiceConnection, KeepClass {
         try {
             this.f3816b.unbindService(this);
         } catch (IllegalArgumentException e) {
-            LogUtil.m4445e(f3815a, e.getMessage());
+            LogUtil.e(f3815a, e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ public class CarlifeServiceConnection implements ServiceConnection, KeepClass {
         try {
             this.f3816b.unbindService(this);
         } catch (IllegalArgumentException e) {
-            LogUtil.m4445e(f3815a, e.getMessage());
+            LogUtil.e(f3815a, e.getMessage());
         }
     }
 

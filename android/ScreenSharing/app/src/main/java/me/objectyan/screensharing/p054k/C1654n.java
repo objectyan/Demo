@@ -61,7 +61,7 @@ public class C1654n extends C1626e {
                 m5963a(jsonItem.toString());
                 return jsonItem;
             } catch (Exception e) {
-                LogUtil.m4445e("StatisticMobileParams", e.toString());
+                LogUtil.e("StatisticMobileParams", e.toString());
                 return null;
             }
         }

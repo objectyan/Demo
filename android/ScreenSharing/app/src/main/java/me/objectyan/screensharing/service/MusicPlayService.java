@@ -13,7 +13,7 @@ import com.baidu.carlife.logic.music.C1829n;
 import com.baidu.carlife.logic.music.C1830o;
 import com.baidu.carlife.logic.p088a.C1702j;
 import com.baidu.carlife.model.MusicSongModel;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class MusicPlayService extends Service {
     /* renamed from: a */
     public C1830o f6898a = new C21631(this);
     /* renamed from: c */
-    private C1663a f6899c;
+    private CarlifeCoreSDK f6899c;
     /* renamed from: d */
     private int f6900d = -1;
     /* renamed from: e */
@@ -141,7 +141,7 @@ public class MusicPlayService extends Service {
 
     public void onCreate() {
         super.onCreate();
-        this.f6899c = C1663a.m5979a();
+        this.f6899c = CarlifeCoreSDK.m5979a();
         this.f6903g = new C1829n(this.f6898a);
     }
 

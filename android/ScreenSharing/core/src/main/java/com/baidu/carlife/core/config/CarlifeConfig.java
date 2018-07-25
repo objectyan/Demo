@@ -73,7 +73,7 @@ public class CarlifeConfig implements KeepClass {
                 break;
             }
         }
-        return CarlifeUtil.m4358a().m4401r() && ConnectClient.m4207a().m4225c() && isWechatEnable;
+        return CarlifeUtil.newInstance().isConnected() && ConnectClient.newInstance().m4225c() && isWechatEnable;
     }
 
     /* renamed from: d */

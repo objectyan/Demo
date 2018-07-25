@@ -290,7 +290,7 @@ public class C1952b {
             File file = new File(C1962d.m7476f());
             long fileSize = file.length();
             if (fileSize > 2147483647L) {
-                LogUtil.m4445e(f6194b, "file too big...");
+                LogUtil.e(f6194b, "file too big...");
                 return false;
             }
             LogUtil.d(f6194b, "transfer data start: " + fileSize);
@@ -307,18 +307,18 @@ public class C1952b {
                 sumRead += numRead;
                 nIndex++;
                 m7414a(fileSize, (int) (((((double) sumRead) + 0.0d) / ((double) fileSize)) * 100.0d));
-                LogUtil.m4445e(f6194b, "transferData : [" + nIndex + " : " + sumRead);
+                LogUtil.e(f6194b, "transferData : [" + nIndex + " : " + sumRead);
             }
             m7427b(this.f6206n);
             if (((long) sumRead) < fileSize) {
-                LogUtil.m4445e(f6194b, "Could not completely read file: " + sumRead);
+                LogUtil.e(f6194b, "Could not completely read file: " + sumRead);
                 bTransferResult = false;
             }
             fi.close();
             LogUtil.d(f6194b, "transfer end: " + sumRead);
             return bTransferResult;
         } catch (IOException ex) {
-            LogUtil.m4445e(f6194b, "transfer data error!!!");
+            LogUtil.e(f6194b, "transfer data error!!!");
             ex.printStackTrace();
         }
     }

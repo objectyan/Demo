@@ -609,7 +609,7 @@ public class C1977e {
                     if (this.f6290a.f6324w.f5945g == 1 || this.f6290a.f6296E > this.f6290a.f6295D) {
                         this.f6290a.f6297F = true;
                         this.f6290a.m7521i();
-                        MsgHandlerCenter.m4461b((int) CommonParams.gi);
+                        MsgHandlerCenter.dispatchMessage((int) CommonParams.gi);
                         this.f6290a.m7550a(this.f6290a.f6324w.f5948j);
                         return;
                     }

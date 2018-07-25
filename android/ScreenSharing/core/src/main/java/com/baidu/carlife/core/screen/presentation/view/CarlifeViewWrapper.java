@@ -46,7 +46,7 @@ import com.baidu.carlife.protobuf.p054k.C1651l;
 import com.baidu.carlife.protobuf.p054k.p055a.C1626e.C0924a;
 import com.baidu.carlife.protobuf.p078f.C1440d;
 import com.baidu.carlife.protobuf.p078f.C1443g;
-import com.baidu.carlife.protobuf.p087l.C1663a;
+import com.baidu.carlife.protobuf.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.util.C2199v;
 import com.baidu.carlife.protobuf.util.C2201w;
 import com.baidu.carlife.protobuf.view.C2342g;
@@ -551,7 +551,7 @@ public class CarlifeViewWrapper extends CarlifeView implements OnClickListener, 
     }
 
     public boolean showConnectForbidDialog() {
-        if (!C1663a.m5979a().m5993N()) {
+        if (!CarlifeCoreSDK.m5979a().m5993N()) {
             return false;
         }
         C1953c connectForbidDialog = new C1953c(this.b).m7455f(1);
@@ -819,7 +819,7 @@ public class CarlifeViewWrapper extends CarlifeView implements OnClickListener, 
     /* renamed from: w */
     private C2278e m4714w() {
         if (this.f3798v == null) {
-            this.f3798v = new C2278e(AppContext.m3876a());
+            this.f3798v = new C2278e(AppContext.getAppContext());
         }
         return this.f3798v;
     }

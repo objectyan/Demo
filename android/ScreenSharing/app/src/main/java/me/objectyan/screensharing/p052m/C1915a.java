@@ -9,7 +9,7 @@ import com.baidu.baidunavis.tts.IBNTTSPlayerWeChatListener;
 import com.baidu.baidunavis.tts.IBNTTSVoiceHintListener;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 
 /* compiled from: BNTTSPlayer */
 /* renamed from: com.baidu.carlife.m.a */
@@ -83,7 +83,7 @@ public class C1915a {
 
     /* renamed from: b */
     public synchronized int m7328b(String speech, int bPreempt) {
-        m7327a(C1663a.m5979a().m5993N());
+        m7327a(CarlifeCoreSDK.m5979a().m5993N());
         LogUtil.d("BNTTSPlayer", "playVoiceTTSText " + speech);
         return BaseTTSPlayer.getInstance().playVoiceTTSText(speech, bPreempt) == 0 ? -1 : 0;
     }
@@ -140,7 +140,7 @@ public class C1915a {
 
     /* renamed from: h */
     public void m7338h() {
-        byte[] vrTTsPackage = C1663a.m5979a().m6018a((int) CommonParams.bD, 0);
-        C1663a.m5979a().m6030d(vrTTsPackage, vrTTsPackage.length);
+        byte[] vrTTsPackage = CarlifeCoreSDK.m5979a().m6018a((int) CommonParams.bD, 0);
+        CarlifeCoreSDK.m5979a().m6030d(vrTTsPackage, vrTTsPackage.length);
     }
 }

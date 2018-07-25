@@ -14,7 +14,7 @@ public class C1445i extends C1436a {
     }
 
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        LogUtil.m4445e("FocusArea", "keycode = " + keyCode + ", event = " + event.toString());
+        LogUtil.e("FocusArea", "keycode = " + keyCode + ", event = " + event.toString());
         if (event != null && event.getAction() == 0) {
             switch (keyCode) {
                 case 19:

@@ -25,7 +25,7 @@ public class DisplayUtils {
         if (spec.m4789e() == 0) {
             spec.m4788d(9);
         }
-        return ((DisplayManager) AppContext.m3876a().getSystemService("display")).createVirtualDisplay(displayName, spec.m4780a(), spec.m4783b(), spec.m4785c(), spec.m4787d(), spec.m4789e());
+        return ((DisplayManager) AppContext.getAppContext().getSystemService("display")).createVirtualDisplay(displayName, spec.m4780a(), spec.m4783b(), spec.m4785c(), spec.m4787d(), spec.m4789e());
     }
 
     /* renamed from: a */

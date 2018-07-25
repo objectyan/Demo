@@ -1,0 +1,61 @@
+<html>
+	<head>
+	<script>
+	function getLocation()
+	{
+		lat = bdnavi.getCurrentLocationLatitude();
+		lon = bdnavi.getCurrentLocationLongtitude();
+		alert("lat:"+lat+"\rlon:"+lon);
+	}
+	function getUid()
+	{
+		var uid = bdnavi.getCurrentUserUid();
+		alert("uid:"+uid);
+	}
+	
+	function getUserBduss()
+	{
+		var bduss = bdnavi.getCurrentUserBduss();
+		alert("bduss:"+bduss);
+	}
+	
+	function showLoginPage()
+	{
+		bdnavi.showLoginPage();
+	}
+	
+	function getCurrentCityName()
+	{
+	    var cityName = bdnavi.getCurrentCityName();
+	    alert("current city:" + cityName);
+	}
+	
+	function getCurrentLocationDistrictId()
+	{
+	    var cityid = bdnavi.getCurrentLocationDistrictId();
+	    alert("current cityid:" + cityid);
+	}
+	
+	</script>	
+		
+	</head>
+	<body>
+	Hello, baidu navi!
+	<br>
+	<button onclick="getLocation()">getlocation</button>	
+	<br>
+	<button onclick="getUid()">getUid</button>
+	<br>
+	<button onclick="getUserBduss()">getUserBduss</button>
+	<br>
+	<button onclick="showLoginPage()">showLoginPage</button>
+	<br>
+	<button onclick="getCurrentCityName()">getCurrentCityName</button>
+	<br>
+	<button onclick="getCurrentLocationDistrictId()">getCurrentLocationDistrictId</button>
+	
+	</body>
+
+
+
+</html>

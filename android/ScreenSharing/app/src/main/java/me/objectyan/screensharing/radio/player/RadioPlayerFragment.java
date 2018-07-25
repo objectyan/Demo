@@ -368,7 +368,7 @@ public class RadioPlayerFragment extends ContentFragment {
             m8154i();
         }
         m8140b();
-        MsgHandlerCenter.m4461b((int) CommonParams.gS);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gS);
         super.onResume();
         onInitFocusAreas();
         if (this.f6886p == null || !this.f6886p.m7369j()) {

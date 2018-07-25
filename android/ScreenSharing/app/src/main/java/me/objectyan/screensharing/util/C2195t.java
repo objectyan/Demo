@@ -70,17 +70,17 @@ public class C2195t {
 
     /* renamed from: b */
     public static void m8350b(Context context, CarlifeStatisticsInfo statisInfo) {
-        String time = C2186p.m8304a().m8309a(CommonParams.ik, "");
+        String time = C2186p.m8304a().m8309a(CommonParams.SOCKET_AUDIO_VR_WIFI_PORT, "");
         if (time.split(",").length > 1000) {
             time = null;
-            C2186p.m8304a().m8322c(CommonParams.ik);
+            C2186p.m8304a().m8322c(CommonParams.SOCKET_AUDIO_VR_WIFI_PORT);
         }
         if (TextUtils.isEmpty(time)) {
             time = String.valueOf(new Date().getTime() / 1000);
         } else {
             time = time + "," + String.valueOf(new Date().getTime() / 1000);
         }
-        C2186p.m8304a().m8319b(CommonParams.ik, time);
+        C2186p.m8304a().m8319b(CommonParams.SOCKET_AUDIO_VR_WIFI_PORT, time);
         if (CarlifeUtil.m4358a().m4401r()) {
             C1657p request = new C1657p();
             request.getClass();
@@ -275,7 +275,7 @@ public class C2195t {
     public static void m8345a(final Context context, final OnDialogListener listener) {
         C2195t.m8344a();
         try {
-            LogUtil.m4445e(f7027a, "Carlife Statstic Connect Timer Start");
+            LogUtil.e(f7027a, "Carlife Statstic Connect Timer Start");
             f7031e = new Timer();
             f7033g = new Handler();
             f7032f = new TimerTask() {
@@ -296,9 +296,9 @@ public class C2195t {
                 }
 
                 public void run() {
-                    LogUtil.m4445e(C2195t.f7027a, "Carlife Statstic Connect Timeout 1");
+                    LogUtil.e(C2195t.f7027a, "Carlife Statstic Connect Timeout 1");
                     if (C2195t.f7031e != null) {
-                        LogUtil.m4445e(C2195t.f7027a, "Carlife Statstic Connect Timeout 2");
+                        LogUtil.e(C2195t.f7027a, "Carlife Statstic Connect Timeout 2");
                         if (C2195t.f7033g != null) {
                             C2195t.f7033g.post(new C21931(this));
                         }
@@ -315,7 +315,7 @@ public class C2195t {
 
     /* renamed from: a */
     public static void m8344a() {
-        LogUtil.m4445e(f7027a, "Carlife Statstic Connect Timer Stop");
+        LogUtil.e(f7027a, "Carlife Statstic Connect Timer Stop");
         if (f7031e != null) {
             f7031e.cancel();
             f7031e = null;

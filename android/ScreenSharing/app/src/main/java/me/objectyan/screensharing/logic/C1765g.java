@@ -12,7 +12,7 @@ import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.core.connect.config.IConfigSyncDone;
 import com.baidu.carlife.logic.voice.C1912n;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeCarHardKeyCodeProto.CarlifeCarHardKeyCode;
 import com.baidu.carlife.protobuf.CarlifeCarHardKeyCodeProto.CarlifeCarHardKeyCode.Builder;
 import com.baidu.carlife.protobuf.CarlifeFeatureConfigListProto.CarlifeFeatureConfigList;
@@ -105,7 +105,7 @@ public class C1765g implements IConfigSyncDone {
         public void run() {
             if (this.f5330a.f5360A != null) {
                 this.f5330a.m6435k();
-                MsgHandlerCenter.m4461b(1008);
+                MsgHandlerCenter.dispatchMessage(1008);
                 this.f5330a.m6440b(true);
             }
         }
@@ -131,13 +131,13 @@ public class C1765g implements IConfigSyncDone {
                     this.f5331a.f5363F = this.f5331a.m6425a((CarlifeCmdMessage) msg.obj);
                     this.f5331a.m6433i();
                     this.f5331a.m6435k();
-                    if (C1663a.m5979a().m6000U()) {
+                    if (CarlifeCoreSDK.m5979a().m6000U()) {
                         LogUtil.d(C1765g.f5359y, "[configure] encrypt: on");
-                        C1663a.m5979a().m6011a(this.f5331a);
+                        CarlifeCoreSDK.m5979a().m6011a(this.f5331a);
                         return;
                     }
                     LogUtil.d(C1765g.f5359y, "[configure] encrypt: off");
-                    MsgHandlerCenter.m4461b(1007);
+                    MsgHandlerCenter.dispatchMessage(1007);
                     this.f5331a.m6440b(true);
                     return;
                 default:
@@ -176,7 +176,7 @@ public class C1765g implements IConfigSyncDone {
             MsgHandlerCenter.m4453a((int) CommonParams.gV, 400);
             this.f5333a.m6446h();
             MsgHandlerCenter.m4452a((int) CommonParams.gV);
-            MsgHandlerCenter.m4461b((int) CommonParams.gW);
+            MsgHandlerCenter.dispatchMessage((int) CommonParams.gW);
         }
     }
 
@@ -203,7 +203,7 @@ public class C1765g implements IConfigSyncDone {
 
     /* renamed from: b */
     public void m6439b() {
-        C1663a.m5979a().m6026c((int) CommonParams.aX);
+        CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.aX);
         m6434j();
         m6440b(false);
     }
@@ -261,7 +261,7 @@ public class C1765g implements IConfigSyncDone {
                             C1765g.m6429a(23);
                         }
                     } else if (f5341f.equals(config.getKey())) {
-                        C1663a.m5979a().m6020b(config.getValue());
+                        CarlifeCoreSDK.m5979a().m6020b(config.getValue());
                         LogUtil.d(f5359y, "KEY_MEDIA_SAMPLE_RATE = " + config.getValue());
                     } else if (f5336a.equals(config.getKey())) {
                         C1772k.m6480a().m6485a(6, config.getValue());
@@ -269,7 +269,7 @@ public class C1765g implements IConfigSyncDone {
                     } else if (f5337b.equals(config.getKey())) {
                         C1912n.m7270a().m7302c(config.getValue() == 1);
                     } else if (f5342g.equals(config.getKey())) {
-                        C1663a.m5979a().m6004a(config.getValue());
+                        CarlifeCoreSDK.m5979a().m6004a(config.getValue());
                         LogUtil.d(f5359y, "KEY_AUDIO_TRANSMISSION_MODE = " + config.getValue());
                     } else if (f5343h.equals(config.getKey())) {
                         boolean encryptConfigSwitch;
@@ -278,7 +278,7 @@ public class C1765g implements IConfigSyncDone {
                         } else {
                             encryptConfigSwitch = false;
                         }
-                        C1663a.m5979a().m6037f(encryptConfigSwitch);
+                        CarlifeCoreSDK.m5979a().m6037f(encryptConfigSwitch);
                     } else if (f5344i.equals(config.getKey())) {
                         LogUtil.d(f5359y, "engine type: " + config.getValue());
                     } else if (f5345j.equals(config.getKey())) {
@@ -289,11 +289,11 @@ public class C1765g implements IConfigSyncDone {
                         }
                         LogUtil.d(f5359y, "####### KEY_INPUT_DISABLE:" + config.getValue());
                     } else {
-                        LogUtil.m4445e(f5359y, "the key is error:" + config.getKey());
+                        LogUtil.e(f5359y, "the key is error:" + config.getKey());
                     }
                 }
             } catch (Exception ex) {
-                LogUtil.m4445e(f5359y, "feature config get exception");
+                LogUtil.e(f5359y, "feature config get exception");
                 ex.printStackTrace();
             }
         }
@@ -320,7 +320,7 @@ public class C1765g implements IConfigSyncDone {
 
     /* renamed from: k */
     private void m6435k() {
-        LogUtil.m4445e(f5359y, "Wait for Feature Config Stop");
+        LogUtil.e(f5359y, "Wait for Feature Config Stop");
         if (this.f5360A != null) {
             this.f5360A.cancel();
             this.f5360A = null;
@@ -418,11 +418,11 @@ public class C1765g implements IConfigSyncDone {
     /* renamed from: a */
     public void mo1641a(boolean flag) {
         if (flag) {
-            C1663a.m5979a().m6026c((int) CommonParams.bm);
+            CarlifeCoreSDK.m5979a().m6026c((int) CommonParams.bm);
             m6440b(true);
-            MsgHandlerCenter.m4461b(1007);
+            MsgHandlerCenter.dispatchMessage(1007);
             return;
         }
-        C1663a.m5979a().m5994O();
+        CarlifeCoreSDK.m5979a().m5994O();
     }
 }

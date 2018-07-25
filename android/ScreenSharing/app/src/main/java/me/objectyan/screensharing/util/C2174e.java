@@ -40,10 +40,10 @@ public class C2174e {
         try {
             exitVal = this.f6940c.exec(cmd).waitFor();
         } catch (InterruptedException e) {
-            LogUtil.m4445e(f6938a, "exec: " + cmd + " get InterruptedException");
+            LogUtil.e(f6938a, "exec: " + cmd + " get InterruptedException");
             e.printStackTrace();
         } catch (IOException e2) {
-            LogUtil.m4445e(f6938a, "exec: " + cmd + " get IOException");
+            LogUtil.e(f6938a, "exec: " + cmd + " get IOException");
             e2.printStackTrace();
         }
         LogUtil.d(f6938a, "exit value: " + exitVal);
@@ -59,7 +59,7 @@ public class C2174e {
         try {
             Process proc = this.f6940c.exec(cmd);
         } catch (IOException e) {
-            LogUtil.m4445e(f6938a, "exec: " + cmd + " get IOException");
+            LogUtil.e(f6938a, "exec: " + cmd + " get IOException");
             e.printStackTrace();
         }
         LogUtil.d(f6938a, "exit value: " + 0);
@@ -87,7 +87,7 @@ public class C2174e {
             } catch (InterruptedException e3) {
                 e = e3;
                 bufferedInputStream = in;
-                LogUtil.m4445e(f6938a, "exec: " + cmd + " get InterruptedException");
+                LogUtil.e(f6938a, "exec: " + cmd + " get InterruptedException");
                 e.printStackTrace();
                 LogUtil.d(f6938a, "exit value: " + exitVal);
                 if (exitVal != 0) {
@@ -97,7 +97,7 @@ public class C2174e {
             } catch (IOException e4) {
                 e2 = e4;
                 bufferedInputStream = in;
-                LogUtil.m4445e(f6938a, "exec: " + cmd + " get IOException");
+                LogUtil.e(f6938a, "exec: " + cmd + " get IOException");
                 e2.printStackTrace();
                 LogUtil.d(f6938a, "exit value: " + exitVal);
                 if (exitVal != 0) {
@@ -107,7 +107,7 @@ public class C2174e {
             }
         } catch (InterruptedException e5) {
             e = e5;
-            LogUtil.m4445e(f6938a, "exec: " + cmd + " get InterruptedException");
+            LogUtil.e(f6938a, "exec: " + cmd + " get InterruptedException");
             e.printStackTrace();
             LogUtil.d(f6938a, "exit value: " + exitVal);
             if (exitVal != 0) {
@@ -116,7 +116,7 @@ public class C2174e {
             return null;
         } catch (IOException e6) {
             e2 = e6;
-            LogUtil.m4445e(f6938a, "exec: " + cmd + " get IOException");
+            LogUtil.e(f6938a, "exec: " + cmd + " get IOException");
             e2.printStackTrace();
             LogUtil.d(f6938a, "exit value: " + exitVal);
             if (exitVal != 0) {

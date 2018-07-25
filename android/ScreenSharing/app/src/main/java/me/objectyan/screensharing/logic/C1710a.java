@@ -392,7 +392,7 @@ public class C1710a {
 
     /* renamed from: a */
     public void m6255a(boolean isFromHome) {
-        if (!CommonParams.jc.equals(CommonParams.jt)) {
+        if (!CommonParams.jc.equals(CommonParams.sChannel)) {
             if (this.f5217k != 4097) {
                 C2201w.m8371a((int) R.string.carlife_update_wait_for_complete, 0);
                 return;

@@ -96,7 +96,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                                 }
                                 this.f3837c.write(layerZ + 200);
                             }
-                            MsgHandlerCenter.m4461b((int) CommonParams.hx);
+                            MsgHandlerCenter.dispatchMessage((int) CommonParams.hx);
                         }
                         String wStr = "";
                         FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -177,7 +177,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                             e3 = e13;
                             out = fileOutputStream;
                             fileInputStream = in;
-                            LogUtil.m4445e(f3834h, e3.toString());
+                            LogUtil.e(f3834h, e3.toString());
                             if (fileInputStream != null) {
                                 try {
                                     fileInputStream.close();
@@ -227,7 +227,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                     } catch (Exception e16) {
                         e3 = e16;
                         fileInputStream = in;
-                        LogUtil.m4445e(f3834h, e3.toString());
+                        LogUtil.e(f3834h, e3.toString());
                         if (fileInputStream != null) {
                             fileInputStream.close();
                         }
@@ -265,7 +265,7 @@ public abstract class BaseReceiverAndConverterThread extends Thread {
                     }
                 } catch (Exception e19) {
                     e3 = e19;
-                    LogUtil.m4445e(f3834h, e3.toString());
+                    LogUtil.e(f3834h, e3.toString());
                     if (fileInputStream != null) {
                         fileInputStream.close();
                     }

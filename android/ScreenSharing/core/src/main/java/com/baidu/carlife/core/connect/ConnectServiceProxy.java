@@ -38,7 +38,7 @@ public class ConnectServiceProxy implements KeepClass {
 
         public void handleMessage(Message msg) {
             if (msg == null) {
-                LogUtil.m4445e(ConnectServiceProxy.f3360a, "handleMessage error: msg is null");
+                LogUtil.e(ConnectServiceProxy.f3360a, "handleMessage error: msg is null");
                 return;
             }
             switch (msg.what) {
@@ -53,8 +53,8 @@ public class ConnectServiceProxy implements KeepClass {
                 default:
                     if (msg.arg1 == 1001) {
                         LogUtil.d(ConnectServiceProxy.f3360a, "Send Msg to Socket, what = 0x" + DigitalTrans.m4317a(msg.what, 8));
-                        if (msg.what == CommonParams.f3536C || ConnectManager.m4228a().m4252g()) {
-                            ConnectManager.m4228a().m4235a((CarlifeCmdMessage) msg.obj);
+                        if (msg.what == CommonParams.f3536C || ConnectManager.newInstance().getIS()) {
+                            ConnectManager.newInstance().write((CarlifeCmdMessage) msg.obj);
                         }
                     }
                     super.handleMessage(msg);

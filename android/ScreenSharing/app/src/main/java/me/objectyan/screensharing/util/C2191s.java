@@ -8,7 +8,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.p054k.C1654n;
 import com.baidu.carlife.p054k.C1654n.C1653a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeStatisticsInfoProto.CarlifeStatisticsInfo;
 import com.baidu.navi.fragment.NaviFragmentManager;
 import com.baidu.navi.track.database.DataBaseConstants;
@@ -75,7 +75,7 @@ public class C2191s {
         } else {
             params.f5087h = 0;
         }
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             i = 1;
         } else {
             i = 0;
@@ -114,7 +114,7 @@ public class C2191s {
                     Long time;
                     if (!TextUtils.isEmpty(errorCode)) {
                         if (C2191s.f7008b == null) {
-                            LogUtil.m4445e(C2191s.f7007a, "MOBILE_LOG_SDCARD_PATH is null ");
+                            LogUtil.e(C2191s.f7007a, "MOBILE_LOG_SDCARD_PATH is null ");
                             return;
                         }
                         C1654n request;
@@ -589,7 +589,7 @@ public class C2191s {
             json.put("item0", item);
             return json;
         } catch (JSONException e) {
-            LogUtil.m4445e(f7007a, e.toString());
+            LogUtil.e(f7007a, e.toString());
             return null;
         }
     }
@@ -617,7 +617,7 @@ public class C2191s {
                             try {
                                 fw2.close();
                             } catch (IOException e2) {
-                                LogUtil.m4445e(f7007a, e2.toString());
+                                LogUtil.e(f7007a, e2.toString());
                                 fw = fw2;
                                 return;
                             }
@@ -627,12 +627,12 @@ public class C2191s {
                         e2 = e3;
                         fw = fw2;
                         try {
-                            LogUtil.m4445e(f7007a, e2.toString());
+                            LogUtil.e(f7007a, e2.toString());
                             if (fw != null) {
                                 try {
                                     fw.close();
                                 } catch (IOException e22) {
-                                    LogUtil.m4445e(f7007a, e22.toString());
+                                    LogUtil.e(f7007a, e22.toString());
                                 }
                             }
                         } catch (Throwable th2) {
@@ -641,7 +641,7 @@ public class C2191s {
                                 try {
                                     fw.close();
                                 } catch (IOException e222) {
-                                    LogUtil.m4445e(f7007a, e222.toString());
+                                    LogUtil.e(f7007a, e222.toString());
                                 }
                             }
                             throw th;
@@ -656,7 +656,7 @@ public class C2191s {
                     }
                 } catch (IOException e4) {
                     e222 = e4;
-                    LogUtil.m4445e(f7007a, e222.toString());
+                    LogUtil.e(f7007a, e222.toString());
                     if (fw != null) {
                         fw.close();
                     }
@@ -715,7 +715,7 @@ public class C2191s {
                     try {
                         br2.close();
                     } catch (IOException e22) {
-                        LogUtil.m4445e(f7007a, e22.toString());
+                        LogUtil.e(f7007a, e22.toString());
                         br = br2;
                         fr = fr2;
                         return resJson;
@@ -731,12 +731,12 @@ public class C2191s {
                 e = e7;
                 fr = fr2;
                 try {
-                    LogUtil.m4445e(f7007a, e.toString());
+                    LogUtil.e(f7007a, e.toString());
                     if (br != null) {
                         try {
                             br.close();
                         } catch (IOException e222) {
-                            LogUtil.m4445e(f7007a, e222.toString());
+                            LogUtil.e(f7007a, e222.toString());
                             return null;
                         }
                     }
@@ -751,7 +751,7 @@ public class C2191s {
                         try {
                             br.close();
                         } catch (IOException e2222) {
-                            LogUtil.m4445e(f7007a, e2222.toString());
+                            LogUtil.e(f7007a, e2222.toString());
                             throw th;
                         }
                     }
@@ -763,12 +763,12 @@ public class C2191s {
             } catch (IOException e8) {
                 e2222 = e8;
                 fr = fr2;
-                LogUtil.m4445e(f7007a, e2222.toString());
+                LogUtil.e(f7007a, e2222.toString());
                 if (br != null) {
                     try {
                         br.close();
                     } catch (IOException e22222) {
-                        LogUtil.m4445e(f7007a, e22222.toString());
+                        LogUtil.e(f7007a, e22222.toString());
                         return null;
                     }
                 }
@@ -780,12 +780,12 @@ public class C2191s {
             } catch (JSONException e9) {
                 e3 = e9;
                 fr = fr2;
-                LogUtil.m4445e(f7007a, e3.toString());
+                LogUtil.e(f7007a, e3.toString());
                 if (br != null) {
                     try {
                         br.close();
                     } catch (IOException e222222) {
-                        LogUtil.m4445e(f7007a, e222222.toString());
+                        LogUtil.e(f7007a, e222222.toString());
                         return null;
                     }
                 }
@@ -807,7 +807,7 @@ public class C2191s {
             }
         } catch (FileNotFoundException e10) {
             e = e10;
-            LogUtil.m4445e(f7007a, e.toString());
+            LogUtil.e(f7007a, e.toString());
             if (br != null) {
                 br.close();
             }
@@ -818,7 +818,7 @@ public class C2191s {
             return null;
         } catch (IOException e11) {
             e222222 = e11;
-            LogUtil.m4445e(f7007a, e222222.toString());
+            LogUtil.e(f7007a, e222222.toString());
             if (br != null) {
                 br.close();
             }
@@ -829,7 +829,7 @@ public class C2191s {
             return null;
         } catch (JSONException e12) {
             e3 = e12;
-            LogUtil.m4445e(f7007a, e3.toString());
+            LogUtil.e(f7007a, e3.toString());
             if (br != null) {
                 br.close();
             }

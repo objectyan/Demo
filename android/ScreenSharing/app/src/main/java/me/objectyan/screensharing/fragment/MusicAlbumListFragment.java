@@ -41,7 +41,7 @@ import com.baidu.carlife.p059c.C1102b.C1096a;
 import com.baidu.carlife.p078f.C1437b;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2186p;
 import com.baidu.carlife.util.C2188r;
 import com.baidu.carlife.util.C2201w;
@@ -296,7 +296,7 @@ public class MusicAlbumListFragment extends ContentFragment implements OnClickLi
                         return;
                     }
                     dataManager.m6609a(false);
-                    LogUtil.m4445e("CarLifeMusic", "MSG_MUSIC_UPDATE_ALBUMLIST-1-");
+                    LogUtil.e("CarLifeMusic", "MSG_MUSIC_UPDATE_ALBUMLIST-1-");
                     return;
                 case CommonParams.dQ /*248*/:
                     dataManager = this.f4555a.f4567g.m6815h(msg.arg1);
@@ -493,7 +493,7 @@ public class MusicAlbumListFragment extends ContentFragment implements OnClickLi
         if (C1343b.m4932a().m4935b()) {
             m5583a(!FragmentManagerCallbackProxy.m4757a().getNaviFragmentManager().isDriving());
         }
-        m5588b(C1663a.m5979a().m5993N());
+        m5588b(CarlifeCoreSDK.m5979a().m5993N());
     }
 
     /* renamed from: b */
@@ -648,7 +648,7 @@ public class MusicAlbumListFragment extends ContentFragment implements OnClickLi
                 }
                 this.f4585y.setVisibility(0);
                 this.f4585y.m8400a(temp, (int) R.string.module_music_thirdparty_download);
-                if (!CommonParams.jc.equals(CommonParams.jt)) {
+                if (!CommonParams.jc.equals(CommonParams.sChannel)) {
                     this.f4585y.m8401a(true);
                     break;
                 } else {
@@ -800,13 +800,13 @@ public class MusicAlbumListFragment extends ContentFragment implements OnClickLi
                 case 1:
                     focusManager.m5256b(m5612p());
                     focusManager.m5268h(m5612p());
-                    LogUtil.m4445e("musicalbum", "DISPLAY_STATUS_UNDOWNLOADED");
+                    LogUtil.e("musicalbum", "DISPLAY_STATUS_UNDOWNLOADED");
                     return;
                 case 2:
                     if (this.f4568h.m6649s() != 1) {
                         focusManager.m5256b(m5610n(), m5611o());
                         focusManager.m5268h(m5611o());
-                        LogUtil.m4445e("musicalbum", "DISPLAY_STATUS_NORMAL");
+                        LogUtil.e("musicalbum", "DISPLAY_STATUS_NORMAL");
                         return;
                     } else if (this.f4557A != null) {
                         focusManager.m5256b(m5610n(), m5613q());
@@ -818,7 +818,7 @@ public class MusicAlbumListFragment extends ContentFragment implements OnClickLi
                 case 3:
                     focusManager.m5256b(m5610n());
                     focusManager.m5268h(m5610n());
-                    LogUtil.m4445e("musicalbum", "DISPLAY_STATUS_LOAD_FAIL");
+                    LogUtil.e("musicalbum", "DISPLAY_STATUS_LOAD_FAIL");
                     return;
                 default:
                     return;

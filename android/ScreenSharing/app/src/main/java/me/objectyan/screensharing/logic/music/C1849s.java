@@ -126,7 +126,7 @@ public class C1849s extends C1790b {
                         this.f5718a.m6618c(model.m);
                         Thread.sleep(4000);
                     } catch (ActivityNotFoundException e) {
-                        LogUtil.m4445e(C1818h.f5590a, "AboveAndroidM ActivityNotFoundException");
+                        LogUtil.e(C1818h.f5590a, "AboveAndroidM ActivityNotFoundException");
                     } catch (InterruptedException e2) {
                         e2.printStackTrace();
                     }
@@ -366,7 +366,7 @@ public class C1849s extends C1790b {
             this.f5721U = m6631h(songId);
         }
         if (this.f5721U == null) {
-            LogUtil.m4445e(C1818h.f5590a, "---onGetSong--songId:" + songId);
+            LogUtil.e(C1818h.f5590a, "---onGetSong--songId:" + songId);
             return;
         }
         this.f5721U.f5922n = downloadSize;

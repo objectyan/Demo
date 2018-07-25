@@ -27,7 +27,7 @@ import com.baidu.carlife.logic.voice.C1912n;
 import com.baidu.carlife.p078f.C1438c;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2177h;
 import com.baidu.carlife.util.C2188r;
 import com.baidu.carlife.util.C2201w;
@@ -225,7 +225,7 @@ public class SettingFragment extends ContentFragment implements OnItemClickListe
                 case 1:
                     switchColorMode = (SwitchButton) view.findViewById(R.id.sw_voice_wakeup);
                     switchColorMode.setVisibility(0);
-                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    switchColorMode.setChecked(!CarlifeCoreSDK.m5979a().m6043j());
                     return;
                 case 2:
                     if (!C1765g.m6424a().m6442c()) {
@@ -287,7 +287,7 @@ public class SettingFragment extends ContentFragment implements OnItemClickListe
                 case 1:
                     switchColorMode = (SwitchButton) view.findViewById(R.id.sw_voice_wakeup);
                     switchColorMode.setVisibility(0);
-                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    switchColorMode.setChecked(!CarlifeCoreSDK.m5979a().m6043j());
                     return;
                 case 2:
                     if (!C1765g.m6424a().m6442c()) {
@@ -344,7 +344,7 @@ public class SettingFragment extends ContentFragment implements OnItemClickListe
                 case 1:
                     switchColorMode = (SwitchButton) view.findViewById(R.id.sw_voice_wakeup);
                     switchColorMode.setVisibility(0);
-                    switchColorMode.setChecked(!C1663a.m5979a().m6043j());
+                    switchColorMode.setChecked(!CarlifeCoreSDK.m5979a().m6043j());
                     return;
                 case 2:
                     if (!C1765g.m6424a().m6442c()) {

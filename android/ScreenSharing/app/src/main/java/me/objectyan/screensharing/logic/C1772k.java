@@ -5,7 +5,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.model.C1928h;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeModuleStatusListProto.CarlifeModuleStatusList;
 import com.baidu.carlife.protobuf.CarlifeModuleStatusListProto.CarlifeModuleStatusList.Builder;
 import com.baidu.carlife.protobuf.CarlifeModuleStatusProto.CarlifeModuleStatus;
@@ -251,12 +251,12 @@ public class C1772k {
 
     /* renamed from: a */
     private void m6482a(CarlifeModuleStatusList carlifeModuleStatusList) {
-        if (carlifeModuleStatusList != null && C1663a.m5979a().m5993N()) {
+        if (carlifeModuleStatusList != null && CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.az);
             command.m4199b(carlifeModuleStatusList.toByteArray());
             command.m4203d(carlifeModuleStatusList.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -273,10 +273,10 @@ public class C1772k {
                 if (carlifeModuleStatusList != null && carlifeModuleStatusList.getModuleStatusCount() > 0) {
                     byte[] sendData = carlifeModuleStatusList.toByteArray();
                     int sendLen = carlifeModuleStatusList.getSerializedSize();
-                    if (C1663a.m5979a().m6001V() && sendLen > 0) {
-                        sendData = C1663a.m5979a().m6038f(sendData, sendLen);
+                    if (CarlifeCoreSDK.m5979a().m6001V() && sendLen > 0) {
+                        sendData = CarlifeCoreSDK.m5979a().m6038f(sendData, sendLen);
                         if (sendData == null) {
-                            LogUtil.m4445e(f5388a, "encrypt failed!");
+                            LogUtil.e(f5388a, "encrypt failed!");
                             return;
                         }
                         sendLen = sendData.length;
@@ -285,8 +285,8 @@ public class C1772k {
                     command.m7055c(CommonParams.bC);
                     command.m7054c();
                     command.m7049a(sendLen);
-                    C1663a.m5979a().m6030d(command.m7050a(), command.m7051b());
-                    C1663a.m5979a().m6030d(sendData, sendLen);
+                    CarlifeCoreSDK.m5979a().m6030d(command.m7050a(), command.m7051b());
+                    CarlifeCoreSDK.m5979a().m6030d(sendData, sendLen);
                 }
             }
         }

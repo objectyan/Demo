@@ -4,7 +4,7 @@ import android.os.Message;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeProtocolVersionMatchStatusProto.CarlifeProtocolVersionMatchStatus;
 import com.baidu.carlife.protobuf.CarlifeProtocolVersionProto.CarlifeProtocolVersion;
 import com.baidu.carlife.protobuf.CarlifeProtocolVersionProto.CarlifeProtocolVersion.Builder;
@@ -89,7 +89,7 @@ public class C1757d {
             }
             return false;
         } catch (Exception ex) {
-            LogUtil.m4445e(f5312a, "computerProtocolMatchStatus fail");
+            LogUtil.e(f5312a, "computerProtocolMatchStatus fail");
             ex.printStackTrace();
             return false;
         }
@@ -115,9 +115,9 @@ public class C1757d {
             protocolM.m4201c(CommonParams.f3536C);
             protocolM.m4199b(f5318g.toByteArray());
             protocolM.m4203d(f5318g.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, protocolM.m4202d(), 1001, 0, protocolM));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, protocolM.getServiceType(), 1001, 0, protocolM));
         } catch (Exception ex) {
-            LogUtil.m4445e(f5312a, "sendProtocolMatchStatus fail");
+            LogUtil.e(f5312a, "sendProtocolMatchStatus fail");
             ex.printStackTrace();
         }
     }

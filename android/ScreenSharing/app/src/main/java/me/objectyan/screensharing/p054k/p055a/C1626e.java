@@ -228,7 +228,7 @@ public abstract class C1626e {
                 notifyResponseListener(-1);
             }
         } catch (JSONException e) {
-            LogUtil.m4445e("NetWork#" + this.tag, "The Response throw JSONException");
+            LogUtil.e("NetWork#" + this.tag, "The Response throw JSONException");
             responseErrorCallBack(-1);
             notifyResponseListener(-1);
         }

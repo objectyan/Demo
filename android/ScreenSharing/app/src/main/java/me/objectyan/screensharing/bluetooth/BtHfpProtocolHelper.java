@@ -6,7 +6,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
 import com.baidu.carlife.core.config.CarlifeConfig;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeBTHfpConnectionProto.CarlifeBTHfpConnection;
 import com.baidu.carlife.protobuf.CarlifeBTHfpConnectionProto.CarlifeBTHfpConnection.Builder;
 import com.baidu.carlife.protobuf.CarlifeBTHfpRequestProto.CarlifeBTHfpRequest;
@@ -29,7 +29,7 @@ public class BtHfpProtocolHelper {
     public static void m3442a(boolean isInternalScreen, boolean isForeground) {
         if (isInternalScreen) {
             LogUtil.d(f2739a, "sendForegroundStatusMsg internal screen capture. ");
-        } else if (C1663a.m5979a().m6046m()) {
+        } else if (CarlifeCoreSDK.m5979a().m6046m()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             if (isForeground) {
                 LogUtil.d(f2739a, "sent foreground message");
@@ -38,7 +38,7 @@ public class BtHfpProtocolHelper {
                 LogUtil.d(f2739a, "sent background message");
                 command.m4201c(CommonParams.ap);
             }
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -48,7 +48,7 @@ public class BtHfpProtocolHelper {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             LogUtil.d(f2739a, "sent foreground message");
             command.m4201c(CommonParams.ao);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -113,7 +113,7 @@ public class BtHfpProtocolHelper {
             btCommand.m4201c(CommonParams.aJ);
             btCommand.m4199b(btHFPConnection.toByteArray());
             btCommand.m4203d(btHFPConnection.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 
@@ -124,7 +124,7 @@ public class BtHfpProtocolHelper {
             btCommand.m4201c(CommonParams.ba);
             btCommand.m4199b(btIdentifyResultInd.toByteArray());
             btCommand.m4203d(btIdentifyResultInd.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 
@@ -165,7 +165,7 @@ public class BtHfpProtocolHelper {
             btCommand.m4201c(CommonParams.f3540G);
             btCommand.m4199b(carlifeBTOOBInfo.toByteArray());
             btCommand.m4203d(carlifeBTOOBInfo.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 
@@ -176,7 +176,7 @@ public class BtHfpProtocolHelper {
             btCommand.m4201c(CommonParams.aT);
             btCommand.m4199b(carlifeBTStartPairReq.toByteArray());
             btCommand.m4203d(carlifeBTStartPairReq.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 
@@ -226,12 +226,12 @@ public class BtHfpProtocolHelper {
     /* renamed from: a */
     public static void m3436a(CarlifeBTHfpRequest hFPRequest) {
         LogUtil.d(f2739a, "MD--->HU : Request");
-        if (hFPRequest != null && C1663a.m5979a().m5993N()) {
+        if (hFPRequest != null && CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage btCommand = new CarlifeCmdMessage(true);
             btCommand.m4201c(CommonParams.aH);
             btCommand.m4199b(hFPRequest.toByteArray());
             btCommand.m4203d(hFPRequest.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, btCommand.m4202d(), 1001, 0, btCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, btCommand.getServiceType(), 1001, 0, btCommand));
         }
     }
 

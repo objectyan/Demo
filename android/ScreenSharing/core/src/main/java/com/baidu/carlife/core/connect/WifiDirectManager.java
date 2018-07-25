@@ -167,7 +167,7 @@ public class WifiDirectManager implements ConnectionInfoListener, PeerListListen
         }
 
         public void onFailure(int reason) {
-            LogUtil.m4445e(WifiDirectManager.f3412e, "WifiDirectManager: Failure to connect to peer!!");
+            LogUtil.e(WifiDirectManager.f3412e, "WifiDirectManager: Failure to connect to peer!!");
         }
     }
 

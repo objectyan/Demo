@@ -116,12 +116,12 @@ public class C1785a implements C0924a {
         /* renamed from: a */
         public void mo1649a(int errorNo, String errorMsg, String packageName, String songId, long downloadSize, long totalSize, boolean stop) {
             if (errorNo != 0) {
-                LogUtil.m4445e("CarLifeMusic", "---onGetSong---error:" + errorNo + "---packageName:" + packageName);
+                LogUtil.e("CarLifeMusic", "---onGetSong---error:" + errorNo + "---packageName:" + packageName);
                 return;
             }
             C1849s dataManager = (C1849s) C1818h.m6730b().m6792b(packageName);
             if (dataManager == null) {
-                LogUtil.m4445e("CarLifeMusic", "---onGetSong--dataManager == Null----packageName:" + packageName);
+                LogUtil.e("CarLifeMusic", "---onGetSong--dataManager == Null----packageName:" + packageName);
             } else {
                 dataManager.m7021a(songId, downloadSize, totalSize, stop);
             }

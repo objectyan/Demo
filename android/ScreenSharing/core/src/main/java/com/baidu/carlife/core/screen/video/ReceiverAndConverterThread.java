@@ -44,7 +44,7 @@ class ReceiverAndConverterThread extends BaseReceiverAndConverterThread {
                 this.c.write((byte) (newRate + 100));
                 this.f3848m = (long) (1000 / newRate);
             } catch (IOException e) {
-                LogUtil.m4445e(f3844i, "changeFrameRate Writer error");
+                LogUtil.e(f3844i, "changeFrameRate Writer error");
                 e.printStackTrace();
             }
         }
@@ -159,7 +159,7 @@ class ReceiverAndConverterThread extends BaseReceiverAndConverterThread {
                         }
                     }
                 } catch (IOException e2) {
-                    LogUtil.m4445e(f3843h, "LocalSocket 读写异常");
+                    LogUtil.e(f3843h, "LocalSocket 读写异常");
                     e2.printStackTrace();
                 } catch (NullPointerException e3) {
                     LogUtil.m4440c(f3843h, "Output Thread closeLocalSocket lead to");
@@ -167,7 +167,7 @@ class ReceiverAndConverterThread extends BaseReceiverAndConverterThread {
                 m4800c();
                 return;
             } catch (IOException e22) {
-                LogUtil.m4445e(f3843h, "connect to localSocket fail");
+                LogUtil.e(f3843h, "connect to localSocket fail");
                 f3847l.m4891v();
                 this.f3849n = null;
                 e22.printStackTrace();

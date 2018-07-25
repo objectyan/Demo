@@ -67,8 +67,8 @@ public class C1769i extends C1759e {
 
         /* renamed from: a */
         void mo1643a() {
-            LogUtil.m4445e(C1769i.f5374d, "index file download fail");
-            MsgHandlerCenter.m4461b(424);
+            LogUtil.e(C1769i.f5374d, "index file download fail");
+            MsgHandlerCenter.dispatchMessage(424);
         }
 
         /* renamed from: a */
@@ -76,8 +76,8 @@ public class C1769i extends C1759e {
             this.f5371a.m6460e(diskFilePath);
             this.f5371a.m6466j();
             if (this.f5371a.m6465i()) {
-                LogUtil.m4445e(C1769i.f5374d, "notify audio track to awake");
-                MsgHandlerCenter.m4461b((int) CommonParams.ew);
+                LogUtil.e(C1769i.f5374d, "notify audio track to awake");
+                MsgHandlerCenter.dispatchMessage((int) CommonParams.ew);
             }
             this.f5371a.m6467k();
         }
@@ -234,10 +234,10 @@ public class C1769i extends C1759e {
         try {
             this.f5380j.m6423a(url, String.valueOf(fileName));
         } catch (SocketTimeoutException e) {
-            LogUtil.m4445e(f5374d, "socket time out");
+            LogUtil.e(f5374d, "socket time out");
             e.printStackTrace();
         } catch (IOException e2) {
-            LogUtil.m4445e(f5374d, "io error");
+            LogUtil.e(f5374d, "io error");
             e2.printStackTrace();
         }
     }

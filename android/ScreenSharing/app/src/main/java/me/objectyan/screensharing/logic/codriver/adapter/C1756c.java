@@ -3,7 +3,7 @@ package com.baidu.carlife.logic.codriver.adapter;
 import android.os.Handler;
 import android.os.Looper;
 import com.baidu.carlife.core.LogUtil;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2201w;
 import com.baidu.che.codriver.sdk.p081a.C1750o;
 import com.baidu.che.codriver.sdk.p081a.C1750o.C2610a;
@@ -45,24 +45,24 @@ public class C1756c implements C1750o {
         if (inputData == null || inputData.length == 0) {
             return -1;
         }
-        int flag = C1663a.m5979a().m6033e(inputData, 12);
+        int flag = CarlifeCoreSDK.m5979a().m6033e(inputData, 12);
         if (flag == -1 || flag != 12) {
-            LogUtil.m4445e(f5306c, "-- get data length failed");
+            LogUtil.e(f5306c, "-- get data length failed");
             return -1;
         }
         int dataLength = ((((inputData[0] << 24) & -16777216) + ((inputData[1] << 16) & 16711680)) + ((inputData[2] << 8) & 65280)) + ((inputData[3] << 0) & 255);
         if (dataLength > inputData.length) {
-            LogUtil.m4445e(f5306c, "---- get data too long!!!-len:" + dataLength);
+            LogUtil.e(f5306c, "---- get data too long!!!-len:" + dataLength);
             return -1;
-        } else if (C1663a.m5979a().m6033e(inputData, dataLength) < 0) {
-            LogUtil.m4445e(f5306c, "-- get data failed---");
+        } else if (CarlifeCoreSDK.m5979a().m6033e(inputData, dataLength) < 0) {
+            LogUtil.e(f5306c, "-- get data failed---");
             return -1;
-        } else if (!C1663a.m5979a().m6001V() || dataLength <= 0) {
+        } else if (!CarlifeCoreSDK.m5979a().m6001V() || dataLength <= 0) {
             return dataLength;
         } else {
-            byte[] recData = C1663a.m5979a().m6040g(inputData, dataLength);
+            byte[] recData = CarlifeCoreSDK.m5979a().m6040g(inputData, dataLength);
             if (recData == null) {
-                LogUtil.m4445e(f5306c, "decrypt failed!");
+                LogUtil.e(f5306c, "decrypt failed!");
                 return -1;
             }
             dataLength = recData.length;
@@ -78,25 +78,25 @@ public class C1756c implements C1750o {
             in.f8633a = null;
             return;
         }
-        int flag = C1663a.m5979a().m6033e(this.f5310d, 12);
+        int flag = CarlifeCoreSDK.m5979a().m6033e(this.f5310d, 12);
         if (flag == -1 || flag != 12) {
-            LogUtil.m4445e(f5306c, "-- get data length failed");
+            LogUtil.e(f5306c, "-- get data length failed");
             in.f8633a = null;
             in.f8634b = -1;
             return;
         }
         int dataLength = ((((this.f5310d[0] << 24) & -16777216) + ((this.f5310d[1] << 16) & 16711680)) + ((this.f5310d[2] << 8) & 65280)) + ((this.f5310d[3] << 0) & 255);
         if (dataLength > this.f5310d.length) {
-            LogUtil.m4445e(f5306c, "---- get data too long!!!-len:" + dataLength);
+            LogUtil.e(f5306c, "---- get data too long!!!-len:" + dataLength);
             in.f8633a = null;
             in.f8634b = -1;
             new Handler(Looper.getMainLooper()).post(new C17551(this));
-        } else if (C1663a.m5979a().m6033e(this.f5310d, dataLength) < 0) {
-            LogUtil.m4445e(f5306c, "-- get data failed---");
+        } else if (CarlifeCoreSDK.m5979a().m6033e(this.f5310d, dataLength) < 0) {
+            LogUtil.e(f5306c, "-- get data failed---");
             in.f8633a = null;
             in.f8634b = -1;
-        } else if (C1663a.m5979a().m6001V()) {
-            in.f8633a = C1663a.m5979a().m6040g(this.f5310d, dataLength);
+        } else if (CarlifeCoreSDK.m5979a().m6001V()) {
+            in.f8633a = CarlifeCoreSDK.m5979a().m6040g(this.f5310d, dataLength);
             if (in.f8633a == null) {
                 in.f8634b = -1;
             } else {

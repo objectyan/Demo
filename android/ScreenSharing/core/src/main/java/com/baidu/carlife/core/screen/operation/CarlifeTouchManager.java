@@ -107,7 +107,7 @@ public class CarlifeTouchManager {
                 this.f3676a.f3700r = new DataInputStream(this.f3676a.f3698p.getInputStream());
                 this.f3676a.f3701s = new DataOutputStream(this.f3676a.f3698p.getOutputStream());
             } catch (Exception e) {
-                LogUtil.m4445e(CarlifeTouchManager.f3685g, "initLocalSocket fail in thread");
+                LogUtil.e(CarlifeTouchManager.f3685g, "initLocalSocket fail in thread");
                 this.f3676a.f3698p = null;
                 e.printStackTrace();
             }
@@ -153,12 +153,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4536a(tx, ty, touchAction.getAction());
                                 return;
                             } catch (InvalidProtocolBufferException e) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION Error");
                                 e.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bF /*425986*/:
                         carlifeMsg = msg.obj;
@@ -171,12 +171,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4535a(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e2) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN Error");
                                 e2.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_DOWN CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bG /*425987*/:
                         carlifeMsg = msg.obj;
@@ -189,12 +189,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4543b(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e22) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP Error");
                                 e22.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_UP CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bH /*425988*/:
                         this.f3677a.f3691A = SystemClock.elapsedRealtime();
@@ -214,12 +214,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4547c(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e222) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE Error");
                                 e222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_ACTION_MOVE CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bI /*425989*/:
                         carlifeMsg = msg.obj;
@@ -232,12 +232,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4550d(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e2222) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK Error");
                                 e2222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_SINGLE_CLICK CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bJ /*425990*/:
                         carlifeMsg = msg.obj;
@@ -250,12 +250,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4556f(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e22222) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK Error");
                                 e22222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_DOUBLE_CLICK CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bK /*425991*/:
                         carlifeMsg = msg.obj;
@@ -268,12 +268,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4558g(tx, ty);
                                 return;
                             } catch (InvalidProtocolBufferException e222222) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS Error");
                                 e222222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_CMD_TOUCH_LONG_PRESS CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bL /*425992*/:
                         carlifeMsg = msg.obj;
@@ -284,12 +284,12 @@ public class CarlifeTouchManager {
                                 this.f3677a.m4555f(code);
                                 return;
                             } catch (InvalidProtocolBufferException e2222222) {
-                                LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE Error");
+                                LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE Error");
                                 e2222222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_CAR_HARD_KEY_CODE CarlifeCmdMessage is null");
                         return;
                     case CommonParams.bN /*425994*/:
                         if (this.f3677a.f3692C) {
@@ -307,12 +307,12 @@ public class CarlifeTouchManager {
                                     }
                                     return;
                                 } catch (InvalidProtocolBufferException e22222222) {
-                                    LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN Error");
+                                    LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN Error");
                                     e22222222.printStackTrace();
                                     return;
                                 }
                             }
-                            LogUtil.m4445e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN CarlifeCmdMessage is null");
+                            LogUtil.e(CarlifeTouchManager.f3685g, "MSG_TOUCH_UI_ACTION_BEGIN CarlifeCmdMessage is null");
                             return;
                         }
                         return;
@@ -372,7 +372,7 @@ public class CarlifeTouchManager {
         HandlerThread handlerThread = new HandlerThread(f3686h);
         handlerThread.start();
         this.f3695m = new C1275a(this, handlerThread.getLooper());
-        MsgHandlerCenter.m4460a(this.f3695m);
+        MsgHandlerCenter.registerMessageHandler(this.f3695m);
         this.f3705w = CarlifeScreenUtil.m4331a().m4351h();
         this.f3706x = CarlifeScreenUtil.m4331a().m4352i();
         this.f3697o = new Instrumentation();
@@ -385,7 +385,7 @@ public class CarlifeTouchManager {
         try {
             new C12741(this).start();
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "initLocalSocket fail");
+            LogUtil.e(f3685g, "initLocalSocket fail");
             this.f3698p = null;
             e.printStackTrace();
         }
@@ -397,7 +397,7 @@ public class CarlifeTouchManager {
         try {
             this.f3700r.close();
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "mReader close fail");
+            LogUtil.e(f3685g, "mReader close fail");
             e.printStackTrace();
         } finally {
             this.f3700r = null;
@@ -405,7 +405,7 @@ public class CarlifeTouchManager {
         try {
             this.f3701s.close();
         } catch (Exception e2) {
-            LogUtil.m4445e(f3685g, "mWriter close fail");
+            LogUtil.e(f3685g, "mWriter close fail");
             e2.printStackTrace();
         } finally {
             this.f3701s = null;
@@ -413,7 +413,7 @@ public class CarlifeTouchManager {
         try {
             this.f3698p.close();
         } catch (Exception e22) {
-            LogUtil.m4445e(f3685g, "mSocket close fail");
+            LogUtil.e(f3685g, "mSocket close fail");
             e22.printStackTrace();
         } finally {
             this.f3698p = null;
@@ -486,16 +486,16 @@ public class CarlifeTouchManager {
             this.f3701s.writeInt(y);
             this.f3701s.writeInt(action);
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "Write to LocalSocket Failed");
+            LogUtil.e(f3685g, "Write to LocalSocket Failed");
             e.printStackTrace();
             try {
                 if (this.f3702t % 20 == 0) {
-                    LogUtil.m4445e(f3685g, "cntShowToast: " + this.f3702t);
-                    MsgHandlerCenter.m4461b((int) CommonParams.fl);
+                    LogUtil.e(f3685g, "cntShowToast: " + this.f3702t);
+                    MsgHandlerCenter.dispatchMessage((int) CommonParams.fl);
                 }
                 this.f3702t++;
             } catch (Exception ex) {
-                LogUtil.m4445e(f3685g, "Write to LocalSocket Failed 1");
+                LogUtil.e(f3685g, "Write to LocalSocket Failed 1");
                 ex.printStackTrace();
             }
         }
@@ -524,7 +524,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 0);
         }
     }
@@ -541,7 +541,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 1);
         }
     }
@@ -558,7 +558,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 2);
         }
     }
@@ -581,7 +581,7 @@ public class CarlifeTouchManager {
             this.f3697o.sendPointerSync(event2);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 0);
             m4523b(x, y, 1);
         }
@@ -626,7 +626,7 @@ public class CarlifeTouchManager {
             this.f3697o.sendPointerSync(event2);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 0);
             m4523b(x, y, 1);
         }
@@ -656,7 +656,7 @@ public class CarlifeTouchManager {
             this.f3697o.sendPointerSync(event5);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "Please Enter into Carlife App!");
+            LogUtil.e(f3685g, "Please Enter into Carlife App!");
             m4523b(x, y, 0);
             m4523b(x, y, 2);
             m4523b(x, y, 2);
@@ -668,7 +668,7 @@ public class CarlifeTouchManager {
     /* renamed from: i */
     public void m4560i() {
         try {
-            LogUtil.m4445e(f3685g, "onKeyBackEvent keycode=4");
+            LogUtil.e(f3685g, "onKeyBackEvent keycode=4");
             if (CarlifeConfig.m4065a()) {
                 this.f3696n.m4510a(4);
             } else {
@@ -676,7 +676,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeyBackEvent get execption!");
+            LogUtil.e(f3685g, "onKeyBackEvent get execption!");
         }
     }
 
@@ -690,7 +690,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
         }
     }
 
@@ -704,7 +704,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
         }
     }
 
@@ -718,7 +718,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorUpEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorUpEvent get execption!");
         }
     }
 
@@ -732,7 +732,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightDownEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightDownEvent get execption!");
         }
     }
 
@@ -746,7 +746,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorLeftDownEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorLeftDownEvent get execption!");
         }
     }
 
@@ -760,7 +760,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightUpEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightUpEvent get execption!");
         }
     }
 
@@ -774,7 +774,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorLeftUpEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorLeftUpEvent get execption!");
         }
     }
 
@@ -788,7 +788,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorDownEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorDownEvent get execption!");
         }
     }
 
@@ -802,7 +802,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeyOkEvent get execption!");
+            LogUtil.e(f3685g, "onKeyOkEvent get execption!");
         }
     }
 
@@ -816,7 +816,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
         }
     }
 
@@ -830,7 +830,7 @@ public class CarlifeTouchManager {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onKeySelectorRightEvent get execption!");
+            LogUtil.e(f3685g, "onKeySelectorRightEvent get execption!");
         }
     }
 
@@ -843,7 +843,7 @@ public class CarlifeTouchManager {
                 this.f3697o.sendKeyDownUpSync(28);
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "onKeyClear get execption:" + e.toString());
+            LogUtil.e(f3685g, "onKeyClear get execption:" + e.toString());
         }
     }
 
@@ -856,7 +856,7 @@ public class CarlifeTouchManager {
                 this.f3697o.sendKeyDownUpSync(67);
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
         }
     }
 
@@ -869,7 +869,7 @@ public class CarlifeTouchManager {
                 this.f3697o.sendKeyDownUpSync(num + 7);
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
         }
     }
 
@@ -882,7 +882,7 @@ public class CarlifeTouchManager {
                 this.f3697o.sendKeyDownUpSync(157);
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3685g, "onKeyDelete get execption:" + e.toString());
+            LogUtil.e(f3685g, "onKeyDelete get execption:" + e.toString());
         }
     }
 
@@ -893,10 +893,10 @@ public class CarlifeTouchManager {
             if (this.f3694E == null || !this.f3694E.mo1339a(keycode)) {
                 switch (keycode) {
                     case 2:
-                        MsgHandlerCenter.m4456a((int) CommonParams.fS, 0, 0, null);
+                        MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fS, 0, 0, null);
                         return;
                     case 3:
-                        MsgHandlerCenter.m4456a((int) CommonParams.fT, 0, 0, null);
+                        MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fT, 0, 0, null);
                         return;
                     case 6:
                         m4570s();
@@ -961,11 +961,11 @@ public class CarlifeTouchManager {
                         return;
                 }
                 e.printStackTrace();
-                LogUtil.m4445e(f3685g, "onHardKeyCodeEvent get exception!");
+                LogUtil.e(f3685g, "onHardKeyCodeEvent get exception!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3685g, "onHardKeyCodeEvent get exception!");
+            LogUtil.e(f3685g, "onHardKeyCodeEvent get exception!");
         }
     }
 

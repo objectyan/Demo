@@ -32,7 +32,7 @@ public class C2128p extends C2110a {
 
     /* renamed from: a */
     public void mo1772a(String url, String error) {
-        LogUtil.m4445e("radio_request", "error = " + error);
+        LogUtil.e("radio_request", "error = " + error);
         this.f6788f = null;
         if (this.f6787e != null) {
             this.f6787e.mo1693a(error);
@@ -41,7 +41,7 @@ public class C2128p extends C2110a {
 
     /* renamed from: a */
     public void mo1771a(int statusCode, String response) {
-        LogUtil.m4445e("radio_request", "statusCode = " + statusCode);
+        LogUtil.e("radio_request", "statusCode = " + statusCode);
         if (statusCode == 200) {
             List<MusicSongModel> songModels = this.f6786d.m7991a(response);
             if (songModels == null || songModels.size() <= 0) {

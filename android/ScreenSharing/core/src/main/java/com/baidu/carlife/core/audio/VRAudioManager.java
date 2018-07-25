@@ -11,7 +11,7 @@ import com.baidu.platform.comapi.UIMsg.m_AppUI;
 /* renamed from: com.baidu.carlife.core.audio.q */
 public class VRAudioManager extends AudioSourceManagerBase {
     /* renamed from: a */
-    private static final String f3145a = (AudioUtil.f3010n + VRAudioManager.class.getSimpleName());
+    private static final String f3145a = (AudioUtil.AUDIO + VRAudioManager.class.getSimpleName());
     /* renamed from: b */
     private PCMPackageHead f3146b = new PCMPackageHead();
     /* renamed from: c */
@@ -28,13 +28,13 @@ public class VRAudioManager extends AudioSourceManagerBase {
     private AESManager f3152h = new AESManager();
 
     public VRAudioManager() {
-        AudioUtil.m3882a();
+        AudioUtil.newInstance();
         this.f3149e = 12;
     }
 
     /* renamed from: a */
-    public synchronized void mo1448a(int sampleRate, int channelConfig, int sampleFormat) {
-        if (AudioUtil.m3883h()) {
+    public synchronized void send(int sampleRate, int channelConfig, int sampleFormat) {
+        if (AudioUtil.getIs()) {
             int revisedSampleRate;
             int revisedChannelConfig;
             int revisedFormat;
@@ -63,8 +63,8 @@ public class VRAudioManager extends AudioSourceManagerBase {
     }
 
     /* renamed from: a */
-    public synchronized void mo1434a() {
-        if (AudioUtil.m3883h()) {
+    public synchronized void send() {
+        if (AudioUtil.getIs()) {
             LogUtil.d(f3145a, "VR stop");
             this.f3146b.m4053c(CommonParams.bB);
             this.f3146b.m4047a(0);
@@ -73,32 +73,32 @@ public class VRAudioManager extends AudioSourceManagerBase {
     }
 
     /* renamed from: a */
-    public synchronized void mo1449a(byte[] data, int len) {
+    public synchronized void send(byte[] data, int len) {
         byte[] sendData = data;
         int sendLen = len;
-        if (EncryptSetupManager.m4120a().m4135c() && len > 0) {
+        if (EncryptSetupManager.newInstance().getFlag() && len > 0) {
             sendData = this.f3152h.m4112a(data, len);
             if (sendData == null) {
-                LogUtil.m4445e(f3145a, "encrypt failed!");
+                LogUtil.e(f3145a, "encrypt failed!");
             } else {
                 sendLen = sendData.length;
             }
         }
-        if (AudioUtil.m3883h()) {
+        if (AudioUtil.getIs()) {
             LogUtil.d(f3145a, "VR write " + sendLen);
             this.f3146b.m4053c(CommonParams.bA);
             this.f3146b.m4047a(sendLen);
             this.f3146b.m4052c();
-            this.f3151g.m3909a(this.f3146b.m4048a(), this.f3149e, sendData, sendLen, this.f3150f);
-            m4059b(this.f3150f.m4057a(), this.f3150f.m4058b());
+            this.f3151g.merge(this.f3146b.m4048a(), this.f3149e, sendData, sendLen, this.f3150f);
+            m4059b(this.f3150f.getData(), this.f3150f.getSize());
         }
     }
 
     /* renamed from: b */
     private int m4059b(byte[] data, int size) {
-        if (AudioUtil.m3882a().m3895g()) {
+        if (AudioUtil.newInstance().isBlueToothMode()) {
             return -1;
         }
-        return ConnectManager.m4228a().m4251g(data, size);
+        return ConnectManager.newInstance().writeVR(data, size);
     }
 }

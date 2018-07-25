@@ -22,7 +22,7 @@ public class AudioUtil {
     /* renamed from: h */
     public static final int f3004h = 12;
     /* renamed from: i */
-    public static final int f3005i = 20480;
+    public static final int M_CHUNK_LENGTH = 20480;
     /* renamed from: j */
     public static final int f3006j = 2;
     /* renamed from: k */
@@ -32,9 +32,9 @@ public class AudioUtil {
     /* renamed from: m */
     public static final int f3009m = 100;
     /* renamed from: n */
-    public static final String f3010n = "Audio-";
+    public static final String AUDIO = "Audio-";
     /* renamed from: o */
-    private static AudioUtil f3011o = null;
+    private static AudioUtil sAudioUtil = null;
     /* renamed from: p */
     private static final int f3012p = 0;
     /* renamed from: q */
@@ -42,32 +42,32 @@ public class AudioUtil {
     /* renamed from: r */
     private static final int f3014r = 1;
     /* renamed from: s */
-    private int f3015s = 0;
+    private int mMode = 0;
     /* renamed from: t */
-    private int f3016t = 0;
+    private int mSR = 0;
 
     /* compiled from: AudioUtil */
     /* renamed from: com.baidu.carlife.core.audio.a$a */
-    private enum C1158a {
+    private enum EnumAudioMode {
         INDEPENDENT_CHANNEL_MODE(0),
         BLUE_TOOTH_MODE(1);
-        
-        /* renamed from: c */
-        private int f2976c;
 
-        private C1158a(int mode) {
-            this.f2976c = mode;
+        /* renamed from: c */
+        private int mMode;
+
+        private EnumAudioMode(int mode) {
+            this.mMode = mode;
         }
 
         /* renamed from: a */
-        public int m3881a() {
-            return this.f2976c;
+        public int getMode() {
+            return this.mMode;
         }
     }
 
     /* compiled from: AudioUtil */
     /* renamed from: com.baidu.carlife.core.audio.a$b */
-    public enum C1159b {
+    public enum EnumAudioStatus {
         TTS_START,
         TTS_END,
         PHONE_START,
@@ -76,7 +76,7 @@ public class AudioUtil {
 
     /* compiled from: AudioUtil */
     /* renamed from: com.baidu.carlife.core.audio.a$c */
-    public enum C1160c {
+    public enum EnumAudioModule {
         MP3_MOUDLE,
         PCM_MODULE,
         INVALID_MODULE
@@ -84,7 +84,7 @@ public class AudioUtil {
 
     /* compiled from: AudioUtil */
     /* renamed from: com.baidu.carlife.core.audio.a$d */
-    public enum C1161d {
+    public enum EnumAudioState {
         INIT,
         STOP,
         PAUSE,
@@ -95,7 +95,7 @@ public class AudioUtil {
 
     /* compiled from: AudioUtil */
     /* renamed from: com.baidu.carlife.core.audio.a$e */
-    public enum C1162e {
+    public enum EnumAudioType {
         MP3_MUSIC,
         LEBO,
         NULL
@@ -105,11 +105,11 @@ public class AudioUtil {
     }
 
     /* renamed from: a */
-    public static AudioUtil m3882a() {
-        if (f3011o == null) {
-            f3011o = new AudioUtil();
+    public static AudioUtil newInstance() {
+        if (sAudioUtil == null) {
+            sAudioUtil = new AudioUtil();
         }
-        return f3011o;
+        return sAudioUtil;
     }
 
     /* renamed from: a */
@@ -146,54 +146,54 @@ public class AudioUtil {
     }
 
     /* renamed from: b */
-    public void m3889b() {
-        this.f3016t = 0;
+    public void initSR() {
+        this.mSR = 0;
     }
 
     /* renamed from: a */
-    public void m3884a(int sr) {
-        this.f3016t = sr;
+    public void setSR(int sr) {
+        this.mSR = sr;
     }
 
     /* renamed from: c */
-    public int m3891c() {
-        return this.f3016t;
+    public int getSR() {
+        return this.mSR;
     }
 
     /* renamed from: d */
-    public boolean m3892d() {
-        if (m3891c() == 1) {
+    public boolean isSR() {
+        if (getSR() == 1) {
             return true;
         }
         return false;
     }
 
     /* renamed from: e */
-    public void m3893e() {
-        this.f3015s = 0;
+    public void setMode() {
+        this.mMode = 0;
     }
 
     /* renamed from: b */
-    public void m3890b(int mode) {
-        this.f3015s = mode;
+    public void setMode(int mode) {
+        this.mMode = mode;
     }
 
     /* renamed from: f */
-    public int m3894f() {
-        return this.f3015s;
+    public int getMode() {
+        return this.mMode;
     }
 
     /* renamed from: g */
-    public boolean m3895g() {
-        if (m3894f() == C1158a.BLUE_TOOTH_MODE.m3881a()) {
+    public boolean isBlueToothMode() {
+        if (getMode() == EnumAudioMode.BLUE_TOOTH_MODE.getMode()) {
             return true;
         }
         return false;
     }
 
     /* renamed from: h */
-    public static boolean m3883h() {
-        CarlifeUtil.m4358a();
-        return CarlifeUtil.m4386y();
+    public static boolean getIs() {
+        CarlifeUtil.newInstance();
+        return CarlifeUtil.getIs();
     }
 }

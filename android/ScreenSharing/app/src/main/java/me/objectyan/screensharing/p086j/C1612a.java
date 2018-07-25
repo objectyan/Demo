@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo;
 import com.baidu.carlife.protobuf.CarlifeNaviNextTurnInfoProto.CarlifeNaviNextTurnInfo.Builder;
 import com.baidu.navi.track.datashop.TrackDataShop;
@@ -341,7 +341,7 @@ public class C1612a {
             hudCommand.m4201c(CommonParams.ag);
             hudCommand.m4199b(carlifeNaviNextTurnInfo.toByteArray());
             hudCommand.m4203d(carlifeNaviNextTurnInfo.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, hudCommand.m4202d(), 1001, 0, hudCommand));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, hudCommand.getServiceType(), 1001, 0, hudCommand));
         }
     }
 

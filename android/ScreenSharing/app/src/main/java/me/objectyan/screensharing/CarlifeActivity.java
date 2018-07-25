@@ -105,7 +105,7 @@ import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p085i.C1609a;
 import com.baidu.carlife.p085i.C1609a.C1608a;
 import com.baidu.carlife.p086j.C1612a;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.p100n.C1977e;
 import com.baidu.carlife.platform.C1984a;
 import com.baidu.carlife.protobuf.CarlifeAuthenRequestProto.CarlifeAuthenRequest;
@@ -392,7 +392,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                     new Handler(Looper.getMainLooper()).post(new C09191(this));
                     return true;
                 case 34:
-                    MsgHandlerCenter.m4461b(4160);
+                    MsgHandlerCenter.dispatchMessage(4160);
                     return true;
                 default:
                     return false;
@@ -411,28 +411,28 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
         /* renamed from: a */
         public void mo1340a() {
-            LogUtil.m4445e(CarlifeActivity.f2351c, "onScreenOn");
+            LogUtil.e(CarlifeActivity.f2351c, "onScreenOn");
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.al);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
 
         /* renamed from: b */
         public void mo1341b() {
-            LogUtil.m4445e(CarlifeActivity.f2351c, "onScreenOff");
+            LogUtil.e(CarlifeActivity.f2351c, "onScreenOff");
             if (!CarlifeConfig.m4065a()) {
                 CarlifeCmdMessage command = new CarlifeCmdMessage(true);
                 command.m4201c(CommonParams.am);
-                C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+                CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
             }
         }
 
         /* renamed from: c */
         public void mo1342c() {
-            LogUtil.m4445e(CarlifeActivity.f2351c, "onUserPresent");
+            LogUtil.e(CarlifeActivity.f2351c, "onUserPresent");
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.m4201c(CommonParams.an);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -618,7 +618,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
             }
 
             public void run() {
-                C1663a.m5979a().m5994O();
+                CarlifeCoreSDK.m5979a().m5994O();
             }
         }
 
@@ -656,7 +656,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         this.f2350a.f2364H.m4716a((int) R.drawable.com_bg);
                         return;
                     case 1002:
-                        LogUtil.m4445e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_DISCONNECTED---------");
+                        LogUtil.e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_DISCONNECTED---------");
                         CarlifeUtil.m4360b(-1);
                         C2252a.m8531a().m8563a(false);
                         MsgHandlerCenter.m4452a((int) CommonParams.fm);
@@ -670,9 +670,9 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         C1343b.m4932a().m4936c();
                         CarlifeUtil.m4361b(null);
                         C2252a.m8531a().m8567d();
-                        C1663a.m5979a().m6034e(false);
+                        CarlifeCoreSDK.m5979a().m6034e(false);
                         C1765g.m6424a().m6440b(false);
-                        C1663a.m5979a().m5992M();
+                        CarlifeCoreSDK.m5979a().m5992M();
                         C1765g.m6424a().m6444e();
                         this.f2350a.m3041G();
                         if (!this.f2350a.f2376T) {
@@ -699,11 +699,11 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         }
                         C1609a.m5871a().m5878a(false);
                         this.f2350a.m3055a(this.f2350a.f2385o.getString(R.string.usb_toast_disconnected));
-                        C1663a.m5979a().m5996Q();
+                        CarlifeCoreSDK.m5979a().m5996Q();
                         C1915a.m7321a().m7327a(false);
                         this.f2350a.m3105b(1002);
                         CommonParams.jv = true;
-                        MsgHandlerCenter.m4461b(3008);
+                        MsgHandlerCenter.dispatchMessage(3008);
                         LightnessControlManager.m4481b().m4486a(4200, false, 0);
                         LightnessControlManager.m4481b().m4496e(false);
                         LightnessControlManager.m4481b().m4490b(4201);
@@ -738,15 +738,15 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         this.f2350a.m3032A();
                         C1774l.m6498c().m6507a(this.f2350a.f2390t);
                         C2103a.m7880a().m7887a(this.f2350a.f2385o);
-                        C1663a.m5979a().m6002W();
+                        CarlifeCoreSDK.m5979a().m6002W();
                         C2716c.m10146a(CommonParams.sVehicleChannel.getChannel());
                         return;
                     case 1003:
-                        LogUtil.m4445e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_CONNECTING---------");
-                        C1663a.m5979a().m6034e(false);
+                        LogUtil.e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_CONNECTING---------");
+                        CarlifeCoreSDK.m5979a().m6034e(false);
                         this.f2350a.m3041G();
                         this.f2350a.sendBroadcast(new Intent(CommonParams.ft));
-                        MsgHandlerCenter.m4461b(3008);
+                        MsgHandlerCenter.dispatchMessage(3008);
                         if (!this.f2350a.f2393w) {
                             StatisticManager.onEventStart(this.f2350a.f2385o, StatisticConstants.HU_CONNECT_MOBILE_AVG_TIME, "HU_CONNECT_MOBILE_AVG_TIME");
                             this.f2350a.f2393w = true;
@@ -758,13 +758,13 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         NavTrajectoryController.hasConnected = true;
                         this.f2350a.m3095z();
                         this.f2350a.m3117m();
-                        LogUtil.m4445e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_CONNECTED---------");
+                        LogUtil.e(CarlifeActivity.f2351c, "---------CONNECT_STATUS_CONNECTED---------");
                         this.f2350a.m3055a(this.f2350a.f2385o.getString(R.string.usb_toast_connected));
-                        C1663a.m5979a().m5995P();
+                        CarlifeCoreSDK.m5979a().m5995P();
                         UsbStateReceiver.m3857a().m3871d();
                         this.f2350a.m3105b(1004);
                         CommonParams.jv = false;
-                        MsgHandlerCenter.m4461b((int) CommonParams.gN);
+                        MsgHandlerCenter.dispatchMessage((int) CommonParams.gN);
                         if (this.f2350a.f2393w) {
                             this.f2350a.f2393w = false;
                             StatisticManager.onEventEnd(this.f2350a.f2385o, StatisticConstants.HU_CONNECT_MOBILE_AVG_TIME, "HU_CONNECT_MOBILE_AVG_TIME");
@@ -839,7 +839,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         return;
                     case CommonParams.gL /*4007*/:
                         if (isLaunchInit) {
-                            MsgHandlerCenter.m4461b(3007);
+                            MsgHandlerCenter.dispatchMessage(3007);
                             return;
                         } else {
                             sendEmptyMessageDelayed(CommonParams.gL, 200);
@@ -861,7 +861,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                             if (dataManager == null) {
                                 this.f2350a.m3055a(this.f2350a.getResources().getString(R.string.module_music_toast_thirdparty_connectrefuse));
                                 return;
-                            } else if (C2186p.m8304a().m8312a(CommonParams.ih, true)) {
+                            } else if (C2186p.m8304a().m8312a(CommonParams.SOCKET_VIDEO_WIFI_PORT, true)) {
                                 LogUtil.d("ouyang", "-MSG_MAIN_THIRDPARTY_CONNECT--UserGuiding--");
                                 sendMessageDelayed(Message.obtain(msg), 500);
                                 return;
@@ -898,7 +898,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         }
                         return;
                     case CommonParams.gV /*4027*/:
-                        if (C1663a.m5979a().m5993N()) {
+                        if (CarlifeCoreSDK.m5979a().m5993N()) {
                             LightnessControlManager.m4481b().m4502j();
                             this.f2350a.m3089w();
                             return;
@@ -911,7 +911,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         }
                         return;
                     case CommonParams.hx /*4251*/:
-                        if (C1663a.m5979a().m5993N()) {
+                        if (CarlifeCoreSDK.m5979a().m5993N()) {
                             CarLifeSettings.m4069a().m4081e(true);
                             this.f2350a.f2364H.mo1480b();
                             if (this.f2350a.f2357A) {
@@ -955,14 +955,14 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                             C1757d.m6389a().m6395f();
                             C1757d.m6389a().m6397h();
                             int matchStatus = C1757d.m6389a().m6396g().getMatchStatus();
-                            LogUtil.m4445e(CarlifeActivity.f2351c, "Protocol Version Match Version: " + matchStatus);
+                            LogUtil.e(CarlifeActivity.f2351c, "Protocol Version Match Version: " + matchStatus);
                             if (matchStatus == 1) {
                                 C2195t.m8345a(this.f2350a, this.f2350a.f2364H);
-                                C1663a.m5979a().m6034e(true);
+                                CarlifeCoreSDK.m5979a().m6034e(true);
                                 C1747c.m6337a().m6342e();
                                 postDelayed(new C09333(this), 500);
                                 if (C1818h.m6730b().m6828p()) {
-                                    MsgHandlerCenter.m4461b(407);
+                                    MsgHandlerCenter.dispatchMessage(407);
                                 }
                                 C1915a.m7321a().m7327a(true);
                                 LightnessControlManager.m4481b().m4496e(true);
@@ -972,11 +972,11 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                                 C1371b.m4999b();
                                 return;
                             }
-                            C1663a.m5979a().m6034e(false);
+                            CarlifeCoreSDK.m5979a().m6034e(false);
                             MsgMainHandler.m4465a().postDelayed(new C09344(this), 500);
                             return;
                         } catch (InvalidProtocolBufferException e2) {
-                            LogUtil.m4445e(CarlifeActivity.f2351c, "Get Car Protocol Version Info Error");
+                            LogUtil.e(CarlifeActivity.f2351c, "Get Car Protocol Version Info Error");
                             e2.printStackTrace();
                             return;
                         }
@@ -986,12 +986,12 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                             C1747c.m6337a().m6338a(info);
                             LogUtil.d(CarlifeActivity.f2351c, info.toString());
                             if (info.getDevice().equals("iRTOS")) {
-                                C1663a.m5979a().m6015a(true);
+                                CarlifeCoreSDK.m5979a().m6015a(true);
                                 return;
                             }
                             return;
                         } catch (Exception ex) {
-                            LogUtil.m4445e(CarlifeActivity.f2351c, "get hu info error");
+                            LogUtil.e(CarlifeActivity.f2351c, "get hu info error");
                             ex.printStackTrace();
                             return;
                         }
@@ -1222,10 +1222,10 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                     case CommonParams.aR /*98378*/:
                         try {
                             if (CarlifeAuthenResult.parseFrom(msg.obj.m4205f()).getAuthenResult()) {
-                                LogUtil.m4445e(CarlifeActivity.f2351c, "MSG_CMD_HU_AUTHEN_RESULT= true");
+                                LogUtil.e(CarlifeActivity.f2351c, "MSG_CMD_HU_AUTHEN_RESULT= true");
                                 return;
                             } else {
-                                LogUtil.m4445e(CarlifeActivity.f2351c, "MSG_CMD_HU_AUTHEN_RESULT= false");
+                                LogUtil.e(CarlifeActivity.f2351c, "MSG_CMD_HU_AUTHEN_RESULT= false");
                                 return;
                             }
                         } catch (Exception e322) {
@@ -1286,9 +1286,9 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         if (carlifeTouchMsg != null) {
                             try {
                                 CarlifeTouchAction touchAction = CarlifeTouchAction.parseFrom(carlifeTouchMsg.m4205f());
-                                if (C1663a.m5979a().m6048o() > 0 && C1663a.m5979a().m6049p() > 0) {
-                                    int tx = (touchAction.getX() * C1663a.m5979a().m6050q()) / C1663a.m5979a().m6048o();
-                                    int ty = (touchAction.getY() * C1663a.m5979a().m6051r()) / C1663a.m5979a().m6049p();
+                                if (CarlifeCoreSDK.m5979a().m6048o() > 0 && CarlifeCoreSDK.m5979a().m6049p() > 0) {
+                                    int tx = (touchAction.getX() * CarlifeCoreSDK.m5979a().m6050q()) / CarlifeCoreSDK.m5979a().m6048o();
+                                    int ty = (touchAction.getY() * CarlifeCoreSDK.m5979a().m6051r()) / CarlifeCoreSDK.m5979a().m6049p();
                                     LogUtil.d(CarlifeActivity.f2351c, "MSG_CMD_TOUCH_ACTION: " + ("x = " + tx + ", y = " + ty + ", action = " + touchAction.getAction()));
                                     long time = SystemClock.uptimeMillis();
                                     this.f2350a.dispatchTouchEvent(MotionEvent.obtain(time, time, touchAction.getAction(), (float) tx, (float) ty, 0));
@@ -1296,12 +1296,12 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                                 }
                                 return;
                             } catch (InvalidProtocolBufferException e2222) {
-                                LogUtil.m4445e(CarlifeActivity.f2351c, "MSG_CMD_TOUCH_ACTION Error");
+                                LogUtil.e(CarlifeActivity.f2351c, "MSG_CMD_TOUCH_ACTION Error");
                                 e2222.printStackTrace();
                                 return;
                             }
                         }
-                        LogUtil.m4445e(CarlifeActivity.f2351c, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
+                        LogUtil.e(CarlifeActivity.f2351c, "MSG_CMD_TOUCH_ACTION CarlifeCmdMessage is null");
                         return;
                     case CommonParams.f3534A /*2147418113*/:
                         LogUtil.m4426a().m4450d();
@@ -1310,10 +1310,10 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                         return;
                 }
             } catch (Exception ex2) {
-                LogUtil.m4445e(CarlifeActivity.f2351c, "handle message exception");
+                LogUtil.e(CarlifeActivity.f2351c, "handle message exception");
                 ex2.printStackTrace();
             }
-            LogUtil.m4445e(CarlifeActivity.f2351c, "handle message exception");
+            LogUtil.e(CarlifeActivity.f2351c, "handle message exception");
             ex2.printStackTrace();
         }
 
@@ -1375,7 +1375,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
     }
 
     protected void onCreate(Bundle savedInstanceState) {
-        C1663a.m5979a().m5999T();
+        CarlifeCoreSDK.m5979a().m5999T();
         LogUtil.d(f2351c, "onCreate");
         this.f2395y = System.currentTimeMillis();
         LogUtil.m4428a(f2351c);
@@ -1398,7 +1398,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         try {
             if (CommonParams.fx.equals(getIntent().getAction())) {
                 LogUtil.d(f2351c, "USB Accessory attached onCreate");
-                C1663a.m5979a().m6010a((Context) this, (UsbAccessory) getIntent().getParcelableExtra("accessory"));
+                CarlifeCoreSDK.m5979a().m6010a((Context) this, (UsbAccessory) getIntent().getParcelableExtra("accessory"));
             }
         } catch (Exception ex) {
             LogUtil.d(f2351c, "start usb accessory attached fail");
@@ -1441,7 +1441,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
     protected void onStop() {
         super.onStop();
         LogUtil.d(f2351c, "SEND: ONSTOP()");
-        if (CarlifeConfig.m4065a() && C1663a.m5979a().m5993N()) {
+        if (CarlifeConfig.m4065a() && CarlifeCoreSDK.m5979a().m5993N()) {
             LogUtil.d(f2351c, " onStop internal screen capture ");
         } else {
             LogUtil.d(f2351c, " onStop fullscreen capture, Invoke ForegroundService.start ");
@@ -1510,11 +1510,11 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         BtDeviceManager.m3360a().m3379b();
         PhoneStateService.m8212a(this);
         this.f2386p = true;
-        C1663a.m5979a().m6045l();
+        CarlifeCoreSDK.m5979a().m6045l();
         if (this.f2389s != null) {
             this.f2389s.cancelAll();
         }
-        C1663a.m5979a().m5991L();
+        CarlifeCoreSDK.m5979a().m5991L();
         UsbStateReceiver.m3857a().m3870c();
         C1710a.m6207a().m6256b();
         m3110f();
@@ -1541,7 +1541,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         }
         CarLifeSettings.m4069a().m4091j(true);
         this.f2357A = false;
-        C1663a.m5979a().m6039g();
+        CarlifeCoreSDK.m5979a().m6039g();
         CarlifeLifeCycleManager.m3276a().m3283d();
         this.f2364H.m4738n();
         C1912n.m7270a().m7318q();
@@ -1561,7 +1561,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         MapViewFactory.getInstance().saveMapCache();
         MapViewFactory.getInstance().saveMapStatus();
         C1912n.m7270a().m7317p();
-        C1663a.m5979a().m6044k();
+        CarlifeCoreSDK.m5979a().m6044k();
         CarlifeLifeCycleManager.m3276a().m3284e();
         this.f2364H.m4739o();
     }
@@ -1615,9 +1615,9 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         }
         CarlifeLifeCycleManager.m3276a().m3277a(intent);
         try {
-            if (CommonParams.fx.equals(getIntent().getAction()) && !C1663a.m5979a().m5993N()) {
+            if (CommonParams.fx.equals(getIntent().getAction()) && !CarlifeCoreSDK.m5979a().m5993N()) {
                 LogUtil.d(f2351c, "USB Accessory attached onNewIntent");
-                C1663a.m5979a().m6010a((Context) this, (UsbAccessory) getIntent().getParcelableExtra("accessory"));
+                CarlifeCoreSDK.m5979a().m6010a((Context) this, (UsbAccessory) getIntent().getParcelableExtra("accessory"));
             }
         } catch (Exception ex) {
             LogUtil.d(f2351c, "start usb accessory attached fail");
@@ -1633,7 +1633,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
     /* renamed from: d */
     public void m3108d() {
-        if (!C2204x.m8382b() || !C1663a.m5979a().m5993N()) {
+        if (!C2204x.m8382b() || !CarlifeCoreSDK.m5979a().m5993N()) {
             LogUtil.d(f2351c, "Open Exit app dialog");
             if (this.f2380j == null) {
                 this.f2380j = new C1953c(this).m7442b((int) R.string.alert_quit).m7435a((int) R.string.alert_quit_app_content).m7457g(17).m7447c((int) R.string.alert_confirm).m7458q().m7450d((int) R.string.alert_cancel);
@@ -1797,9 +1797,9 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                 }
             } else if (keyCode == 25) {
                 LogUtil.d(f2351c, "KeyEvent.KEYCODE_VOLUME_DOWN is detected!");
-                C1663a.m5979a().m6009a((Context) this);
+                CarlifeCoreSDK.m5979a().m6009a((Context) this);
             } else if (keyCode == 85) {
-                C1663a.m5979a().m5988I();
+                CarlifeCoreSDK.m5979a().m5988I();
             }
         } else if (this.f2392v != null && this.f2392v.size() > 0) {
             for (int i = 0; i < this.f2392v.size(); i++) {
@@ -1849,7 +1849,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
     /* renamed from: a */
     private boolean m3056a(MotionEvent ev) {
-        if (!C1663a.m5979a().m5993N()) {
+        if (!CarlifeCoreSDK.m5979a().m5993N()) {
             return false;
         }
         if (LightnessControlManager.m4481b().m4499g()) {
@@ -1905,15 +1905,15 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
             file.mkdir();
         }
         LogUtil.m4426a().m4448b();
-        C1663a.m5979a().m6008a(this, CarlifeActivityService.class, this, C2188r.m8331b(R.drawable.com_ic_carlife_black), R.drawable.ic_launcher);
-        C1663a.m5979a().m6052s();
+        CarlifeCoreSDK.m5979a().m6008a(this, CarlifeActivityService.class, this, C2188r.m8331b(R.drawable.com_ic_carlife_black), R.drawable.ic_launcher);
+        CarlifeCoreSDK.m5979a().m6052s();
         CarLifeSettings.m4069a().m4073a(0);
         BtHfpManager.m3397a().m3413a(new BtHfpStateCallbackImp());
         ScreenUtil.getInstance().init(this);
         LightnessControlManager.m4481b().m4487a((WindowLightnessChangeListener) this);
         C1747c.m6337a().m6339b();
         C1757d.m6389a().m6391b();
-        C1663a.m5979a().m6022b((Context) this);
+        CarlifeCoreSDK.m5979a().m6022b((Context) this);
         UsbStateReceiver.m3857a().m3868a((Context) this);
         m3094y();
         this.f2390t.postDelayed(new Runnable(this) {
@@ -1940,7 +1940,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
             /* renamed from: a */
             public boolean mo1338a() {
-                return C1663a.m5979a().m5989J();
+                return CarlifeCoreSDK.m5979a().m5989J();
             }
         });
         TipTool.setToastinInterface(new C2199v());
@@ -1987,7 +1987,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
     /* renamed from: y */
     private void m3094y() {
-        C1663a.m5979a().m6007a(AppContext.m3876a().getResources().getDimensionPixelOffset(R.dimen.frag_main_bottom_bar_height), new C09212(this));
+        CarlifeCoreSDK.m5979a().m6007a(AppContext.m3876a().getResources().getDimensionPixelOffset(R.dimen.frag_main_bottom_bar_height), new C09212(this));
     }
 
     /* renamed from: z */
@@ -2066,7 +2066,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                     LogUtil.d(f2351c, "firstGpsComing updateGpsInfo end");
                 }
             } catch (InvalidProtocolBufferException e) {
-                LogUtil.m4445e(f2351c, "Get MSG_CMD_CAR_GPS Error");
+                LogUtil.e(f2351c, "Get MSG_CMD_CAR_GPS Error");
                 e.printStackTrace();
             }
         }
@@ -2088,14 +2088,14 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                 MsgHandlerCenter.m4462b(CommonParams.hJ, nSpeed);
             }
         } catch (InvalidProtocolBufferException e) {
-            LogUtil.m4445e(f2351c, "Get MSG_CMD_CAR_VELOCITY Error");
+            LogUtil.e(f2351c, "Get MSG_CMD_CAR_VELOCITY Error");
             e.printStackTrace();
         }
     }
 
     /* renamed from: b */
     private void m3063b(boolean isForegroud) {
-        if (C1663a.m5979a().m6046m()) {
+        if (CarlifeCoreSDK.m5979a().m6046m()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             if (isForegroud) {
                 LogUtil.d(f2351c, "send foreground message");
@@ -2104,7 +2104,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
                 LogUtil.d(f2351c, "send background message");
                 command.m4201c(CommonParams.ap);
             }
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 
@@ -2200,12 +2200,12 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.m4445e("zzt", "requestCode:  " + requestCode + " resultCode:  " + resultCode + "  data: " + data);
+        LogUtil.e("zzt", "requestCode:  " + requestCode + " resultCode:  " + resultCode + "  data: " + data);
         if (requestCode == 4353 && resultCode == -1) {
             C1765g.m6424a();
             C1765g.m6432g();
         }
-        C1663a.m5979a().m6006a(requestCode, resultCode, data);
+        CarlifeCoreSDK.m5979a().m6006a(requestCode, resultCode, data);
     }
 
     /* renamed from: m */
@@ -2236,7 +2236,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         if (this.f2361E == null) {
             this.f2361E = new C2328t(this);
         }
-        if (this.f2360D.m5971a() && C1663a.m5979a().m5993N()) {
+        if (this.f2360D.m5971a() && CarlifeCoreSDK.m5979a().m5993N()) {
             this.f2364H.showDialog(this.f2361E);
         } else if (this.f2364H.isDialogShown()) {
             this.f2364H.dismissDialog(this.f2361E);
@@ -2292,7 +2292,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
     public void mo1355p() {
         LogUtil.d(f2351c, "onVehicleDisconnect");
         setVehicleConnected(false);
-        if (C1663a.m5979a().m6047n() != null) {
+        if (CarlifeCoreSDK.m5979a().m6047n() != null) {
             attachHost();
         }
         FragmentManagerCallbackProxy.m4757a().m4761a((OnFragmentListener) this);
@@ -2328,7 +2328,7 @@ public class CarlifeActivity extends BaseActivity implements ConnectionInfoListe
         this.f2366J = (WifiP2pManager) getSystemService("wifip2p");
         this.f2367K = this.f2366J.initialize(this, getMainLooper(), null);
         if (this.f2366J == null || this.f2367K == null) {
-            LogUtil.m4445e(f2352d, "Activity: InitWifiP2pManager error!");
+            LogUtil.e(f2352d, "Activity: InitWifiP2pManager error!");
         }
         this.f2371O = WifiP2pActionListener.m4306a();
         m3045K();

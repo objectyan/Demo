@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import com.baidu.carlife.R;
 import com.baidu.carlife.core.screen.presentation.FragmentManagerCallbackProxy;
 import com.baidu.carlife.logic.C1856o;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2188r;
 import com.baidu.carlife.view.PressTextView;
 
@@ -90,7 +90,7 @@ public class HomeBigIconAdapter extends BaseAdapter {
             itemTV.setAlpha(0.5f);
         }
         if (this.f2488h == 2) {
-            if (!C1663a.m5979a().m5993N() && C1856o.m7042a().m7045b() && position == 0) {
+            if (!CarlifeCoreSDK.m5979a().m5993N() && C1856o.m7042a().m7045b() && position == 0) {
                 m3180a(itemTV, true);
             } else {
                 m3180a(itemTV, false);

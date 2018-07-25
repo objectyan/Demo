@@ -375,7 +375,7 @@ public abstract class C1790b {
                 }
                 return;
             }
-            LogUtil.m4445e(C1818h.f5590a, "openApp " + packageName + " fail, can't find ResolveInfo");
+            LogUtil.e(C1818h.f5590a, "openApp " + packageName + " fail, can't find ResolveInfo");
         } catch (NameNotFoundException e2) {
             e2.printStackTrace();
         }

@@ -11,7 +11,7 @@ import com.baidu.carlife.p075d.C1431b.C1423e;
 import com.baidu.carlife.p075d.C1431b.C1424f;
 import com.baidu.carlife.p075d.C1431b.C1425g;
 import com.baidu.carlife.p075d.C1431b.C1430l;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 
 public class MainTopBarView extends RelativeLayout {
     /* renamed from: a */
@@ -46,7 +46,7 @@ public class MainTopBarView extends RelativeLayout {
         ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(C1425g.main_comm_top_bar, this, true);
         BatteryView batteryView = (BatteryView) findViewById(C1424f.view_battery);
         TimeTextView timeView = (TimeTextView) findViewById(C1424f.view_time);
-        m8463b(C1663a.m5979a().m5993N());
+        m8463b(CarlifeCoreSDK.m5979a().m5993N());
         if (this.f7190c == 1) {
             batteryView.setType(1);
             timeView.setTextColor(getResources().getColor(C1421c.text_navi_black_title));

@@ -18,7 +18,7 @@ import com.baidu.carlife.core.config.CarlifeConfig;
 import com.baidu.carlife.custom.elhyf.C1371b;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.p100n.C1977e;
 import com.baidu.carlife.view.DiscoverCardView;
 import com.baidu.navi.fragment.ContentFragment;
@@ -150,7 +150,7 @@ public class HomeMoreFragment extends ContentFragment implements OnClickListener
     private void m5519a() {
         int count;
         LogUtil.d(f4483a, "setupView");
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             if (this.f4497o) {
                 if (CarlifeConfig.m4067c()) {
                     this.f4489g.m8406a((int) R.drawable.home_ic_quit);
@@ -256,7 +256,7 @@ public class HomeMoreFragment extends ContentFragment implements OnClickListener
     private void m5524c() {
         CarlifeCmdMessage command = new CarlifeCmdMessage(true);
         command.m4201c(CommonParams.au);
-        C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+        CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     public void onResume() {

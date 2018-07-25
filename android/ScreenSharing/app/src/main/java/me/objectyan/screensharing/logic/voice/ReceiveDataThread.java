@@ -37,7 +37,7 @@ public class ReceiveDataThread extends Thread {
         r6 = 1;
         r0.<init>(r1, r2, r3, r4, r5, r6);	 Catch:{ IllegalArgumentException -> 0x0040 }
     L_0x0017:
-        r1 = com.baidu.carlife.p087l.C1663a.m5979a();
+        r1 = com.baidu.carlife.p087l.CarlifeCoreSDK.m5979a();
         r2 = r13.inputData;
         r3 = 12;
         r1 = r1.m6033e(r2, r3);
@@ -52,7 +52,7 @@ public class ReceiveDataThread extends Thread {
     L_0x0030:
         r1 = "CarLifeVoice";
         r2 = "-- get data length failed";
-        com.baidu.carlife.core.LogUtil.m4445e(r1, r2);
+        com.baidu.carlife.core.LogUtil.e(r1, r2);
     L_0x0039:
         r1 = 0;
         r13.inputData = r1;
@@ -99,10 +99,10 @@ public class ReceiveDataThread extends Thread {
         r3 = r13.dataLength;
         r2 = r2.append(r3);
         r2 = r2.toString();
-        com.baidu.carlife.core.LogUtil.m4445e(r1, r2);
+        com.baidu.carlife.core.LogUtil.e(r1, r2);
         goto L_0x0039;
     L_0x008f:
-        r1 = com.baidu.carlife.p087l.C1663a.m5979a();
+        r1 = com.baidu.carlife.p087l.CarlifeCoreSDK.m5979a();
         r2 = r13.inputData;
         r3 = r13.dataLength;
         r1 = r1.m6033e(r2, r3);
@@ -112,7 +112,7 @@ public class ReceiveDataThread extends Thread {
     L_0x00a1:
         r1 = "CarLifeVoice";
         r2 = "-- get data failed---";
-        com.baidu.carlife.core.LogUtil.m4445e(r1, r2);
+        com.baidu.carlife.core.LogUtil.e(r1, r2);
         goto L_0x0039;
     L_0x00ab:
         r1 = "CarLifeVoice";
@@ -124,14 +124,14 @@ public class ReceiveDataThread extends Thread {
         r2 = r2.append(r3);
         r2 = r2.toString();
         com.baidu.carlife.core.LogUtil.d(r1, r2);
-        r1 = com.baidu.carlife.p087l.C1663a.m5979a();
+        r1 = com.baidu.carlife.p087l.CarlifeCoreSDK.m5979a();
         r1 = r1.m6001V();
         if (r1 == 0) goto L_0x00f7;
     L_0x00d1:
         r1 = r13.dataLength;
         if (r1 <= 0) goto L_0x00f7;
     L_0x00d5:
-        r1 = com.baidu.carlife.p087l.C1663a.m5979a();
+        r1 = com.baidu.carlife.p087l.CarlifeCoreSDK.m5979a();
         r2 = r13.inputData;
         r3 = r13.dataLength;
         r1 = r1.m6040g(r2, r3);
@@ -141,7 +141,7 @@ public class ReceiveDataThread extends Thread {
     L_0x00e7:
         r1 = "CarLifeVoice";
         r2 = "decrypt failed!";
-        com.baidu.carlife.core.LogUtil.m4445e(r1, r2);
+        com.baidu.carlife.core.LogUtil.e(r1, r2);
         goto L_0x003f;
     L_0x00f2:
         r1 = r13.inputData;

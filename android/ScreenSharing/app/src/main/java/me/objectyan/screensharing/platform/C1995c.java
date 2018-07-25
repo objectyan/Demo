@@ -323,7 +323,7 @@ public class C1995c {
             Message.obtain(this.f6436g, 1, appName).sendToTarget();
             return true;
         }
-        LogUtil.m4445e("CarLifePlatform", "PlatformManager.getAlbumList() invalid appname " + appName);
+        LogUtil.e("CarLifePlatform", "PlatformManager.getAlbumList() invalid appname " + appName);
         return false;
     }
 
@@ -332,13 +332,13 @@ public class C1995c {
         if (m7611d(appName)) {
             LogUtil.d("CarLifePlatform", "PlatformManager.getSongList() app=" + appName + " id=" + songListId + " pn=" + pn + " rn=" + rn);
             if (TextUtils.isEmpty(songListId)) {
-                LogUtil.m4445e("CarLifePlatform", "PlatformManager.requestSongList() invalid songListId: " + songListId);
+                LogUtil.e("CarLifePlatform", "PlatformManager.requestSongList() invalid songListId: " + songListId);
                 return;
             }
             Message.obtain(this.f6436g, 2, new Object[]{appName, songListId, Integer.valueOf(pn), Integer.valueOf(rn)}).sendToTarget();
             return;
         }
-        LogUtil.m4445e("CarLifePlatform", "PlatformManager.requestSongList() invalid appname " + appName);
+        LogUtil.e("CarLifePlatform", "PlatformManager.requestSongList() invalid appname " + appName);
     }
 
     /* renamed from: a */
@@ -348,7 +348,7 @@ public class C1995c {
             Message.obtain(this.f6436g, 3, new Pair(appName, song)).sendToTarget();
             return;
         }
-        LogUtil.m4445e("CarLifePlatform", "PlatformManager.getDataWithid() invalid appname " + appName);
+        LogUtil.e("CarLifePlatform", "PlatformManager.getDataWithid() invalid appname " + appName);
     }
 
     /* renamed from: b */
@@ -358,7 +358,7 @@ public class C1995c {
             Message.obtain(this.f6436g, 4, appName).sendToTarget();
             return;
         }
-        LogUtil.m4445e("CarLifePlatform", "PlatformManager.stopDownload() invalid appname " + appName);
+        LogUtil.e("CarLifePlatform", "PlatformManager.stopDownload() invalid appname " + appName);
     }
 
     /* renamed from: c */
@@ -368,7 +368,7 @@ public class C1995c {
             Message.obtain(this.f6436g, 5, appName).sendToTarget();
             return;
         }
-        LogUtil.m4445e("CarLifePlatform", "PlatformManager.disconnectApp() invalid appname " + appName);
+        LogUtil.e("CarLifePlatform", "PlatformManager.disconnectApp() invalid appname " + appName);
     }
 
     /* renamed from: d */

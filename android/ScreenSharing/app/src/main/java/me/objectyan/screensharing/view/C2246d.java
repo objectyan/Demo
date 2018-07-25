@@ -25,6 +25,6 @@ public abstract class C2246d implements OnClickListener {
             mo1799a(v);
             return;
         }
-        LogUtil.m4445e(f7324a, "you click too fast, need to throw away");
+        LogUtil.e(f7324a, "you click too fast, need to throw away");
     }
 }

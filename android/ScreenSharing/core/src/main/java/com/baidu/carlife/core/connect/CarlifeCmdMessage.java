@@ -32,7 +32,7 @@ public class CarlifeCmdMessage implements KeepClass {
     /* renamed from: a */
     public boolean m4195a(byte[] msg) {
         if (msg.length != 8) {
-            LogUtil.m4445e(TAG, "fromByteArray fail: length not equal");
+            LogUtil.e(TAG, "fromByteArray fail: length not equal");
             return false;
         }
         try {
@@ -41,7 +41,7 @@ public class CarlifeCmdMessage implements KeepClass {
             setServiceType(ByteConvert.m4178b(new byte[]{msg[4], msg[5], msg[6], msg[7]}));
             return true;
         } catch (Exception e) {
-            LogUtil.m4445e(TAG, "fromByteArray fail: get exception");
+            LogUtil.e(TAG, "fromByteArray fail: get exception");
             e.printStackTrace();
             return false;
         }
@@ -77,7 +77,7 @@ public class CarlifeCmdMessage implements KeepClass {
             } catch (Exception e2) {
                 e = e2;
                 i2 = i;
-                LogUtil.m4445e(TAG, "toByteArray fail: get exception");
+                LogUtil.e(TAG, "toByteArray fail: get exception");
                 e.printStackTrace();
                 return null;
             }

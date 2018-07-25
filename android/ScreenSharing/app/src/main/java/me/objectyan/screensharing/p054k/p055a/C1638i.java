@@ -347,7 +347,7 @@ public class C1638i extends Thread implements Comparable<C1638i> {
                         out = out2;
                         m5927a(C1634b.ERROR, C1633a.ERROR_HTTP);
                         e2.printStackTrace();
-                        LogUtil.m4445e(f5034b, "IOException");
+                        LogUtil.e(f5034b, "IOException");
                         if (in != null) {
                             try {
                                 in.close();
@@ -368,7 +368,7 @@ public class C1638i extends Thread implements Comparable<C1638i> {
                         out = out2;
                         m5927a(C1634b.ERROR, C1633a.ERROR_HTTP);
                         e3.printStackTrace();
-                        LogUtil.m4445e(f5034b, "OtherException");
+                        LogUtil.e(f5034b, "OtherException");
                         if (in != null) {
                             try {
                                 in.close();
@@ -428,7 +428,7 @@ public class C1638i extends Thread implements Comparable<C1638i> {
                 e2 = e13;
                 m5927a(C1634b.ERROR, C1633a.ERROR_HTTP);
                 e2.printStackTrace();
-                LogUtil.m4445e(f5034b, "IOException");
+                LogUtil.e(f5034b, "IOException");
                 if (in != null) {
                     in.close();
                 }
@@ -442,7 +442,7 @@ public class C1638i extends Thread implements Comparable<C1638i> {
                 e3 = e14;
                 m5927a(C1634b.ERROR, C1633a.ERROR_HTTP);
                 e3.printStackTrace();
-                LogUtil.m4445e(f5034b, "OtherException");
+                LogUtil.e(f5034b, "OtherException");
                 if (in != null) {
                     in.close();
                 }

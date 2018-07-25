@@ -1,7 +1,7 @@
 package com.baidu.carlife.p085i;
 
 import android.os.Bundle;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.navi.BaiduNaviSDKManager;
 import com.baidu.navi.cruise.BCruiser;
 import com.baidu.navi.location.LocationManager;
@@ -63,7 +63,7 @@ public class C1609a {
 
     /* renamed from: b */
     public boolean m5880b() {
-        return this.f4917c && C1663a.m5979a().m5993N();
+        return this.f4917c && CarlifeCoreSDK.m5979a().m5993N();
     }
 
     /* renamed from: a */

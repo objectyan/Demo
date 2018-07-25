@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.baidu.carlife.R;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2188r;
 import com.baidu.navi.protocol.model.RoutePlanDataStruct;
 
@@ -132,7 +132,7 @@ public class BladeView extends View {
                 invalidate();
                 break;
             case 2:
-                if (!C1663a.m5979a().m5993N() && oldChoose != c && c >= 0 && c < this.f7752g.length) {
+                if (!CarlifeCoreSDK.m5979a().m5993N() && oldChoose != c && c >= 0 && c < this.f7752g.length) {
                     m8929a(c);
                     this.f7746a = c;
                     invalidate();

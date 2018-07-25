@@ -25,7 +25,7 @@ import com.baidu.carlife.p077e.C1435a;
 import com.baidu.carlife.p078f.C1438c;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2201w;
 import com.baidu.carlife.view.CommonTipView;
 import com.baidu.carlife.view.p104a.C2251b;
@@ -295,7 +295,7 @@ public class HomeDiscoverParkListFragment extends ContentFragment implements C09
 
     /* renamed from: c */
     private boolean m5430c() {
-        if (!C1663a.m5979a().m5993N() && C1435a.m5226a().m5235g()) {
+        if (!CarlifeCoreSDK.m5979a().m5993N() && C1435a.m5226a().m5235g()) {
             String cities = C1435a.m5226a().m5233e();
             LogUtil.m4440c("Framework", "cities=" + cities + ", focusUI=" + C1765g.m6424a().m6442c());
             DistrictInfo mDistrictInfo = GeoLocateModel.getInstance().getCurrentDistrict();
@@ -315,7 +315,7 @@ public class HomeDiscoverParkListFragment extends ContentFragment implements C09
             } else {
                 this.f4415a.setVisibility(8);
             }
-            if (C1663a.m5979a().m5993N()) {
+            if (CarlifeCoreSDK.m5979a().m5993N()) {
                 this.f4416b.setVisibility(8);
             } else if (m5428b()) {
                 this.f4416b.setVisibility(0);

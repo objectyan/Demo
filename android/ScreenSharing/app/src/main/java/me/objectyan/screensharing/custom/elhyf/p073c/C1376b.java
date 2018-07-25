@@ -14,7 +14,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeStopReceiveDataProto.CarlifeStopReceiveData;
 import com.baidu.carlife.protobuf.CarlifeStopReceiveDataProto.CarlifeStopReceiveData.Builder;
 import com.baidu.carlife.protobuf.CarlifeStopReceiveDataProto.CarlifeStopReceiveData.Reason;
@@ -297,7 +297,7 @@ public class C1376b {
         if (((float) VDeviceAPI.getSdcardFreeSpace()) < ((float) len) / 1024.0f) {
             m5033a(id, Reason.NoSpace);
             C2201w.m8373a(this.f4023k.getString(R.string.home_my_mydvr_toast_no_space), 1);
-        } else if (C1663a.m5979a().m5993N()) {
+        } else if (CarlifeCoreSDK.m5979a().m5993N()) {
             int progress;
             int nTotalSize;
             File file = ((C1372a) this.f4024l.get(Integer.valueOf(id))).m5028e();
@@ -474,7 +474,7 @@ public class C1376b {
     /* renamed from: a */
     private synchronized int m5033a(int id, Reason reason) {
         int a;
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             if (this.f4024l.containsKey(Integer.valueOf(id))) {
                 m5041a((C1372a) this.f4024l.get(Integer.valueOf(id)));
             }
@@ -486,7 +486,7 @@ public class C1376b {
             msg.m4199b(proto.toByteArray());
             msg.m4203d(proto.getSerializedSize());
             msg.m4201c(CommonParams.f3548O);
-            a = C1663a.m5979a().m6003a(msg);
+            a = CarlifeCoreSDK.m5979a().m6003a(msg);
         } else {
             a = -1;
         }

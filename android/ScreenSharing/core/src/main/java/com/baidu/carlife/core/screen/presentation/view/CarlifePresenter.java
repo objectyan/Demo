@@ -26,7 +26,7 @@ import com.baidu.carlife.protobuf.fragment.PhoneFragment;
 import com.baidu.carlife.protobuf.logic.music.C1790b;
 import com.baidu.carlife.protobuf.logic.music.C1818h;
 import com.baidu.carlife.protobuf.logic.voice.C1912n;
-import com.baidu.carlife.protobuf.p087l.C1663a;
+import com.baidu.carlife.protobuf.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.util.C2201w;
 import com.baidu.carlife.protobuf.view.C2342g;
 import com.baidu.carlife.protobuf.view.dialog.C1953c;
@@ -146,7 +146,7 @@ public class CarlifePresenter {
         this.f3758d = FragmentManagerCallbackProxy.m4757a();
         this.f3758d.getNaviFragmentManager().setUIListener(view);
         this.f3764j = new C1305a(this, Looper.getMainLooper());
-        MsgHandlerCenter.m4460a(this.f3764j);
+        MsgHandlerCenter.registerMessageHandler(this.f3764j);
         m4658k();
     }
 
@@ -206,7 +206,7 @@ public class CarlifePresenter {
             } else {
                 this.f3758d.showLatestHomeFragment();
             }
-            MsgHandlerCenter.m4461b((int) CommonParams.gR);
+            MsgHandlerCenter.dispatchMessage((int) CommonParams.gR);
             m4659l();
         }
     }
@@ -217,11 +217,11 @@ public class CarlifePresenter {
             LogUtil.m4428a(PhoneFragment.f4685a);
             this.f3758d.showFragment(519, null);
             this.f3757c.updateMainDisplayStatus(4002);
-            MsgHandlerCenter.m4461b((int) CommonParams.gR);
+            MsgHandlerCenter.dispatchMessage((int) CommonParams.gR);
             C2342g.m8864e().m8893c();
             C2342g.m8864e().m8894d();
-            if (C1663a.m5979a().m5993N() && !CarLifeSettings.m4069a().m4093k()) {
-                MsgHandlerCenter.m4453a((int) CommonParams.fV, 200);
+            if (CarlifeCoreSDK.m5979a().m5993N() && !CarLifeSettings.m4069a().m4093k()) {
+                MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fV, 200);
             }
         }
     }
@@ -230,10 +230,10 @@ public class CarlifePresenter {
     private void m4661n() {
         if (!this.f3758d.m4765b(m4683h())) {
             LogUtil.m4428a(C1818h.f5590a);
-            MsgHandlerCenter.m4461b((int) CommonParams.gR);
+            MsgHandlerCenter.dispatchMessage((int) CommonParams.gR);
             m4662o();
             this.f3757c.updateMainDisplayStatus(4004);
-            if (C1663a.m5979a().m5993N() && this.f3762h) {
+            if (CarlifeCoreSDK.m5979a().m5993N() && this.f3762h) {
                 this.f3762h = false;
                 m4665r();
             }
@@ -268,7 +268,7 @@ public class CarlifePresenter {
                     this.f3758d.showFragment(17, null);
                 }
                 this.f3757c.updateMainDisplayStatus(4003);
-                MsgHandlerCenter.m4461b((int) CommonParams.gR);
+                MsgHandlerCenter.dispatchMessage((int) CommonParams.gR);
                 StatisticManager.onEvent(StatisticConstants.MAP_USAGE, StatisticConstants.MAP_BAIDU_MAP);
                 m4659l();
                 return;
@@ -291,7 +291,7 @@ public class CarlifePresenter {
                     this.f3758d.showFragment(17, bundle);
                 }
                 this.f3757c.updateMainDisplayStatus(4003);
-                MsgHandlerCenter.m4461b((int) CommonParams.gR);
+                MsgHandlerCenter.dispatchMessage((int) CommonParams.gR);
                 StatisticManager.onEvent(StatisticConstants.MAP_USAGE, StatisticConstants.MAP_BAIDU_MAP);
                 m4659l();
                 return;
@@ -348,10 +348,10 @@ public class CarlifePresenter {
 
     /* renamed from: q */
     private void m4664q() {
-        if (C1663a.m5979a().m5993N()) {
+        if (CarlifeCoreSDK.m5979a().m5993N()) {
             CarlifeCmdMessage command = new CarlifeCmdMessage(true);
             command.setServiceType(CommonParams.aG);
-            C1663a.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         }
     }
 

@@ -7,7 +7,7 @@ import com.baidu.carlife.core.CarlifeUtil;
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeAuthenResponseProto.CarlifeAuthenResponse;
 import com.baidu.carlife.protobuf.CarlifeAuthenResponseProto.CarlifeAuthenResponse.Builder;
 import com.baidu.carlife.protobuf.CarlifeAuthenResultProto.CarlifeAuthenResult;
@@ -74,7 +74,7 @@ public class C0967a {
         CarlifeAuthenResponse response = builder.build();
         command.m4199b(response.toByteArray());
         command.m4203d(response.getSerializedSize());
-        C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+        CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: b */
@@ -136,7 +136,7 @@ public class C0967a {
         CarlifeAuthenResult response = builder.build();
         command.m4199b(response.toByteArray());
         command.m4203d(response.getSerializedSize());
-        C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+        CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
     }
 
     /* renamed from: d */

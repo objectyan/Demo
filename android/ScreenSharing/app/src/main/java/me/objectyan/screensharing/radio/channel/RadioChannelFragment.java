@@ -29,7 +29,7 @@ import com.baidu.carlife.logic.music.C1818h;
 import com.baidu.carlife.logic.p088a.C1702j;
 import com.baidu.carlife.p078f.C1440d;
 import com.baidu.carlife.p078f.C1443g;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.radio.p079c.C2139a;
 import com.baidu.carlife.radio.p079c.C2139a.C1491a;
 import com.baidu.carlife.radio.p079c.C2142b;
@@ -305,7 +305,7 @@ public class RadioChannelFragment extends ContentFragment {
     }
 
     protected View onCreateContentView(LayoutInflater inflater) {
-        if (CarlifeScreenUtil.m4334m() && C1663a.m5979a().m5993N()) {
+        if (CarlifeScreenUtil.m4334m() && CarlifeCoreSDK.m5979a().m5993N()) {
             this.f6853c = inflater.inflate(R.layout.fragment_radio_chnl_big_screen, null);
         } else {
             this.f6853c = inflater.inflate(R.layout.fragment_radio_channel, null);
@@ -332,7 +332,7 @@ public class RadioChannelFragment extends ContentFragment {
 
     public void onResume() {
         super.onResume();
-        MsgHandlerCenter.m4461b((int) CommonParams.gS);
+        MsgHandlerCenter.dispatchMessage((int) CommonParams.gS);
     }
 
     public void onPause() {

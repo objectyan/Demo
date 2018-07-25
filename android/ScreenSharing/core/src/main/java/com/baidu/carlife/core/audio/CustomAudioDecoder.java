@@ -10,93 +10,93 @@ import com.baidu.carlife.core.MsgHandlerCenter;
 /* renamed from: com.baidu.carlife.core.audio.g */
 public class CustomAudioDecoder {
     /* renamed from: a */
-    private static final String f3035a = (AudioUtil.f3010n + CustomAudioDecoder.class.getSimpleName());
+    private static final String Tag = (AudioUtil.AUDIO + CustomAudioDecoder.class.getSimpleName());
     /* renamed from: b */
-    private int f3036b;
+    private int mSampleRate;
     /* renamed from: c */
-    private int f3037c;
+    private int mChannelConfig;
     /* renamed from: d */
-    private int f3038d;
+    private int mReSampleRate;
     /* renamed from: e */
-    private AudioTrack f3039e;
+    private AudioTrack mAudioTrack;
     /* renamed from: f */
-    private int f3040f = 0;
+    private int mWeiChatVol = 0;
     /* renamed from: g */
-    private AudioDecoderInterface f3041g = new MediaCodecDecoder();
+    private AudioDecoderInterface mMediaCodecDecoder = new MediaCodecDecoder();
     /* renamed from: h */
-    private Pair f3042h = new Pair();
+    private Pair mPairOne = new Pair();
     /* renamed from: i */
-    private Pair f3043i = new Pair();
+    private Pair mPairTwo = new Pair();
     /* renamed from: j */
-    private byte[] f3044j = null;
+    private byte[] decoderOut = null;
     /* renamed from: k */
-    private Object f3045k = new Object();
+    private Object mObject = new Object();
 
     /* renamed from: a */
-    public boolean m3938a(String filePath) {
-        synchronized (this.f3045k) {
-            LogUtil.d(f3035a, "init() is called");
-            if (this.f3041g.mo1445a(filePath, null) == -1) {
-                Log.i(f3035a, "MediaCodec initialization is failed!");
+    public boolean init(String filePath) {
+        synchronized (this.mObject) {
+            LogUtil.d(Tag, "init() is called");
+            if (this.mMediaCodecDecoder.initialization(filePath, null) == -1) {
+                Log.i(Tag, "MediaCodec initialization is failed!");
             } else {
-                Log.i(f3035a, "wechat initialization is successed!");
+                Log.i(Tag, "wechat initialization is successed!");
             }
         }
-        if (8000 != this.f3041g.mo1442a()) {
+        if (8000 != this.mMediaCodecDecoder.getSampleRate()) {
             return false;
         }
         return true;
     }
 
     /* renamed from: a */
-    public byte[] m3939a() {
+    public byte[] getDecoderOut() {
         int nCount = 0;
-        this.f3044j = null;
+        this.decoderOut = null;
         while (nCount < 5) {
-            this.f3040f = this.f3041g.mo1443a(this.f3042h, 0);
-            LogUtil.d(f3035a, "Get WeChat Vol:" + this.f3040f);
-            if (this.f3040f > 0) {
+            this.mWeiChatVol = this.mMediaCodecDecoder.changeOutput(this.mPairOne, 0);
+            LogUtil.d(Tag, "Get WeChat Vol:" + this.mWeiChatVol);
+            if (this.mWeiChatVol > 0) {
                 break;
-            } else if (-1 == this.f3040f) {
+            } else if (-1 == this.mWeiChatVol) {
                 try {
-                    synchronized (this.f3045k) {
-                        this.f3045k.wait();
+                    synchronized (this.mObject) {
+                        this.mObject.wait();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 nCount++;
-                LogUtil.d(f3035a, "MediaCodec Error happen!");
-            } else if (this.f3040f == 0) {
+                LogUtil.d(Tag, "MediaCodec Error happen!");
+            } else if (this.mWeiChatVol == 0) {
                 nCount++;
             }
         }
-        if (this.f3042h.m4058b() != this.f3040f) {
-            LogUtil.m4445e(f3035a, "Get Audio size Error =" + this.f3042h.m4058b() + "  Return=" + this.f3040f);
+        if (this.mPairOne.getSize() != this.mWeiChatVol) {
+            LogUtil.e(Tag, "Get Audio size Error =" + this.mPairOne.getSize() + "  Return=" + this.mWeiChatVol);
         }
-        if (this.f3040f <= 0) {
+        if (this.mWeiChatVol <= 0) {
             return null;
         }
-        this.f3044j = new byte[(this.f3042h.m4058b() * 2)];
-        byte[] dataIn = this.f3042h.m4057a();
-        LogUtil.d(f3035a, "decoder out :" + this.f3040f);
-        for (int i = 0; i < this.f3040f; i += 2) {
-            this.f3044j[i * 2] = dataIn[i];
-            this.f3044j[(i * 2) + 1] = dataIn[i + 1];
-            this.f3044j[(i * 2) + 2] = dataIn[i];
-            this.f3044j[(i * 2) + 3] = dataIn[i + 1];
+        this.decoderOut = new byte[(this.mPairOne.getSize() * 2)];
+        byte[] dataIn = this.mPairOne.getData();
+        LogUtil.d(Tag, "decoder out :" + this.mWeiChatVol);
+        for (int i = 0; i < this.mWeiChatVol; i += 2) {
+            this.decoderOut[i * 2] = dataIn[i];
+            this.decoderOut[(i * 2) + 1] = dataIn[i + 1];
+            this.decoderOut[(i * 2) + 2] = dataIn[i];
+            this.decoderOut[(i * 2) + 3] = dataIn[i + 1];
         }
-        return this.f3044j;
+        return this.decoderOut;
     }
 
     /* renamed from: b */
-    public void m3940b() {
-        if (m3934g()) {
-            ArbitrationModule.m3896a().m3907b();
-            m3935h();
+    public void initAudioTrack() {
+        if (createAudioTrack()) {
+            ArbitrationModule.newInstance().musicAudioFocus();
+            playAudioTrack();
             return;
         }
-        LogUtil.d(f3035a, "audio Track Init Error!!!");
+        LogUtil.d(Tag, "audio Track Init Error!!!");
     }
 
     /* renamed from: c */
@@ -104,164 +104,164 @@ public class CustomAudioDecoder {
         int nCount = 0;
         while (nCount < 8) {
             long lstarttime = System.currentTimeMillis();
-            this.f3040f = this.f3041g.mo1443a(this.f3042h, 0);
-            LogUtil.d(f3035a, "Get WeChat Vol:" + this.f3040f);
-            if (-1 == this.f3040f) {
+            this.mWeiChatVol = this.mMediaCodecDecoder.changeOutput(this.mPairOne, 0);
+            LogUtil.d(Tag, "Get WeChat Vol:" + this.mWeiChatVol);
+            if (-1 == this.mWeiChatVol) {
                 try {
-                    synchronized (this.f3045k) {
-                        this.f3045k.wait();
+                    synchronized (this.mObject) {
+                        this.mObject.wait();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 nCount++;
-                LogUtil.d(f3035a, "MediaCodec Error happen!");
-            } else if (this.f3040f == 0) {
+                LogUtil.d(Tag, "MediaCodec Error happen!");
+            } else if (this.mWeiChatVol == 0) {
                 nCount++;
             } else {
-                if (this.f3042h.m4058b() != this.f3040f) {
-                    LogUtil.m4445e(f3035a, "Get Audio size Error =" + this.f3042h.m4058b() + "  Return=" + this.f3040f);
+                if (this.mPairOne.getSize() != this.mWeiChatVol) {
+                    LogUtil.e(Tag, "Get Audio size Error =" + this.mPairOne.getSize() + "  Return=" + this.mWeiChatVol);
                 }
                 nCount = 0;
-                this.f3044j = new byte[(this.f3042h.m4058b() * 2)];
-                this.f3043i.m4055a(this.f3042h.m4058b() * 2);
-                this.f3043i.m4056a(this.f3044j);
-                byte[] dataIn = this.f3042h.m4057a();
-                for (int i = 0; i < this.f3040f; i += 2) {
-                    this.f3044j[i * 2] = dataIn[i];
-                    this.f3044j[(i * 2) + 1] = dataIn[i + 1];
-                    this.f3044j[(i * 2) + 2] = dataIn[i];
-                    this.f3044j[(i * 2) + 3] = dataIn[i + 1];
+                this.decoderOut = new byte[(this.mPairOne.getSize() * 2)];
+                this.mPairTwo.setSize(this.mPairOne.getSize() * 2);
+                this.mPairTwo.setData(this.decoderOut);
+                byte[] dataIn = this.mPairOne.getData();
+                for (int i = 0; i < this.mWeiChatVol; i += 2) {
+                    this.decoderOut[i * 2] = dataIn[i];
+                    this.decoderOut[(i * 2) + 1] = dataIn[i + 1];
+                    this.decoderOut[(i * 2) + 2] = dataIn[i];
+                    this.decoderOut[(i * 2) + 3] = dataIn[i + 1];
                 }
-                LogUtil.d(f3035a, "Use Time :" + (System.currentTimeMillis() - lstarttime));
-                m3944f();
+                LogUtil.d(Tag, "Use Time :" + (System.currentTimeMillis() - lstarttime));
+                writeAudioData();
             }
         }
     }
 
     /* renamed from: d */
-    public void m3942d() {
-        synchronized (this.f3045k) {
-            LogUtil.d(f3035a, "stop() is called");
-            if (this.f3039e == null) {
+    public void stop() {
+        synchronized (this.mObject) {
+            LogUtil.d(Tag, "stop() is called");
+            if (this.mAudioTrack == null) {
                 return;
             }
             try {
-                this.f3039e.stop();
+                this.mAudioTrack.stop();
             } catch (IllegalStateException e) {
-                MsgHandlerCenter.m4461b(415);
+                MsgHandlerCenter.dispatchMessage(415);
                 e.printStackTrace();
             }
-            this.f3039e.release();
-            this.f3039e = null;
+            this.mAudioTrack.release();
+            this.mAudioTrack = null;
         }
     }
 
     /* renamed from: e */
-    public void m3943e() {
-        synchronized (this.f3045k) {
-            ArbitrationModule.m3896a().m3907b();
-            LogUtil.d(f3035a, "play() is called");
-            if (this.f3039e == null || this.f3039e.getPlayState() == 3) {
-                LogUtil.d(f3035a, "play music has been triggered");
+    public void play() {
+        synchronized (this.mObject) {
+            ArbitrationModule.newInstance().musicAudioFocus();
+            LogUtil.d(Tag, "play() is called");
+            if (this.mAudioTrack == null || this.mAudioTrack.getPlayState() == 3) {
+                LogUtil.d(Tag, "play music has been triggered");
             } else {
-                m3935h();
+                playAudioTrack();
             }
         }
     }
 
     /* renamed from: g */
-    private boolean m3934g() {
+    private boolean createAudioTrack() {
         int channelConfig;
-        this.f3036b = this.f3041g.mo1442a();
-        if (this.f3036b == 8000) {
-            this.f3036b *= 2;
+        this.mSampleRate = this.mMediaCodecDecoder.getSampleRate();
+        if (this.mSampleRate == 8000) {
+            this.mSampleRate *= 2;
         }
-        this.f3037c = this.f3041g.mo1446b();
-        this.f3038d = this.f3041g.mo1447c();
-        if (this.f3039e != null) {
-            this.f3039e.flush();
+        this.mChannelConfig = this.mMediaCodecDecoder.getChannelConfig();
+        this.mReSampleRate = this.mMediaCodecDecoder.getReSampleRate();
+        if (this.mAudioTrack != null) {
+            this.mAudioTrack.flush();
         }
-        if (this.f3037c == 1) {
+        if (this.mChannelConfig == 1) {
             channelConfig = 4;
         } else {
             channelConfig = 12;
         }
-        LogUtil.d(f3035a, "samplerate = " + this.f3036b);
-        if (this.f3036b < 4000 || this.f3036b > 48000) {
-            this.f3039e = null;
-            LogUtil.d(f3035a, "4000>sample rate || sample rate>48000: " + this.f3036b);
+        LogUtil.d(Tag, "samplerate = " + this.mSampleRate);
+        if (this.mSampleRate < 4000 || this.mSampleRate > 48000) {
+            this.mAudioTrack = null;
+            LogUtil.d(Tag, "4000>sample rate || sample rate>48000: " + this.mSampleRate);
             return false;
         }
-        int audioMinBufSizeLocal = AudioTrack.getMinBufferSize(this.f3036b, channelConfig, 2);
-        LogUtil.d(f3035a, "audioMinBufSizeLocal= " + audioMinBufSizeLocal);
+        int audioMinBufSizeLocal = AudioTrack.getMinBufferSize(this.mSampleRate, channelConfig, 2);
+        LogUtil.d(Tag, "audioMinBufSizeLocal= " + audioMinBufSizeLocal);
         try {
-            this.f3039e = new AudioTrack(3, this.f3036b, channelConfig, 2, audioMinBufSizeLocal * 2, 1);
+            this.mAudioTrack = new AudioTrack(3, this.mSampleRate, channelConfig, 2, audioMinBufSizeLocal * 2, 1);
             return true;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            this.f3039e = null;
-            LogUtil.d(f3035a, "IllegalArgumentException: mAudioTrack =new AudioTrack");
+            this.mAudioTrack = null;
+            LogUtil.d(Tag, "IllegalArgumentException: mAudioTrack =new AudioTrack");
             return false;
         }
     }
 
     /* renamed from: h */
-    private void m3935h() {
-        if (this.f3039e != null) {
-            if (this.f3039e.getPlayState() != 3) {
+    private void playAudioTrack() {
+        if (this.mAudioTrack != null) {
+            if (this.mAudioTrack.getPlayState() != 3) {
                 try {
-                    LogUtil.d(f3035a, "Play WeChat voice!");
-                    this.f3039e.play();
+                    LogUtil.d(Tag, "Play WeChat voice!");
+                    this.mAudioTrack.play();
                 } catch (IllegalStateException e) {
-                    MsgHandlerCenter.m4461b(415);
+                    MsgHandlerCenter.dispatchMessage(415);
                     e.printStackTrace();
                 }
-                synchronized (this.f3045k) {
-                    this.f3045k.notify();
+                synchronized (this.mObject) {
+                    this.mObject.notify();
                 }
                 return;
             }
-            LogUtil.d(f3035a, "play music has been triggered");
+            LogUtil.d(Tag, "play music has been triggered");
         }
     }
 
     /* renamed from: a */
-    public void m3937a(byte[] pData) {
+    public void writeAudioData(byte[] pData) {
         int size = pData.length;
         if (size <= 0) {
-            LogUtil.m4445e(f3035a, "Data size 0!!!");
+            LogUtil.e(Tag, "Data size 0!!!");
             return;
         }
-        synchronized (this.f3045k) {
-            if (this.f3039e != null && this.f3039e.getPlayState() == 3) {
-                LogUtil.m4445e(f3035a, "Trace size:  " + size);
-                this.f3039e.write(pData, 0, size);
+        synchronized (this.mObject) {
+            if (this.mAudioTrack != null && this.mAudioTrack.getPlayState() == 3) {
+                LogUtil.e(Tag, "Trace size:  " + size);
+                this.mAudioTrack.write(pData, 0, size);
             }
         }
     }
 
     /* renamed from: f */
-    public void m3944f() {
-        int size = this.f3043i.m4058b();
+    public void writeAudioData() {
+        int size = this.mPairTwo.getSize();
         if (size <= 0) {
-            LogUtil.m4445e(f3035a, "Out size 0!!!");
+            LogUtil.e(Tag, "Out size 0!!!");
             return;
         }
-        synchronized (this.f3045k) {
-            if (this.f3039e != null && this.f3039e.getPlayState() == 3) {
-                LogUtil.m4445e(f3035a, "size  " + size);
-                this.f3039e.write(this.f3043i.m4057a(), 0, size);
+        synchronized (this.mObject) {
+            if (this.mAudioTrack != null && this.mAudioTrack.getPlayState() == 3) {
+                LogUtil.e(Tag, "size  " + size);
+                this.mAudioTrack.write(this.mPairTwo.getData(), 0, size);
             }
         }
     }
 
     /* renamed from: i */
-    private void m3936i() {
-        synchronized (this.f3045k) {
-            if (this.f3039e == null || this.f3039e.getPlayState() != 3) {
+    private void audioWait() {
+        synchronized (this.mObject) {
+            if (this.mAudioTrack == null || this.mAudioTrack.getPlayState() != 3) {
                 try {
-                    this.f3045k.wait();
+                    this.mObject.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

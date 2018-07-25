@@ -15,7 +15,7 @@ import com.baidu.carlife.model.MusicSongModel;
 import com.baidu.carlife.p059c.C1105d;
 import com.baidu.carlife.p059c.C1105d.C1091a;
 import com.baidu.carlife.p059c.C1141f;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.facebook.common.p140h.C2921a;
 import com.facebook.drawee.p143c.C2926a;
 import com.facebook.drawee.p144a.p145a.C5377b;
@@ -132,14 +132,14 @@ public class C1605a {
                 this.f4904a.f5916h = bitmap;
                 MsgHandlerCenter.m4459a((int) CommonParams.dB, this.f4904a.f5916h);
             }
-            if (C1663a.m5979a().m5993N()) {
-                MsgHandlerCenter.m4461b(407);
+            if (CarlifeCoreSDK.m5979a().m5993N()) {
+                MsgHandlerCenter.dispatchMessage(407);
             }
         }
 
         /* renamed from: a */
         public void m5866a(C2918d dataSource) {
-            MsgHandlerCenter.m4461b(407);
+            MsgHandlerCenter.dispatchMessage(407);
         }
     }
 

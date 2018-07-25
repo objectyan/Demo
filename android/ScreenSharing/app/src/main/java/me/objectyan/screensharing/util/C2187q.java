@@ -24,7 +24,7 @@ public class C2187q {
         if (CommonParams.sVehicleChannel != EnumVehicleChannel.VEHICLE_CHANNEL_DAIMLER || CarlifeUtil.m4382t() || C2187q.m8326a(context)) {
             return true;
         }
-        LogUtil.m4445e(f6992a, "package signature check fail");
+        LogUtil.e(f6992a, "package signature check fail");
         C2204x.m8380a(context, listener);
         return false;
     }

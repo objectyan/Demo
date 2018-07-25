@@ -448,15 +448,15 @@ public class CommonParams implements KeepClass {
     public static final String hO = "netease_tmp.mp3";
     public static final String hP = "CarLife.apk";
     public static final String hQ = "CarLife-Vehicle.apk";
-    public static final String hR = "bdscxx";
-    public static final String hS = "bdsc";
-    public static final String hT = "xx";
-    public static final String hU = "bdsc16";
-    public static final String hV = "bdsc17";
-    public static final String hW = "bdsc18";
-    public static final String hX = "bdsc19";
-    public static final String hY = "bdsc19_01";
-    public static final String hZ = "bdim.jar";
+    public static final String SCREENCAP_ANDROID_XX = "bdscxx";
+    public static final String SCREENCAP_ANDROID = "bdsc";
+    public static final String SCREENCAP_STRING_XX = "xx";
+    public static final String SCREENCAP_ANDROID_16 = "bdsc16";
+    public static final String SCREENCAP_ANDROID_17 = "bdsc17";
+    public static final String SCREENCAP_ANDROID_18 = "bdsc18";
+    public static final String SCREENCAP_ANDROID_19 = "bdsc19";
+    public static final String SCREENCAP_ANDROID_19_01 = "bdsc19_01";
+    public static final String INPUT_JAR_ANDROID = "bdim.jar";
     public static final int ha = 4103;
     public static final int hb = 4140;
     public static final int hc = 4141;
@@ -490,13 +490,14 @@ public class CommonParams implements KeepClass {
     public static final int iD = 10000;
     public static final int iE = 10000000;
     public static final String iF = "°C";
-    public static final int iG = 7240;
-    public static final int iH = 8240;
-    public static final int iI = 9240;
-    public static final int iJ = 9241;
-    public static final int iK = 9242;
-    public static final int iL = 9340;
-    public static final int iM = 9440;
+
+    public static final int SOCKET_WIFI_PORT = 7240;
+    public static final int SOCKET_VIDEO_WIFI_PORT = 8240;
+    public static final int SOCKET_AUDIO_WIFI_PORT = 9240;
+    public static final int SOCKET_AUDIO_TTS_WIFI_PORT = 9241;
+    public static final int SOCKET_AUDIO_VR_WIFI_PORT = 9242;
+    public static final int SOCKET_TOUCH_WIFI_PORT = 9340;
+    public static final int SOCKET_DATA_WIFI_PORT = 9440;
 
     public static final String SERVER_SOCKET_NAME = "Cmd";
     public static final String SERVER_SOCKET_VIDEO_NAME = "Video";
@@ -504,8 +505,7 @@ public class CommonParams implements KeepClass {
     public static final String SERVER_SOCKET_AUDIO_TTS_NAME = "TTS";
     public static final String SERVER_SOCKET_AUDIO_VR_NAME = "VR";
     public static final String SERVER_SOCKET_TOUCH_NAME = "Touch";
-
-    public static final String iT = "Data";
+    public static final String SERVER_SOCKET_DATA_NAME = "Data";
 
     public static final int MSG_CHANNEL_ID = 0x0001;
     public static final int MSG_CHANNEL_ID_VIDEO = 0x0002;
@@ -514,11 +514,11 @@ public class CommonParams implements KeepClass {
     public static final int MSG_CHANNEL_ID_AUDIO_VR = 0x0005;
     public static final int MSG_CHANNEL_ID_TOUCH = 0x0006;
 
-    public static final String ia = "CarLife_Temp";
-    public static final String ib = "WakeUpFlag";
-    public static final String ic = "radio_voice_query";
-    public static final String id = "OnceWakeUpFlag";
-    public static final String ie = "isFristBoot";
+    public static final String CAR_LIFE_TEMP = "CarLife_Temp";
+    public static final String WAKE_UP_FLAG = "WakeUpFlag";
+    public static final String RADIO_VOICE_QUERY = "radio_voice_query";
+    public static final String ONCE_WAKE_UP_FLAG = "OnceWakeUpFlag";
+    public static final String IS_FRIST_BOOT = "isFristBoot";
     /* renamed from: if */
     public static final String f3570if = "isFristVoiceInHome";
     public static final String ig = "isFristHelpInVoice";
@@ -526,7 +526,7 @@ public class CommonParams implements KeepClass {
     public static final String ii = "RouteRecordFlag";
     public static final String ij = "RouteRecordManualSyncTimeFlag";
     public static final String ik = "connectedTime";
-    public static final int il = -1;
+    public static final int MSG_ARG_INVALID = -1;
     public static final int im = -2;
     public static final int in = 43981;
     public static final int io = 43982;
@@ -570,12 +570,12 @@ public class CommonParams implements KeepClass {
     public static String jq = "r1875";
     public static boolean jr = true;
     public static boolean js = false;
-    public static String jt = "";
+    public static String sChannel = "";
     public static boolean ju = true;
     public static boolean jv = true;
     public static boolean jw = true;
-    public static String jy = "";
-    public static String jz = "";
+    public static String sVehicleCUID = "";
+    public static String sVersion = "";
 
 
     /**

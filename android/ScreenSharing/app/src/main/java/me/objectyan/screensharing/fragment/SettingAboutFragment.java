@@ -32,7 +32,7 @@ public class SettingAboutFragment extends ContentFragment implements OnClickList
         this.mContentView = inflater.inflate(R.layout.frag_setting_about, null);
         setCommonTitleBar(this.mContentView, getString(R.string.module_setting_about));
         this.f4772a = (Button) this.mContentView.findViewById(R.id.btn_check_version);
-        if (CommonParams.jc.equals(CommonParams.jt)) {
+        if (CommonParams.jc.equals(CommonParams.sChannel)) {
             this.f4772a.setVisibility(8);
         } else {
             this.f4772a.setVisibility(0);
@@ -99,7 +99,7 @@ public class SettingAboutFragment extends ContentFragment implements OnClickList
             }
             if (this.f4776e == null) {
                 this.f4776e = new C1443g(this.mContentView, 4);
-                if (!CommonParams.jc.equals(CommonParams.jt)) {
+                if (!CommonParams.jc.equals(CommonParams.sChannel)) {
                     this.f4776e.m5300d(this.f4772a);
                 }
                 this.f4776e.m5300d(this.f4773b);

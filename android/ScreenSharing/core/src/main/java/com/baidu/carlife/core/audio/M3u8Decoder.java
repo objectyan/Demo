@@ -3,9 +3,11 @@ package com.baidu.carlife.core.audio;
 import android.media.MediaCodec.CryptoException;
 import android.media.MediaFormat;
 import android.os.Build.VERSION;
+
 import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.MsgHandlerCenter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,53 +20,53 @@ import java.util.List;
 /* renamed from: com.baidu.carlife.core.audio.j */
 class M3u8Decoder extends MediaCodecDecoder {
     /* renamed from: a */
-    private static final String f3107a = "audioM3U8decoder";
+    private static final String Tag = "audioM3U8decoder";
     /* renamed from: e */
     private static final int f3108e = 7;
     /* renamed from: b */
     private byte[] f3109b = new byte[8192];
     /* renamed from: c */
-    private FileInputStream f3110c = null;
+    private FileInputStream mFileInputStream = null;
     /* renamed from: d */
-    private List<String> f3111d = new ArrayList();
+    private List<String> mAACPaths = new ArrayList();
 
     M3u8Decoder() {
     }
 
     /* renamed from: a */
-    public int mo1445a(String url, ArrayList aacFilePaths) {
-        this.f3111d = aacFilePaths;
-        m4019n();
-        return super.mo1444a(url);
+    public int initialization(String url, ArrayList aacFilePaths) {
+        this.mAACPaths = aacFilePaths;
+        closeFileStream();
+        return super.decodeAudio(url);
     }
 
     /* renamed from: a */
-    public synchronized int mo1443a(Pair p, int offset) {
-        return m4029b(p, offset);
+    public synchronized int changeOutput(Pair p, int offset) {
+        return crypto(p, offset);
     }
 
     /* renamed from: n */
-    private void m4019n() {
-        if (this.f3110c != null) {
+    private void closeFileStream() {
+        if (this.mFileInputStream != null) {
             try {
-                this.f3110c.close();
+                this.mFileInputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                this.f3110c = null;
+                this.mFileInputStream = null;
             }
         }
     }
 
     /* renamed from: a */
-    private int m4017a(byte[] aacDataBuf, int count) throws IOException {
+    private int readDataForStream(byte[] aacDataBuf, int count) throws IOException {
         int totalByteRead = 0;
         while (totalByteRead < count) {
-            int byteReadThisTime = this.f3110c.read(aacDataBuf, 0, count);
+            int byteReadThisTime = this.mFileInputStream.read(aacDataBuf, 0, count);
             if (byteReadThisTime > 0) {
                 totalByteRead += byteReadThisTime;
             } else {
-                LogUtil.m4445e(f3107a, "read data from aac stream fail");
+                LogUtil.e(Tag, "read data from aac stream fail");
                 return -1;
             }
         }
@@ -72,85 +74,85 @@ class M3u8Decoder extends MediaCodecDecoder {
     }
 
     /* renamed from: b */
-    public synchronized int m4029b(Pair p, int pos) {
+    public synchronized int crypto(Pair p, int pos) {
         int i;
-        if (m4008e() == null) {
-            LogUtil.m4445e(f3107a, "codec is null");
+        if (getMediaCodec() == null) {
+            LogUtil.e(Tag, "codec is null");
             i = -1;
-        } else if (m4026u()) {
-            LogUtil.m4445e(f3107a, "aac file not enough");
+        } else if (isAACEnough()) {
+            LogUtil.e(Tag, "aac file not enough");
             i = -1;
         } else {
-            int pcmFrameSize = m4020o();
+            int pcmFrameSize = readPCM();
             if (pcmFrameSize < 0) {
-                LogUtil.m4445e(f3107a, "pcm frame parse fail");
+                LogUtil.e(Tag, "pcm frame parse fail");
                 i = -1;
             } else {
                 i = 0;
-                p.m4056a(m4016m());
-                p.m4055a(0);
+                p.setData(getChunk());
+                p.setSize(0);
                 try {
-                    int inputBufIndex = m4008e().dequeueInputBuffer((long) MediaCodecDecoder.m3991d());
-                    if (inputBufIndex >= 0 && !m4012i()) {
+                    int inputBufIndex = getMediaCodec().dequeueInputBuffer((long) MediaCodecDecoder.m3991d());
+                    if (inputBufIndex >= 0 && !getSawInputEOS()) {
                         ByteBuffer dstBuf;
                         if (VERSION.SDK_INT >= 21) {
-                            dstBuf = m4008e().getInputBuffer(inputBufIndex);
+                            dstBuf = getMediaCodec().getInputBuffer(inputBufIndex);
                         } else {
-                            dstBuf = m4013j()[inputBufIndex];
+                            dstBuf = getCodecInputBuffers()[inputBufIndex];
                         }
                         dstBuf.put(this.f3109b, 0, pcmFrameSize);
-                        m4008e().queueInputBuffer(inputBufIndex, 0, pcmFrameSize, 0, m4012i() ? 4 : 0);
+                        getMediaCodec().queueInputBuffer(inputBufIndex, 0, pcmFrameSize, 0, getSawInputEOS() ? 4 : 0);
                         dstBuf.clear();
                     }
-                    int res = m4008e().dequeueOutputBuffer(m4010g(), (long) MediaCodecDecoder.m3991d());
+                    int res = getMediaCodec().dequeueOutputBuffer(getBufferInfo(), (long) MediaCodecDecoder.m3991d());
                     if (res >= 0) {
                         ByteBuffer buf;
                         int outputBufIndex = res;
                         if (VERSION.SDK_INT >= 21) {
-                            buf = m4008e().getOutputBuffer(outputBufIndex);
+                            buf = getMediaCodec().getOutputBuffer(outputBufIndex);
                         } else {
-                            buf = m4014k()[outputBufIndex];
+                            buf = getCodecOutputBuffers()[outputBufIndex];
                         }
-                        int chunkLen = m4010g().size;
-                        if (m4016m().length < chunkLen + pos) {
-                            m4000a(new byte[(chunkLen + pos)]);
-                            p.m4056a(m4016m());
+                        int chunkLen = getBufferInfo().size;
+                        if (getChunk().length < chunkLen + pos) {
+                            setChunk(new byte[(chunkLen + pos)]);
+                            p.setData(getChunk());
                         }
-                        buf.get(m4016m(), pos, chunkLen);
+                        buf.get(getChunk(), pos, chunkLen);
                         buf.clear();
                         if (chunkLen > 0) {
-                            p.m4055a(chunkLen);
+                            p.setSize(chunkLen);
                             i = chunkLen;
                         }
-                        m4008e().releaseOutputBuffer(outputBufIndex, false);
-                        if ((m4010g().flags & 4) != 0) {
-                            m3999a(true);
+                        getMediaCodec().releaseOutputBuffer(outputBufIndex, false);
+                        if ((getBufferInfo().flags & 4) != 0) {
+                            setSawOutputEOS(true);
                         } else {
-                            m3999a(false);
+                            setSawOutputEOS(false);
                         }
                     } else if (VERSION.SDK_INT < 21) {
                         if (res == -3) {
-                            m4005b(m4008e().getOutputBuffers());
+                            setCodecOutputBuffers(getMediaCodec().getOutputBuffers());
                         }
                     } else if (res == -2) {
-                        MediaFormat oformat = m4008e().getOutputFormat();
-                        m4003b(oformat.getInteger("sample-rate"));
-                        m4007c(oformat.getInteger("channel-count"));
-                        LogUtil.m4445e(f3107a, "output format changed new sample rate is " + mo1442a() + " and new new channel count is " + mo1446b());
-                        MsgHandlerCenter.m4461b((int) CommonParams.ev);
+                        MediaFormat oformat = getMediaCodec().getOutputFormat();
+                        setSampleRate(oformat.getInteger("sample-rate"));
+                        setChannelConfig(oformat.getInteger("channel-count"));
+                        LogUtil.e(Tag, "output format changed new sample rate is " + getSampleRate() + " and new new channel count is " + getChannelConfig());
+                        MsgHandlerCenter.dispatchMessage((int) CommonParams.ev);
                     }
                 } catch (IllegalStateException e2) {
                     e2.printStackTrace();
-                    LogUtil.m4445e(f3107a, "IllegalStateException");
+                    LogUtil.e(Tag, "IllegalStateException");
                     m3995a(404);
                     i = -1;
                 } catch (IllegalArgumentException e4) {
-                    LogUtil.m4445e(f3107a, "IllegalArgumentException");
+                    LogUtil.e(Tag, "IllegalArgumentException");
                     e4.printStackTrace();
                     m3995a(404);
                     i = -1;
                 } catch (CryptoException e6) {
-                    LogUtil.m4445e(f3107a, "MediaCodec.CryptoException");
+                    LogUtil.e(Tag, "MediaCodec.CryptoException");
                     e6.printStackTrace();
                     m3995a(404);
                     i = -1;
@@ -161,46 +163,46 @@ class M3u8Decoder extends MediaCodecDecoder {
     }
 
     /* renamed from: o */
-    private int m4020o() {
+    private int readPCM() {
         try {
-            return m4021p();
+            return parseUntilPCM();
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.m4445e(f3107a, "read pcm io exception");
+            LogUtil.e(Tag, "read pcm io exception");
             return -1;
         }
     }
 
     /* renamed from: p */
-    private int m4021p() throws IOException {
+    private int parseUntilPCM() throws IOException {
         int count = 0;
-        while (m4018d(count)) {
-            if (m4025t()) {
-                count = m4022q();
+        while (isFisReadBytes(count)) {
+            if (readAACFile()) {
+                count = readFrameData();
             }
         }
         if (count < 0) {
-            LogUtil.m4445e(f3107a, "parse until pcm frame read fail");
+            LogUtil.e(Tag, "parse until pcm frame read fail");
         }
         return count;
     }
 
     /* renamed from: q */
-    private int m4022q() throws IOException {
-        int pcmFrameSize = m4017a(this.f3109b, 7);
+    private int readFrameData() throws IOException {
+        int pcmFrameSize = readDataForStream(this.f3109b, 7);
         if (pcmFrameSize < 0) {
-            LogUtil.d(f3107a, "read header fail");
-            m4024s();
+            LogUtil.d(Tag, "read header fail");
+            deleteACCFile();
             return pcmFrameSize;
         } else if (m4023r() < 7) {
-            LogUtil.m4445e(f3107a, "frame is too short");
-            m4024s();
+            LogUtil.e(Tag, "frame is too short");
+            deleteACCFile();
             return -1;
         } else {
-            pcmFrameSize = m4017a(this.f3109b, m4023r() - 7);
+            pcmFrameSize = readDataForStream(this.f3109b, m4023r() - 7);
             if (pcmFrameSize < 0) {
-                LogUtil.m4445e(f3107a, "read frame data fail");
-                m4024s();
+                LogUtil.e(Tag, "read frame data fail");
+                deleteACCFile();
             }
             return pcmFrameSize;
         }
@@ -208,37 +210,39 @@ class M3u8Decoder extends MediaCodecDecoder {
 
     /* renamed from: r */
     private int m4023r() {
-        return (((this.f3109b[3] & 3) << 11) + ((this.f3109b[4] & 255) << 3)) + ((this.f3109b[5] & CommonParams.dE) >> 5);
+        return (((this.f3109b[3] & 3) << 11) +
+                ((this.f3109b[4] & 255) << 3)) +
+                ((this.f3109b[5] & CommonParams.dE) >> 5);
     }
 
     /* renamed from: s */
-    private void m4024s() throws IOException {
-        this.f3110c.close();
-        this.f3110c = null;
-        File file = new File((String) this.f3111d.get(0));
-        this.f3111d.remove(0);
+    private void deleteACCFile() throws IOException {
+        this.mFileInputStream.close();
+        this.mFileInputStream = null;
+        File file = new File((String) this.mAACPaths.get(0));
+        this.mAACPaths.remove(0);
         if (file.exists()) {
             file.delete();
         }
     }
 
     /* renamed from: t */
-    private boolean m4025t() {
-        if (this.f3110c == null) {
+    private boolean readAACFile() {
+        if (this.mFileInputStream == null) {
             try {
-                File file = new File((String) this.f3111d.get(0));
+                File file = new File((String) this.mAACPaths.get(0));
                 if (file.exists()) {
-                    this.f3110c = new FileInputStream(file);
+                    this.mFileInputStream = new FileInputStream(file);
                 } else {
-                    LogUtil.m4445e(f3107a, "aac file not exist");
-                    this.f3111d.remove(0);
+                    LogUtil.e(Tag, "aac file not exist");
+                    this.mAACPaths.remove(0);
                     return false;
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                LogUtil.m4445e(f3107a, "aac file not found");
-                this.f3110c = null;
-                this.f3111d.remove(0);
+                LogUtil.e(Tag, "aac file not found");
+                this.mFileInputStream = null;
+                this.mAACPaths.remove(0);
                 return false;
             }
         }
@@ -246,12 +250,12 @@ class M3u8Decoder extends MediaCodecDecoder {
     }
 
     /* renamed from: d */
-    private boolean m4018d(int fisReadBytes) {
-        return fisReadBytes <= 0 && this.f3111d.size() > 0;
+    private boolean isFisReadBytes(int fisReadBytes) {
+        return fisReadBytes <= 0 && this.mAACPaths.size() > 0;
     }
 
     /* renamed from: u */
-    private boolean m4026u() {
-        return this.f3111d.size() < 2;
+    private boolean isAACEnough() {
+        return this.mAACPaths.size() < 2;
     }
 }

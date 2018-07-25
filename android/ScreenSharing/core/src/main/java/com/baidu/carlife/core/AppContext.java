@@ -7,11 +7,11 @@ import android.content.ContextWrapper;
 /* renamed from: com.baidu.carlife.core.a */
 public class AppContext extends ContextWrapper implements KeepClass {
     /* renamed from: a */
-    private static AppContext f2967a;
+    private static AppContext sAppContext;
 
     /* renamed from: a */
-    public static AppContext m3876a() {
-        return f2967a;
+    public static AppContext getAppContext() {
+        return sAppContext;
     }
 
     private AppContext(Context ctx) {
@@ -19,10 +19,10 @@ public class AppContext extends ContextWrapper implements KeepClass {
     }
 
     /* renamed from: a */
-    public static synchronized void m3877a(Context context) {
+    public static synchronized void newInstance(Context context) {
         synchronized (AppContext.class) {
-            if (f2967a == null) {
-                f2967a = new AppContext(context);
+            if (sAppContext == null) {
+                sAppContext = new AppContext(context);
             }
         }
     }

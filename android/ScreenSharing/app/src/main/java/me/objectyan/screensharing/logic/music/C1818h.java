@@ -561,7 +561,7 @@ public class C1818h {
                         return;
                     }
                 case 404:
-                    LogUtil.m4445e(C1818h.f5590a, "----MSG_MUSIC_AUDIO_DECODER_ERROR--");
+                    LogUtil.e(C1818h.f5590a, "----MSG_MUSIC_AUDIO_DECODER_ERROR--");
                     if (!this.f5587a.m6829q() || this.f5587a.f5604B.f5922n > this.f5587a.f5604B.f5923o / 2) {
                         C2201w.m8373a(this.f5587a.f5619S.getString(R.string.module_music_invalid_song_hint), 0);
                         this.f5587a.f5618R.post(new C18132(this));
@@ -586,7 +586,7 @@ public class C1818h {
                     }
                     return;
                 case 416:
-                    LogUtil.m4445e(C1818h.f5590a, "----MSG_MUSIC_AUDIO_DECODER_ERROR_NO_INPUT_DATA--");
+                    LogUtil.e(C1818h.f5590a, "----MSG_MUSIC_AUDIO_DECODER_ERROR_NO_INPUT_DATA--");
                     if (this.f5587a.m6814g(0) && this.f5587a.m6816h().f5918j < this.f5587a.f5633u - 20) {
                         this.f5587a.f5618R.post(new C18143(this));
                         return;
@@ -811,7 +811,7 @@ public class C1818h {
     /* renamed from: e */
     public void m6805e(int strategy) {
         this.f5626m = strategy;
-        MsgHandlerCenter.m4461b(407);
+        MsgHandlerCenter.dispatchMessage(407);
         m6723Z();
     }
 
@@ -1524,7 +1524,7 @@ public class C1818h {
     /* renamed from: k */
     public void m6821k(int pos) {
         if (this.f5612L == null || pos < 0 || pos >= this.f5612L.size()) {
-            LogUtil.m4445e(f5590a, "param error");
+            LogUtil.e(f5590a, "param error");
             return;
         }
         MusicSongModel song = (MusicSongModel) this.f5612L.get(pos);
@@ -1912,7 +1912,7 @@ public class C1818h {
                 }
                 m6749k(nextSong);
             } catch (IndexOutOfBoundsException e) {
-                LogUtil.m4445e(f5590a, "MusicListError: list size = " + list.size() + ", nextIndex = " + nextIndex);
+                LogUtil.e(f5590a, "MusicListError: list size = " + list.size() + ", nextIndex = " + nextIndex);
                 e.printStackTrace();
             }
         }
@@ -1945,7 +1945,7 @@ public class C1818h {
                     this.f5616P.sendEmptyMessageDelayed(221, 500);
                     return;
                 }
-                LogUtil.m4445e(f5590a, "播放出错");
+                LogUtil.e(f5590a, "播放出错");
                 m6819j(101);
             } else if (this.f5620T != null) {
                 this.f5620T.m8186a(101, this.f5604B);

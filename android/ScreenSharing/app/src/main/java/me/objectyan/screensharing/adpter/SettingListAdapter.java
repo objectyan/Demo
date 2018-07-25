@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.baidu.carlife.R;
 import com.baidu.carlife.core.CarlifeUtil;
 import com.baidu.carlife.logic.voice.C1912n;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.util.C2188r;
 import com.baidu.carlife.view.SwitchButton;
 
@@ -89,7 +89,7 @@ public class SettingListAdapter extends BaseAdapter {
         }
 
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            C1663a.m5979a().m6032d(isChecked);
+            CarlifeCoreSDK.m5979a().m6032d(isChecked);
         }
     }
 
@@ -255,7 +255,7 @@ public class SettingListAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        if (C1663a.m5979a().m6042i()) {
+        if (CarlifeCoreSDK.m5979a().m6042i()) {
             return this.f2601a.length;
         }
         return this.f2601a.length - 1;
@@ -269,7 +269,7 @@ public class SettingListAdapter extends BaseAdapter {
         if (position == 0) {
             return 0;
         }
-        if (C1663a.m5979a().m6042i()) {
+        if (CarlifeCoreSDK.m5979a().m6042i()) {
             return (long) position;
         }
         return (long) (position + 1);
@@ -292,7 +292,7 @@ public class SettingListAdapter extends BaseAdapter {
         }
         C1019c cache = (C1019c) convertView.getTag();
         cache.f2597b.setOnCheckedChangeListener(null);
-        if (!C1663a.m5979a().m6042i()) {
+        if (!CarlifeCoreSDK.m5979a().m6042i()) {
             switch (position) {
                 case 0:
                 case 3:
@@ -336,7 +336,7 @@ public class SettingListAdapter extends BaseAdapter {
                         }
                     }
                     cache.f2597b.setOnCheckedChangeListener(this.f2606f);
-                    cache.f2597b.setChecked(C1663a.m5979a().m6043j());
+                    cache.f2597b.setChecked(CarlifeCoreSDK.m5979a().m6043j());
                     break;
                 }
                 cache.f2597b.setOnCheckedChangeListener(this.f2605e);

@@ -111,12 +111,12 @@ public class AOAConnectManager implements KeepClass {
         }
 
         public void run() {
-            LogUtil.m4445e(AOAConnectManager.f3263b, "timeout 1");
+            LogUtil.e(AOAConnectManager.f3263b, "timeout 1");
             if (this.f3206a.f3285H != null) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, "timeout 2");
+                LogUtil.e(AOAConnectManager.f3263b, "timeout 2");
                 LogUtil.m4440c(AOAConnectManager.f3263b, "numOfHeartBeat = " + this.f3206a.f3287J + ", oldNumOfHeartBeat = " + this.f3206a.f3288K);
                 if (this.f3206a.f3288K == this.f3206a.f3287J) {
-                    ConnectClient.m4207a().m4222a(false);
+                    ConnectClient.newInstance().m4222a(false);
                     this.f3206a.m4169h();
                 }
                 this.f3206a.f3288K = this.f3206a.f3287J;
@@ -157,7 +157,7 @@ public class AOAConnectManager implements KeepClass {
             r11 = r11.append(r12);
             r11 = r11.append(r0);
             r11 = r11.toString();
-            com.baidu.carlife.core.LogUtil.m4445e(r10, r11);
+            com.baidu.carlife.core.LogUtil.e(r10, r11);
             r10 = "AOAConnectManager";
             r11 = new java.lang.StringBuilder;
             r11.<init>();
@@ -166,7 +166,7 @@ public class AOAConnectManager implements KeepClass {
             r12 = r4 - r6;
             r11 = r11.append(r12);
             r11 = r11.toString();
-            com.baidu.carlife.core.LogUtil.m4445e(r10, r11);
+            com.baidu.carlife.core.LogUtil.e(r10, r11);
             return;
         L_0x004b:
             r10 = "AOAConnectManager";
@@ -193,7 +193,7 @@ public class AOAConnectManager implements KeepClass {
             r11 = r11.append(r12);	 Catch:{ Exception -> 0x0097 }
             r11 = r11.append(r8);	 Catch:{ Exception -> 0x0097 }
             r11 = r11.toString();	 Catch:{ Exception -> 0x0097 }
-            com.baidu.carlife.core.LogUtil.m4445e(r10, r11);	 Catch:{ Exception -> 0x0097 }
+            com.baidu.carlife.core.LogUtil.e(r10, r11);	 Catch:{ Exception -> 0x0097 }
             goto L_0x0010;
         L_0x0097:
             r2 = move-exception;
@@ -203,10 +203,10 @@ public class AOAConnectManager implements KeepClass {
         L_0x00a1:
             r10 = "AOAConnectManager";
             r11 = "get exception when write";
-            com.baidu.carlife.core.LogUtil.m4445e(r10, r11);
+            com.baidu.carlife.core.LogUtil.e(r10, r11);
             r10 = "AOAConnectManager";
             r11 = r2.toString();
-            com.baidu.carlife.core.LogUtil.m4445e(r10, r11);
+            com.baidu.carlife.core.LogUtil.e(r10, r11);
             r2.printStackTrace();
             goto L_0x0010;
         L_0x00b9:
@@ -234,7 +234,7 @@ public class AOAConnectManager implements KeepClass {
         public void run() {
             Exception e;
             try {
-                LogUtil.m4445e(AOAConnectManager.f3263b, "sleep 1s before read...");
+                LogUtil.e(AOAConnectManager.f3263b, "sleep 1s before read...");
                 C11963.sleep(1000);
             } catch (InterruptedException e2) {
                 e2.printStackTrace();
@@ -246,14 +246,14 @@ public class AOAConnectManager implements KeepClass {
             while (true) {
                 int ret = this.f3208a.m4144b(data, AOAConnectManager.f3275u);
                 if (ret != AOAConnectManager.f3275u) {
-                    LogUtil.m4445e(AOAConnectManager.f3263b, "read data error, ret = " + ret);
+                    LogUtil.e(AOAConnectManager.f3263b, "read data error, ret = " + ret);
                     String str2 = str;
                     return;
                 }
                 cnt++;
                 try {
                     if (cnt >= AOAConnectManager.f3274t) {
-                        LogUtil.m4445e(AOAConnectManager.f3263b, "Read Time = " + (SystemClock.elapsedRealtime() - mStartTime));
+                        LogUtil.e(AOAConnectManager.f3263b, "Read Time = " + (SystemClock.elapsedRealtime() - mStartTime));
                     }
                     str2 = new String(data);
                     try {
@@ -267,8 +267,8 @@ public class AOAConnectManager implements KeepClass {
                     str2 = str;
                 }
             }
-            LogUtil.m4445e(AOAConnectManager.f3263b, "get exception when read");
-            LogUtil.m4445e(AOAConnectManager.f3263b, e.toString());
+            LogUtil.e(AOAConnectManager.f3263b, "get exception when read");
+            LogUtil.e(AOAConnectManager.f3263b, e.toString());
             e.printStackTrace();
         }
     }
@@ -311,9 +311,9 @@ public class AOAConnectManager implements KeepClass {
                 C1197a.sleep(100);
                 while (this.f3210b) {
                     if (!this.f3210b) {
-                        LogUtil.m4445e(AOAConnectManager.f3263b, "read data cancled");
+                        LogUtil.e(AOAConnectManager.f3263b, "read data cancled");
                     } else if (this.f3209a.m4144b(this.f3212d, 8) < 0) {
-                        LogUtil.m4445e(AOAConnectManager.f3263b, "bulkTransferIn fail 1");
+                        LogUtil.e(AOAConnectManager.f3263b, "bulkTransferIn fail 1");
                     } else {
                         this.f3213e = ByteConvert.m4178b(new byte[]{this.f3212d[0], this.f3212d[1], this.f3212d[2], this.f3212d[3]});
                         this.f3214f = ByteConvert.m4178b(new byte[]{this.f3212d[4], this.f3212d[5], this.f3212d[6], this.f3212d[7]});
@@ -323,20 +323,20 @@ public class AOAConnectManager implements KeepClass {
                             tatalChannel = 7;
                         }
                         if (this.f3213e < 1 || this.f3213e > tatalChannel || this.f3214f < 0 || this.f3214f > AOAConnectManager.f3277y) {
-                            LogUtil.m4445e(AOAConnectManager.f3263b, "typeMsg or lenMsg is error");
-                            ConnectClient.m4207a().m4222a(false);
+                            LogUtil.e(AOAConnectManager.f3263b, "typeMsg or lenMsg is error");
+                            ConnectClient.newInstance().m4222a(false);
                         } else {
                             if (this.f3211c.length < this.f3214f) {
                                 this.f3211c = new byte[this.f3214f];
                             }
                             if (this.f3209a.m4144b(this.f3211c, this.f3214f) < 0) {
-                                LogUtil.m4445e(AOAConnectManager.f3263b, "bulkTransferIn fail 2");
+                                LogUtil.e(AOAConnectManager.f3263b, "bulkTransferIn fail 2");
                             } else {
                                 this.f3216h = -1;
                                 while (this.f3210b) {
                                     this.f3215g++;
                                     if (this.f3215g >= 100) {
-                                        LogUtil.m4445e(AOAConnectManager.f3263b, "write data to socket fail...retry");
+                                        LogUtil.e(AOAConnectManager.f3263b, "write data to socket fail...retry");
                                         this.f3215g = 0;
                                         this.f3210b = false;
                                     } else {
@@ -363,7 +363,7 @@ public class AOAConnectManager implements KeepClass {
                                                 this.f3216h = this.f3209a.f3284G.m4109b(this.f3211c, 0, this.f3214f);
                                                 break;
                                             default:
-                                                LogUtil.m4445e(AOAConnectManager.f3263b, "AOAReadThread typeMsg error");
+                                                LogUtil.e(AOAConnectManager.f3263b, "AOAReadThread typeMsg error");
                                                 this.f3210b = false;
                                                 break;
                                         }
@@ -381,7 +381,7 @@ public class AOAConnectManager implements KeepClass {
                 }
                 this.f3209a.m4163b();
             } catch (Exception e) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, "Exception when read data by AOA");
+                LogUtil.e(AOAConnectManager.f3263b, "Exception when read data by AOA");
                 e.printStackTrace();
             }
         }
@@ -442,11 +442,11 @@ public class AOAConnectManager implements KeepClass {
                     System.arraycopy(ByteConvert.m4175a(5), 0, this.f3230n, 0, 4);
                 } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME)) {
                     System.arraycopy(ByteConvert.m4175a(6), 0, this.f3230n, 0, 4);
-                } else if (this.f3221e.equals(CommonParams.iT)) {
+                } else if (this.f3221e.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
                     System.arraycopy(ByteConvert.m4175a(7), 0, this.f3230n, 0, 4);
                 }
             } catch (Exception e) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail");
+                LogUtil.e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail");
                 e.printStackTrace();
             }
         }
@@ -468,7 +468,7 @@ public class AOAConnectManager implements KeepClass {
                 }
                 this.f3219c = false;
             } catch (Exception e) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, "Close " + this.f3222f + " fail");
+                LogUtil.e(AOAConnectManager.f3263b, "Close " + this.f3222f + " fail");
                 e.printStackTrace();
             }
         }
@@ -486,21 +486,21 @@ public class AOAConnectManager implements KeepClass {
                             cnt -= r;
                             dataLen += r;
                         } else {
-                            LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: ret = " + r);
+                            LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: ret = " + r);
                             throw new IOException();
                         }
                     }
                     if (dataLen == len) {
                         return dataLen;
                     }
-                    LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: dataLen = " + dataLen);
+                    LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Error: dataLen = " + dataLen);
                     throw new IOException();
                 }
-                LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Fail, mInputStream is null");
+                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Receive Data Fail, mInputStream is null");
                 throw new IOException();
             } catch (Exception e) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " IOException, Receive Data Fail");
-                ConnectClient.m4207a().m4222a(false);
+                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " IOException, Receive Data Fail");
+                ConnectClient.newInstance().m4222a(false);
                 e.printStackTrace();
                 return r;
             }
@@ -514,10 +514,10 @@ public class AOAConnectManager implements KeepClass {
                     this.f3225i.flush();
                     return len;
                 }
-                LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " Send Data Fail, mOutputStream is null");
+                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " Send Data Fail, mOutputStream is null");
                 throw new IOException();
             } catch (Exception e) {
-                LogUtil.m4445e(AOAConnectManager.f3263b, this.f3221e + " IOException, Send Data Fail");
+                LogUtil.e(AOAConnectManager.f3263b, this.f3221e + " IOException, Send Data Fail");
                 e.printStackTrace();
                 return -1;
             }
@@ -546,7 +546,7 @@ public class AOAConnectManager implements KeepClass {
                     this.f3224h = new BufferedInputStream(this.f3223g.getInputStream());
                     this.f3225i = new BufferedOutputStream(this.f3223g.getOutputStream());
                 } catch (Exception e) {
-                    LogUtil.m4445e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail 1");
+                    LogUtil.e(AOAConnectManager.f3263b, "Create " + this.f3222f + " fail 1");
                     e.printStackTrace();
                 }
             }
@@ -554,10 +554,10 @@ public class AOAConnectManager implements KeepClass {
                 try {
                     if (this.f3223g != null && this.f3219c) {
                         if (!this.f3223g.isConnected()) {
-                            LogUtil.m4445e(AOAConnectManager.f3263b, "socket is disconnected when read data");
+                            LogUtil.e(AOAConnectManager.f3263b, "socket is disconnected when read data");
                             break;
                         }
-                        if (!this.f3221e.equals(CommonParams.SERVER_SOCKET_NAME) && !this.f3221e.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME) && !this.f3221e.equals(CommonParams.iT)) {
+                        if (!this.f3221e.equals(CommonParams.SERVER_SOCKET_NAME) && !this.f3221e.equals(CommonParams.SERVER_SOCKET_TOUCH_NAME) && !this.f3221e.equals(CommonParams.SERVER_SOCKET_DATA_NAME)) {
                             if (m4107a(this.f3229m, 0, 12) < 0) {
                                 break;
                             }
@@ -584,12 +584,12 @@ public class AOAConnectManager implements KeepClass {
                         break;
                     }
                 } catch (Exception ex) {
-                    LogUtil.m4445e(AOAConnectManager.f3263b, "get Exception in " + this.f3222f);
+                    LogUtil.e(AOAConnectManager.f3263b, "get Exception in " + this.f3222f);
                     ex.printStackTrace();
                     return;
                 }
             } while (this.f3218b.m4161a(this.f3230n, 8, this.f3229m, this.f3228l) >= 0);
-            LogUtil.m4445e(AOAConnectManager.f3263b, "bulkTransferOut fail");
+            LogUtil.e(AOAConnectManager.f3263b, "bulkTransferOut fail");
             this.f3218b.m4163b();
         }
     }
@@ -611,33 +611,33 @@ public class AOAConnectManager implements KeepClass {
 
     /* renamed from: a */
     public void m4162a(Context context, UsbAccessory accessory) {
-        LogUtil.m4445e(f3263b, "init");
+        LogUtil.e(f3263b, "init");
         this.f3289d = context;
         this.f3290e = (UsbManager) this.f3289d.getSystemService("usb");
         this.f3291f = accessory;
         if (this.f3291f == null) {
-            LogUtil.m4445e(f3263b, "mUsbAccessory is null");
-        } else if (ConnectClient.m4207a().m4226d()) {
+            LogUtil.e(f3263b, "mUsbAccessory is null");
+        } else if (ConnectClient.newInstance().m4226d()) {
             try {
                 this.f3292g = this.f3290e.openAccessory(this.f3291f);
                 this.f3293h = this.f3292g.getFileDescriptor();
                 this.f3294i = new FileOutputStream(this.f3293h);
                 this.f3295j = new FileInputStream(this.f3293h);
-                ConnectManager.m4228a().m4237a(2);
+                ConnectManager.newInstance().setType(2);
                 m4166e();
                 m4164c();
             } catch (Exception ex) {
-                LogUtil.m4445e(f3263b, "get fd fail");
+                LogUtil.e(f3263b, "get fd fail");
                 ex.printStackTrace();
             }
         } else {
-            LogUtil.m4445e(f3263b, "usb is not connected");
+            LogUtil.e(f3263b, "usb is not connected");
         }
     }
 
     /* renamed from: b */
     public void m4163b() {
-        LogUtil.m4445e(f3263b, "uninit");
+        LogUtil.e(f3263b, "uninit");
         try {
             if (this.f3294i != null) {
                 this.f3294i.close();
@@ -652,11 +652,11 @@ public class AOAConnectManager implements KeepClass {
                 this.f3292g = null;
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "uninit fail");
+            LogUtil.e(f3263b, "uninit fail");
         }
         this.f3291f = null;
         this.f3293h = null;
-        ConnectManager.m4228a().m4237a(1);
+        ConnectManager.newInstance().setType(1);
         m4167f();
         m4165d();
     }
@@ -665,7 +665,7 @@ public class AOAConnectManager implements KeepClass {
     private int m4144b(byte[] data, int len) {
         try {
             if (this.f3295j == null) {
-                LogUtil.m4445e(f3263b, "mFin is null");
+                LogUtil.e(f3263b, "mFin is null");
                 throw new IOException();
             }
             int cnt = len;
@@ -676,18 +676,18 @@ public class AOAConnectManager implements KeepClass {
                     cnt -= ret;
                     dataLen += ret;
                 } else {
-                    LogUtil.m4445e(f3263b, "bulkTransferIn error 1: ret = " + ret);
+                    LogUtil.e(f3263b, "bulkTransferIn error 1: ret = " + ret);
                     throw new IOException();
                 }
             }
             if (dataLen == len) {
                 return dataLen;
             }
-            LogUtil.m4445e(f3263b, "bulkTransferIn error 3: dataLen = " + dataLen + ", len = " + len);
+            LogUtil.e(f3263b, "bulkTransferIn error 3: dataLen = " + dataLen + ", len = " + len);
             throw new IOException();
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "bulkTransferIn catch exception");
-            ConnectClient.m4207a().m4222a(false);
+            LogUtil.e(f3263b, "bulkTransferIn catch exception");
+            ConnectClient.newInstance().m4222a(false);
             e.printStackTrace();
             return -1;
         }
@@ -697,14 +697,14 @@ public class AOAConnectManager implements KeepClass {
     public int m4160a(byte[] data, int len) {
         try {
             if (this.f3294i == null) {
-                LogUtil.m4445e(f3263b, "mFin is null");
+                LogUtil.e(f3263b, "mFin is null");
                 throw new IOException();
             }
             this.f3294i.write(data, 0, len);
             return len;
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "bulkTransferOut catch exception");
-            ConnectClient.m4207a().m4222a(false);
+            LogUtil.e(f3263b, "bulkTransferOut catch exception");
+            ConnectClient.newInstance().m4222a(false);
             e.printStackTrace();
             return -1;
         }
@@ -717,9 +717,9 @@ public class AOAConnectManager implements KeepClass {
             this.f3287J++;
             this.f3287J %= 65536;
             if (m4160a(head, lenHead) < 0) {
-                LogUtil.m4445e(f3263b, "bulkTransferOut fail 1");
+                LogUtil.e(f3263b, "bulkTransferOut fail 1");
             } else if (m4160a(msg, lenMsg) < 0) {
-                LogUtil.m4445e(f3263b, "bulkTransferOut fail 2");
+                LogUtil.e(f3263b, "bulkTransferOut fail 2");
             } else {
                 i = lenHead + lenMsg;
             }
@@ -733,7 +733,7 @@ public class AOAConnectManager implements KeepClass {
             this.f3298z = new C1197a(this);
             this.f3298z.start();
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "Start AOAReadThread Fail");
+            LogUtil.e(f3263b, "Start AOAReadThread Fail");
             e.printStackTrace();
         }
     }
@@ -746,7 +746,7 @@ public class AOAConnectManager implements KeepClass {
                 this.f3298z = null;
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "Stop AOAReadThread Fail");
+            LogUtil.e(f3263b, "Stop AOAReadThread Fail");
             e.printStackTrace();
         }
     }
@@ -754,22 +754,22 @@ public class AOAConnectManager implements KeepClass {
     /* renamed from: e */
     public void m4166e() {
         try {
-            this.f3278A = new C1198b(this, CommonParams.iG, CommonParams.SERVER_SOCKET_NAME);
+            this.f3278A = new C1198b(this, CommonParams.SOCKET_WIFI_PORT, CommonParams.SERVER_SOCKET_NAME);
             this.f3278A.start();
-            this.f3279B = new C1198b(this, CommonParams.iH, CommonParams.SERVER_SOCKET_VIDEO_NAME);
+            this.f3279B = new C1198b(this, CommonParams.SOCKET_VIDEO_WIFI_PORT, CommonParams.SERVER_SOCKET_VIDEO_NAME);
             this.f3279B.start();
-            this.f3280C = new C1198b(this, CommonParams.iI, CommonParams.SERVER_SOCKET_AUDIO_NAME);
+            this.f3280C = new C1198b(this, CommonParams.SOCKET_AUDIO_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_NAME);
             this.f3280C.start();
-            this.f3281D = new C1198b(this, CommonParams.iJ, "TTS");
+            this.f3281D = new C1198b(this, CommonParams.SOCKET_AUDIO_TTS_WIFI_PORT, "TTS");
             this.f3281D.start();
-            this.f3282E = new C1198b(this, CommonParams.iK, CommonParams.SERVER_SOCKET_AUDIO_VR_NAME);
+            this.f3282E = new C1198b(this, CommonParams.SOCKET_AUDIO_VR_WIFI_PORT, CommonParams.SERVER_SOCKET_AUDIO_VR_NAME);
             this.f3282E.start();
-            this.f3283F = new C1198b(this, CommonParams.iL, CommonParams.SERVER_SOCKET_TOUCH_NAME);
+            this.f3283F = new C1198b(this, CommonParams.SOCKET_TOUCH_WIFI_PORT, CommonParams.SERVER_SOCKET_TOUCH_NAME);
             this.f3283F.start();
-            this.f3284G = new C1198b(this, CommonParams.iM, CommonParams.iT);
+            this.f3284G = new C1198b(this, CommonParams.SOCKET_DATA_WIFI_PORT, CommonParams.SERVER_SOCKET_DATA_NAME);
             this.f3284G.start();
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "Start Read Thread Fail");
+            LogUtil.e(f3263b, "Start Read Thread Fail");
             e.printStackTrace();
         }
     }
@@ -806,7 +806,7 @@ public class AOAConnectManager implements KeepClass {
                 this.f3284G = null;
             }
         } catch (Exception e) {
-            LogUtil.m4445e(f3263b, "Stop Read Thread Fail");
+            LogUtil.e(f3263b, "Stop Read Thread Fail");
             e.printStackTrace();
         }
     }
@@ -814,21 +814,21 @@ public class AOAConnectManager implements KeepClass {
     /* renamed from: g */
     public void m4168g() {
         try {
-            LogUtil.m4445e(f3263b, "start timer");
+            LogUtil.e(f3263b, "start timer");
             this.f3287J = 0;
             this.f3288K = -1;
             this.f3285H = new Timer();
             this.f3286I = new C11941(this);
             this.f3285H.schedule(this.f3286I, 1500, 500);
         } catch (Exception ex) {
-            LogUtil.m4445e(f3263b, "start timer get exception");
+            LogUtil.e(f3263b, "start timer get exception");
             ex.printStackTrace();
         }
     }
 
     /* renamed from: h */
     public void m4169h() {
-        LogUtil.m4445e(f3263b, "timer Stop");
+        LogUtil.e(f3263b, "timer Stop");
         if (this.f3285H != null) {
             this.f3285H.cancel();
             this.f3285H = null;

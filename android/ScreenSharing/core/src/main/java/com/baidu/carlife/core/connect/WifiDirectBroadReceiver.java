@@ -69,7 +69,7 @@ public class WifiDirectBroadReceiver extends BroadcastReceiver {
             } else if (f3201e) {
                 LogUtil.d(f3200b, "BroadReceiver: --------------------- peer disconnected reset discover");
                 f3201e = false;
-                MsgHandlerCenter.m4453a((int) CommonParams.fp, 2000);
+                MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fp, 2000);
             }
         }
         if ("android.net.wifi.p2p.CONNECTION_STATE_CHANGE".equals(action)) {
@@ -109,7 +109,7 @@ public class WifiDirectBroadReceiver extends BroadcastReceiver {
                 return;
             case 3:
                 LogUtil.d(f3200b, "Wifi State: Enabled");
-                MsgHandlerCenter.m4453a((int) CommonParams.fq, 1000);
+                MsgHandlerCenter.dispatchMessageDelay((int) CommonParams.fq, 1000);
                 return;
             default:
                 return;

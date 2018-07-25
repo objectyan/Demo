@@ -9,7 +9,7 @@ import com.baidu.carlife.core.CommonParams;
 import com.baidu.carlife.core.CommonParams.EnumVehicleChannel;
 import com.baidu.carlife.core.LogUtil;
 import com.baidu.carlife.core.connect.CarlifeCmdMessage;
-import com.baidu.carlife.p087l.C1663a;
+import com.baidu.carlife.p087l.CarlifeCoreSDK;
 import com.baidu.carlife.protobuf.CarlifeDeviceInfoProto.CarlifeDeviceInfo;
 import com.baidu.carlife.protobuf.CarlifeDeviceInfoProto.CarlifeDeviceInfo.Builder;
 import com.baidu.carlife.util.C2186p;
@@ -80,7 +80,7 @@ public class C1747c {
             }
             f5286c = builder.build();
         } catch (Exception ex) {
-            LogUtil.m4445e(f5284a, "init error");
+            LogUtil.e(f5284a, "init error");
             ex.printStackTrace();
         }
     }
@@ -107,9 +107,9 @@ public class C1747c {
             command.m4201c(65540);
             command.m4199b(f5286c.toByteArray());
             command.m4203d(f5286c.getSerializedSize());
-            C1663a.m5979a().m6017a(Message.obtain(null, command.m4202d(), 1001, 0, command));
+            CarlifeCoreSDK.m5979a().m6017a(Message.obtain(null, command.getServiceType(), 1001, 0, command));
         } catch (Exception ex) {
-            LogUtil.m4445e(f5284a, "send md info error");
+            LogUtil.e(f5284a, "send md info error");
             ex.printStackTrace();
         }
     }
